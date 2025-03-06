@@ -1,5 +1,5 @@
 <!--
-Item Name: Grabit - Multipurpose eCommerce Tailwind CSS Template.
+Item Name:
 Author: Maraviya Infotech
 Version: 1.0.0
 Copyright 2024
@@ -19,25 +19,25 @@ Copyright 2024
     <meta name="author" content="Maraviya Infotech">
 
     <!-- site Favicon -->
-    <link rel="icon" href="assets/img/favicon/favicon.png" sizes="32x32">
+    <link rel="icon" href="{{ asset('assets/img/favicon/favicon.png') }}" sizes="32x32">
 
     <!-- css Icon Font -->
-    <link rel="stylesheet" href="assets/css/vendor/gicons.css">
+    <link rel="stylesheet" href="{{ asset('assets/css/vendor/gicons.css') }}">
 
     <!-- css All Plugins Files -->
-    <link rel="stylesheet" href="assets/css/plugins/animate.css">   
-    <link rel="stylesheet" href="assets/css/plugins/swiper-bundle.min.css">
-    <link rel="stylesheet" href="assets/css/plugins/owl.carousel.min.css">
-    <link rel="stylesheet" href="assets/css/plugins/owl.theme.default.min.css">
-    <link rel="stylesheet" href="assets/css/plugins/slick.min.css">
-    <link rel="stylesheet" href="assets/css/plugins/nouislider.css">
+    <link rel="stylesheet" href="{{ asset('assets/css/plugins/animate.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/plugins/swiper-bundle.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/plugins/owl.carousel.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/plugins/owl.theme.default.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/plugins/slick.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/plugins/nouislider.css') }}">
 
     <!-- Tailwindcss -->
-    <script src="assets/js/plugins/tailwindcss3.4.1"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
 
     <!-- Main Style -->
-    <link rel="stylesheet" id="main_style" href="assets/css/demo-1.css">
-    <link rel="stylesheet" href="assets/css/responsive.css">
+    <link rel="stylesheet" id="main_style" href="{{ asset('assets/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/responsive.css') }}">
 </head>
 
 <body class="w-full h-full relative font-Poppins font-normal overflow-x-hidden">

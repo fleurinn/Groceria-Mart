@@ -5,13 +5,15 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\CategoryProduct;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\View\View;
 
 class CategoryProductController extends Controller
 {
     // Menampilkan daftar kategori produk
     public function index()
     {
-        $categoryproducts = CategoryProduct::all(); // Menggunakan camelCase untuk konsistensi
+        $categoryproducts = CategoryProduct::all();
         return view('admin.categoryproducts.index', compact('categoryproducts'));
     }
 
@@ -26,9 +28,9 @@ class CategoryProductController extends Controller
     {
         // Validasi input
         $request->validate([
-            'name'           => 'required|string|max:255',
-            'image'          => 'required|image|mimes:jpeg,jpg,png|max:2048',
-            'status'         => 'required|in:draft,publik',
+            'name'   => 'required|string|max:255',
+            'image'  => 'required|image|mimes:jpeg,jpg,png|max:2048',
+            'status' => 'required|in:draft,publik',
         ]);
 
         // Upload image
@@ -37,19 +39,18 @@ class CategoryProductController extends Controller
 
         // Menyimpan kategori
         CategoryProduct::create([
-            'name'                 => $request->name,
-            'image'                => $image->hashName(),
-            'status'               => $request->status,
+            'name'   => $request->name,
+            'image'  => $image->hashName(),
+            'status' => $request->status,
         ]);
 
-        // Redirect dengan pesan sukses
-        return redirect()->route('kategori-produk.index')->with('success', 'Kategori produk berhasil ditambahkan.');
+        return redirect()->route('categoryproducts.index')->with('success', 'Kategori produk berhasil ditambahkan.');
     }
 
     // Menampilkan form untuk mengedit kategori produk
     public function edit(CategoryProduct $categoryproduct)
     {
-        return view('admin.categoryproduct.edit', compact('categoryproduct'));
+        return view('admin.categoryproducts.edit', compact('categoryproduct'));
     }
 
     // Mengupdate kategori produk
@@ -57,51 +58,53 @@ class CategoryProductController extends Controller
     {
         // Validasi input
         $request->validate([
-            'name'          => 'required|string|max:255',
-            'image'         => 'required|image|mimes:jpeg,jpg,png|max:2048',
-            'status'        => 'required|in:draft,publik',
+            'name'   => 'required|string|max:255',
+            'image'  => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
+            'status' => 'required|in:draft,publik',
         ]);
 
-        // If a new image is uploaded, handle the image update
         if ($request->hasFile('image')) {
-            // Delete the old image
-            Storage::delete('public/categoryproducts/' . $categoryproduct->image);
+            // Hapus gambar lama jika ada
+            if ($categoryproduct->image && Storage::exists('public/categoryproducts/' . $categoryproduct->image)) {
+                Storage::delete('public/categoryproducts/' . $categoryproduct->image);
+            }
 
-            // Upload new image
+            // Upload gambar baru
             $image = $request->file('image');
             $imagePath = $image->storeAs('public/categoryproducts/', $image->hashName());
 
-        // Update kategori
-        $categoryproduct->update([
-            'name'              => $request->name,
-            'image'             => $image->hashName(),
-            'status'            => $request->status,
-        ]);
-    } else {
-        //ubah category product tanpa image
-        $categoryproduct->update([
-            'name' => $request->name,
-        ]);
+            $categoryproduct->update([
+                'name'   => $request->name,
+                'image'  => $image->hashName(),
+                'status' => $request->status,
+            ]);
+        } else {
+            // Update kategori tanpa mengubah gambar
+            $categoryproduct->update([
+                'name'   => $request->name,
+                'status' => $request->status,
+            ]);
+        }
 
-        $product->save();
-
-    }
-        // Redirect dengan pesan sukses
         return redirect()->route('categoryproducts.index')->with('success', 'Kategori produk berhasil diperbarui.');
     }
 
     // Menghapus kategori produk
     public function destroy(CategoryProduct $categoryproduct)
     {
+        // Hapus gambar terkait jika ada
+        if ($categoryproduct->image && Storage::exists('public/categoryproducts/' . $categoryproduct->image)) {
+            Storage::delete('public/categoryproducts/' . $categoryproduct->image);
+        }
+
         $categoryproduct->delete();
-        return redirect()->route('admin.categoryproducts.index')->with('success', 'Kategori produk berhasil dihapus.');
+        return redirect()->route('categoryproducts.index')->with('success', 'Kategori produk berhasil dihapus.');
     }
 
+    // Menampilkan detail kategori produk
     public function show(string $id): View
-{
-    // Ambil kategori portofolio berdasarkan ID dan load portofolio yang terelasi
-    $categoryproduct = CategoryProduct::with('products')->find($id);
-
-    return view('categoryproduct.show', compact('categoryproduct'));
-}
+    {
+        $categoryproduct = CategoryProduct::with('products')->findOrFail($id);
+        return view('admin.categoryproducts.show', compact('categoryproduct'));
+    }
 }

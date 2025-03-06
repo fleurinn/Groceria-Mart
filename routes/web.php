@@ -40,5 +40,4 @@ Route::get('/product-left-sidebar', function () {
 })->name('product.left.sidebar');
 
 
-
 require __DIR__.'/auth.php';
