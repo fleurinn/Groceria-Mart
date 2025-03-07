@@ -13,9 +13,8 @@ return new class extends Migration
     {
         Schema::create('services', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('fullname');
             $table->string('email');
-            $table->string('topic');
             $table->string('phone');
             $table->text('message');
             $table->timestamps();
