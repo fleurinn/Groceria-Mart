@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('title');
             $table->string('description');
             $table->string('categoryproducts_id');
-            $table->enum('status', ['draft', 'publik'])->default('draft'); // Tambahkan default 'draft'
+            $table->enum('status', ['draft', 'publik'])->default('publik'); // Tambahkan default 'draft'
             $table->timestamps();
         });
     }

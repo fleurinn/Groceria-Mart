@@ -9,7 +9,24 @@ use App\Http\Controllers\Admin\SliderController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('landingpage.index');
+    return view('landing-page');
+});
+
+
+Route::get('/slider', function () {
+    return view('landing.pages.slider.slider-index');
+});
+
+Route::get('/category-produk', function () {
+    return view('landing.pages.produk.category-product.categoryproduct-index');
+});
+
+Route::get('/produk', function () {
+    return view('landing.pages.produk.product.product-index');
+});
+
+Route::get('/layanan', function () {
+    return view('landing.pages.layanan.service-index');
 });
 
 Route::get('/dashboard', function () {

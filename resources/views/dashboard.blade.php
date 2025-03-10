@@ -8,7 +8,7 @@
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
 
-    <p>welcome Admin</p>
+    <p>welcome</p>
 
 </body>
 </html>
