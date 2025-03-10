@@ -9,7 +9,5 @@ class Service extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'description', 'price', 'image', 'status'];
-
-    // Jika service memiliki kategori, bisa tambahkan relasi ke kategori di sini.
+    protected $fillable = ['fullname', 'email', 'phone', 'message'];
 }

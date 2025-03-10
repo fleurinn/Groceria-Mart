@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Service;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class ServiceController extends Controller
@@ -28,25 +27,22 @@ class ServiceController extends Controller
     {
         // Validasi input
         $request->validate([
-            'title'       => 'required|string|max:255',
-            'description' => 'required|string|max:1000',
-            'image'       => 'required|image|mimes:jpeg,jpg,png|max:2048',
-            'status'      => 'required|in:draft,publik',
+            'fullname' => 'required|string|max:255',
+            'email'    => 'required|email|max:255',
+            'phone'    => 'required|string|max:20',
+            'message'  => 'required|string',
         ]);
 
-        // Upload image
-        $image = $request->file('image');
-        $imagePath = $image->storeAs('public/services/', $image->hashName());
-
-        // Menyimpan layanan
-        Service::create([
-            'title'       => $request->title,
-            'description' => $request->description,
-            'image'       => $image->hashName(),
-            'status'      => $request->status,
-        ]);
+        // Simpan ke database
+        Service::create($request->only(['fullname', 'email', 'phone', 'message']));
 
         return redirect()->route('services.index')->with('success', 'Layanan berhasil ditambahkan.');
+    }
+
+    // Menampilkan detail layanan
+    public function show(Service $service): View
+    {
+        return view('admin.services.show', compact('service'));
     }
 
     // Menampilkan form untuk mengedit layanan
@@ -60,36 +56,14 @@ class ServiceController extends Controller
     {
         // Validasi input
         $request->validate([
-            'title'       => 'required|string|max:255',
-            'description' => 'required|string|max:1000',
-            'image'       => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
-            'status'      => 'required|in:draft,publik',
+            'fullname' => 'required|string|max:255',
+            'email'    => 'required|email|max:255',
+            'phone'    => 'required|string|max:20',
+            'message'  => 'required|string',
         ]);
 
-        if ($request->hasFile('image')) {
-            // Hapus gambar lama jika ada
-            if ($service->image && Storage::exists('public/services/' . $service->image)) {
-                Storage::delete('public/services/' . $service->image);
-            }
-
-            // Upload gambar baru
-            $image = $request->file('image');
-            $imagePath = $image->storeAs('public/services/', $image->hashName());
-
-            $service->update([
-                'title'       => $request->title,
-                'description' => $request->description,
-                'image'       => $image->hashName(),
-                'status'      => $request->status,
-            ]);
-        } else {
-            // Update layanan tanpa mengubah gambar
-            $service->update([
-                'title'       => $request->title,
-                'description' => $request->description,
-                'status'      => $request->status,
-            ]);
-        }
+        // Update data layanan
+        $service->update($request->only(['fullname', 'email', 'phone', 'message']));
 
         return redirect()->route('services.index')->with('success', 'Layanan berhasil diperbarui.');
     }
@@ -97,19 +71,7 @@ class ServiceController extends Controller
     // Menghapus layanan
     public function destroy(Service $service)
     {
-        // Hapus gambar terkait jika ada
-        if ($service->image && Storage::exists('public/services/' . $service->image)) {
-            Storage::delete('public/services/' . $service->image);
-        }
-
         $service->delete();
         return redirect()->route('services.index')->with('success', 'Layanan berhasil dihapus.');
-    }
-
-    // Menampilkan detail layanan
-    public function show(string $id): View
-    {
-        $service = Service::findOrFail($id);
-        return view('admin.services.show', compact('service'));
     }
 }

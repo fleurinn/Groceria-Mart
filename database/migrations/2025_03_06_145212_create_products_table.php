@@ -7,16 +7,23 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
+        // Membuat tabel products
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('category_product_id')->constrained('category_products')->onDelete('cascade');
             $table->string('name');
+            $table->string('image');
             $table->text('description');
             $table->decimal('price', 10, 2);
-            $table->string('image');
-            $table->enum('status', ['draft', 'publik']);
+            $table->decimal('discount', 5, 2)->default(0); // Default 0 jika tidak ada diskon
+            $table->integer('stock');
+            $table->foreignId('category_product_id')
+                ->constrained('category_products')
+                ->onDelete('cascade');
+            $table->boolean('status')->default(1); // 1 = public, 0 = draft
+            $table->string('tag');
             $table->timestamps();
         });
+
     }
 
     public function down(): void
