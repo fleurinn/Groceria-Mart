@@ -11,9 +11,16 @@ use Illuminate\View\View;
 class CategoryProductController extends Controller
 {
     // Menampilkan daftar kategori produk
+    // public function index()
+    // {
+    //     $categoryproducts = CategoryProduct::all();
+    //     return view('admin.categoryproducts.index', compact('categoryproducts'));
+    // }
+
+    // Menampilkan daftar kategori produk
     public function index()
     {
-        $categoryproducts = CategoryProduct::all();
+        $categoryproducts = CategoryProduct::withCount('products')->get(); // Menggunakan withCount untuk menghitung produk
         return view('admin.categoryproducts.index', compact('categoryproducts'));
     }
 

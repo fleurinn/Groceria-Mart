@@ -10,9 +10,8 @@ use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\DiscountController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\CartController;
-use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\ReportController;
-
+use App\Http\Controllers\Admin\PaymentController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -40,6 +39,14 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::middleware('auth')->group(function () {
+    Route::resource('/kategori-produk', CategoryProductController::class);
+
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
     // Rute untuk produk
     Route::resource('products', ProductController::class);
@@ -49,6 +56,16 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 
     // Rute untuk layanan (services)
     Route::resource('services', ServiceController::class);
+});
+
+Route::prefix('admin')->group(function () {
+    Route::get('/sliders', [SliderController::class, 'index'])->name('sliders.index'); // Menampilkan daftar slider
+    Route::get('/sliders/create', [SliderController::class, 'create'])->name('sliders.create'); // Menampilkan form tambah slider
+    Route::post('/sliders', [SliderController::class, 'store'])->name('sliders.store'); // Menyimpan slider baru
+    Route::get('/sliders/{slider}/edit', [SliderController::class, 'edit'])->name('sliders.edit'); // Menampilkan form edit slider
+    Route::put('/sliders/{slider}', [SliderController::class, 'update'])->name('sliders.update'); // Update slider
+    Route::delete('/sliders/{slider}', [SliderController::class, 'destroy'])->name('sliders.destroy'); // Hapus slider
+    Route::get('/sliders/{id}', [SliderController::class, 'show'])->name('sliders.show'); // Menampilkan detail slider
 });
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -90,6 +107,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/reports/{id}', [ReportController::class, 'destroy']);
 });
 
+Route::middleware(['auth'])->group(function () {
+    Route::resource('payments', PaymentController::class);
+});
+
 
 
 // Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('auth', 'verified');
@@ -105,14 +126,6 @@ Route::middleware('auth:sanctum')->group(function () {
 //     return view('dashboard');
 // })->name('dashboard');
 
-Route::middleware('auth')->group(function () {
-
-    Route::resource('/kategori-produk', CategoryProductController::class);
-
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
 
 Route::get('/product-left-sidebar', function () {
     return view('product-left-sidebar');
