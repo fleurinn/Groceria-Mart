@@ -1,20 +1,29 @@
+
 @extends('landing.layouts.app')
 
 @section('page_title', 'Groceria | Belanja Online dengan Ceria!')
 
 @section('content')
     <!-- Slider Section -->
-    <section class="slider">
-        @include('landing.pages.slider.slider-index')
-    </section>
+    @include('landing.parts.hero')
 
     <!-- Kategori Produk Section -->
-    <section class="category-product">
-        @include('landing.pages.produk.category-product.categoryproduct-index')
-    </section>
+    @include('landing.parts.category-product')
+
+    <!-- Flash Sale Section -->
+    @include('landing.parts.flash-sale')
+    
+    <!-- Hero 2 Section -->
+    @include('landing.parts.hero2')
 
     <!-- Produk Section -->
-    <section class="product">
-        @include('landing.pages.produk.product.product-index')
-    </section>
+    @include('landing.parts.product')
+    
+    <!-- Hero 3 Section -->
+    @include('landing.parts.hero3')
+    
+    <!-- Service Section -->
+    @include('landing.parts.service')
+
 @endsection
+

@@ -16,10 +16,8 @@ return new class extends Migration {
             $table->decimal('price', 10, 2);
             $table->decimal('discount', 5, 2)->default(0); // Default 0 jika tidak ada diskon
             $table->integer('stock');
-            $table->foreignId('category_product_id')
-                ->constrained('category_products')
-                ->onDelete('cascade');
-            $table->boolean('status')->default(1); // 1 = public, 0 = draft
+            $table->foreignId('category_products_id')->constrained('category_products')->onDelete('cascade');
+            $table->enum('status', ['draft', 'publik']);
             $table->string('tag');
             $table->timestamps();
         });

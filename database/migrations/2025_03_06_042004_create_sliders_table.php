@@ -17,11 +17,7 @@ return new class extends Migration
             $table->string('image');
             $table->string('title');
             $table->string('description');
-<<<<<<< HEAD
-            $table->string('categoryproducts_id');
-=======
             $table->foreignId('category_products_id')->references('id')->on('category_products')->onDelete('cascade');
->>>>>>> 60426b763d4763c4a2a68f7ae24708c3df62007b
             $table->enum('status', ['draft', 'publik'])->default('publik'); // Tambahkan default 'draft'
             $table->timestamps();
         });

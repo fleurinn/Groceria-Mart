@@ -1,7 +1,4 @@
-@extends('landing.layouts.app')
 
-@section('page_title', 'Kategori Produk | Groceria')
-@section('content')
 
 @php
     use App\Models\Product;
@@ -80,5 +77,3 @@
     </div>
 </section>
 <!--  Day Of The Deal End -->
-
-@endsection
