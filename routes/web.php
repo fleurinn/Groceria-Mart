@@ -18,26 +18,39 @@ Route::get('/', function () {
     return view('landing-page');
 });
 
-
-Route::get('/slider', function () {
-    return view('landing.pages.slider.slider-index');
+Route::get('/about-us', function () {
+    return view('landing.pages.about-us.about-us-index');
 });
 
-Route::get('/category-produk', function () {
-    return view('landing.pages.produk.category-product.categoryproduct-index');
-});
-
-Route::get('/produk', function () {
-    return view('landing.pages.produk.product.product-index');
-});
-
-Route::get('/layanan', function () {
+Route::get('/service', function () {
     return view('landing.pages.layanan.service-index');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/produk', function () {
+    return view('landing.pages.produk.product-index');
+});
+
+Route::get('/produk-detail', function () {
+    return view('landing.pages.produk.product-show');
+});
+
+Route::get('/keranjang', function () {
+    return view('landing.pages.cart.cart-index');
+});
+
+Route::get('/wishlist', function () {
+    return view('landing.pages.wishlist.wishlist-index');
+});
+
+Route::get('/checkout', function () {
+    return view('landing.pages.checkout.checkout-index');
+});
+
+
+
+// Route::get('/dashboard', function () {
+//     return view('dashboard');
+// })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::resource('/kategori-produk', CategoryProductController::class);
