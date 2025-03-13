@@ -1,50 +1,7 @@
 @section('header')
 
-    <!-- Header start  -->
-    <header class="gi-header bg-[#fff] z-[14] max-[991px]:z-[16] relative">
-                    <!-- Header Top responsive Action -->
-                    <div class="grow-[1] shrink-[0] basis-[0%] min-[992px]:hidden">
-                        <div class="gi-header-bottons flex justify-end">
-                            <div class="right-icons flex flex-row">
-                                <!-- Header User Start -->
-                                <a href="#" class="gi-header-btn gi-header-user mr-[30px] relative transition-all duration-[0.3s] ease-in-out relative flex text-[#4b5966] w-[auto] items-center">
-                                    <div class="header-icon relative flex">
-                                        <i class="fi-rr-user text-[24px] leading-[17px]"></i>
-                                    </div>
-                                </a>
-                                <!-- Header User End -->
-                                <!-- Header Wishlist Start -->
-                                <a href="#" class="gi-header-btn gi-wish-toggle mr-[30px] relative transition-all duration-[0.3s] ease-in-out relative flex text-[#4b5966] w-[auto] items-center">
-                                    <div class="header-icon relative flex">
-                                        <i class="fi-rr-heart text-[24px] leading-[17px]"></i>
-                                    </div>
-                                    <span class="gi-header-count gi-wishlist-count w-[15px] h-[15px] text-[#fff] flex items-center justify-center rounded-[50%] text-[11px] absolute top-[-2px] right-[-6px] opacity-[0.8]">3</span>
-                                </a>
-                                <!-- Header Wishlist End -->
-                                <!-- Header Cart Start -->
-                                <a href="javascript:void(0)" class="gi-header-btn gi-cart-toggle mr-[30px] relative transition-all duration-[0.3s] ease-in-out relative flex text-[#4b5966] w-[auto] items-center">
-                                    <div class="header-icon relative flex">
-                                        <i class="fi-rr-shopping-bag text-[24px] leading-[17px]"></i>
-                                        <span class="main-label-note-new"></span>
-                                    </div>
-                                    <span class="gi-header-count gi-cart-count  w-[15px] h-[15px] text-[#fff] flex items-center justify-center rounded-[50%] text-[11px] absolute top-[-2px] right-[-6px] opacity-[0.8]">3</span>
-                                </a>
-                                <!-- Header Cart End -->
-                                <!-- Header menu Start -->
-                                <a href="javascript:void(0)"
-                                    class="gi-header-btn gi-site-menu-icon relative transition-all duration-[0.3s] ease-in-out relative flex text-[#4b5966] w-[auto] items-center">
-                                    <i class="fi-rr-menu-burger text-[24px] leading-[17px]"></i>
-                                </a>
-                                <!-- Header menu End -->
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Header Top responsive Action -->
-                </div>
-            </div>
-        </div>
-        <!-- Header Top  End -->
-
+<!-- Header start  -->
+<header class="gi-header bg-[#fff] z-[14] max-[991px]:z-[16] relative">
         <!-- Header Bottom  Start -->
         <div class="gi-header-bottom py-[30px] max-[991px]:py-[15px] max-[991px]:border-b-[1px] border-solid border-[#eee]">
             <div class="flex flex-wrap justify-between relative items-center mx-auto min-[1600px]:max-w-[1600px] min-[1400px]:max-w-[1320px] min-[1200px]:max-w-[1140px] min-[992px]:max-w-[960px] min-[768px]:max-w-[720px] min-[576px]:max-w-[540px]">
@@ -53,7 +10,7 @@
                         <!-- Header Logo Start -->
                         <div class="self-center gi-header-logo max-[575px]:mb-[15px]">
                             <div class="header-logo text-left">
-                                <a href="#"><img src="assets/img/logo/logo.png" alt="Site Logo" class="w-[144px] max-[1199px]:w-[130px] max-[991px]:w-[120px] max-[767px]:w-[100px] "></a>
+                                <a href="index.html"><img src="assets/img/logo/logo.png" alt="Site Logo" class="w-[144px] max-[1199px]:w-[130px] max-[991px]:w-[120px] max-[767px]:w-[100px] "></a>
                             </div>
                         </div>
                         <!-- Header Logo End -->
@@ -84,14 +41,14 @@
                                         </div>
                                     </a>
                                     <ul class="gi-dropdown-menu min-w-[150px] py-[5px] transition-all duration-[0.3s] ease-in-out mt-[25px] absolute z-[16] text-left bg-[#fff] block opacity-0 invisible left-[0] right-[auto] border-[1px] border-solid border-[#eee] rounded-[5px]">
-                                        <li><a class="dropdown-item py-[10px] px-[20px] block w-full font-normal text-[13px] text-[#777] hover:bg-transparent hover:text-[#5caf90]" href="#">Register</a></li>
-                                        <li><a class="dropdown-item py-[10px] px-[20px] block w-full font-normal text-[13px] text-[#777] hover:bg-transparent hover:text-[#5caf90]" href="#">Checkout</a></li>
-                                        <li><a class="dropdown-item py-[10px] px-[20px] block w-full font-normal text-[13px] text-[#777] hover:bg-transparent hover:text-[#5caf90]" href="#">Login</a></li>
+                                        <li><a class="dropdown-item py-[10px] px-[20px] block w-full font-normal text-[13px] text-[#777] hover:bg-transparent hover:text-[#5caf90]" href="register.html">Register</a></li>
+                                        <li><a class="dropdown-item py-[10px] px-[20px] block w-full font-normal text-[13px] text-[#777] hover:bg-transparent hover:text-[#5caf90]" href="checkout.html">Checkout</a></li>
+                                        <li><a class="dropdown-item py-[10px] px-[20px] block w-full font-normal text-[13px] text-[#777] hover:bg-transparent hover:text-[#5caf90]" href="login.html">Login</a></li>
                                     </ul>
                                 </div>
                                 <!-- Header User End -->
                                 <!-- Header wishlist Start -->
-                                <a href="#" class="gi-header-btn gi-wish-toggle mr-[30px] transition-all duration-[0.3s] ease-in-out relative flex text-[#4b5966] w-[auto] items-center whitespace-nowrap" title="Wishlist">
+                                <a href="wishlist.html" class="gi-header-btn gi-wish-toggle mr-[30px] transition-all duration-[0.3s] ease-in-out relative flex text-[#4b5966] w-[auto] items-center whitespace-nowrap" title="Wishlist">
                                     <div class="header-icon relative flex">
                                         <i class="fi-rr-heart text-[24px] leading-[17px]"></i>
                                     </div>
@@ -128,123 +85,41 @@
             <div class="flex flex-wrap justify-between items-center mx-auto min-[1600px]:max-w-[1600px] min-[1400px]:max-w-[1320px] min-[1200px]:max-w-[1140px] min-[992px]:max-w-[960px] min-[768px]:max-w-[720px] min-[576px]:max-w-[540px] relative">
                 <div class="gi-nav-bar flex flex-row justify-between relative w-full px-[12px]">
                     <!-- Main Menu Start -->
-                    <div id="gi-main-menu-desk" class="w-full flex items-center min-[992px]:block hidden">
+                    <div id="gi-main-menu-desk" class="w-full flex items-center min-[992px]:block">
                         <div class="nav-desk">
-                            <div class="w-full flex flex-wrap px-[13px] min-[1400px]:relative">
+                            <div class="w-full flex flex-wrap px-[12px] min-[1400px]:relative">
                                 <div class="basis-auto w-full self-center">
                                     <div class="gi-main-menu flex">
                                         <ul class="w-full flex justify-center flex-wrap pl-[0]">
-                                            <li class="dropdown drop-list relative ml-[20px] mr-[30px] transition-all duration-[0.3s] ease-in-out max-[1199px]:ml-[15px]">
-                                                <a href="javascript:void(0)" class="dropdown-arrow relative transition-all duration-[0.3s] ease-in-out text-[15px] leading-[60px] capitalize text-[#4b5966] flex items-center font-medium">Home<i class="fi-rr-angle-small-right transition-all duration-[0.3s] ease-in-out mr-[5px] text-[#4b5966] absolute right-[-27px] text-[18px] rotate-[90deg] flex"></i></a>
-                                                <ul class="sub-menu transition-all duration-[0.3s] ease-in-out mt-[15px] absolute z-[16] text-left opacity-0 invisible min-w-[205px] left-0 right-auto bg-[#fff] block rounded-[5px] border-[1px] border-solid border-[#eee] py-[5px]">
-                                                    <li><a href="#" class="transition-all duration-[0.3s] ease-in-out leading-[20px] px-[20px] py-[10px] font-normal text-[13px] text-[#777] capitalize flex justify-between items-center hover:text-[#5caf90]">Grocery</a></li>
-                                                    <li><a href="#" class="transition-all duration-[0.3s] ease-in-out leading-[20px] px-[20px] py-[10px] font-normal text-[13px] text-[#777] capitalize flex justify-between items-center hover:text-[#5caf90]">Fashion</a></li>
-                                                    <li><a href="#" class="transition-all duration-[0.3s] ease-in-out leading-[20px] px-[20px] py-[10px] font-normal text-[13px] text-[#777] capitalize flex justify-between items-center hover:text-[#5caf90]">Fashion 2</a></li>
-                                                </ul>
-                                            </li>
-                                            <li class="dropdown drop-list static ml-[20px] mr-[30px] transition-all duration-[0.3s] ease-in-out max-[1199px]:ml-[15px]">
-                                                <a href="javascript:void(0)" class="dropdown-arrow relative transition-all duration-[0.3s] ease-in-out text-[15px] leading-[60px] capitalize text-[#4b5966] flex items-center font-medium">Categories<i class="fi-rr-angle-small-right transition-all duration-[0.3s] ease-in-out mr-[5px] text-[#4b5966] absolute right-[-27px] text-[18px] rotate-[90deg] flex"></i></a>
-                                                <ul class="mega-menu block transition-all duration-[0.3s] ease-in-out w-full max-[1399px]:mx-[12px] max-[1399px]:w-[calc(100%-24px)] mt-[15px] absolute bg-[#fff] pl-[30px] opacity-0 invisible left-0 z-[15] rounded-[5px] border-[1px] border-solid border-[#eee] truncate">
-                                                    <li class="flex">
-                                                        <span class="bg"></span>
-                                                        <ul class="mega-block w-[calc(25%-30px)] mr-[30px] py-[15px] block">
-                                                            <li class="menu_title">
-                                                                <a href="javascript:void(0)" class="text-[#5caf90] text-[15px] capitalize leading-[30px] font-medium block border-b-[1px] border-solid border-[#eee] mb-[10px] pb-[5px] h-auto">Classic</a>
-                                                            </li>
-                                                            <li><a href="#" class="text-[#777] capitalize leading-[30px] font-normal text-[13px] block py-[5px] border-0 h-auto hover:text-[#5caf90]">Left sidebar 3 column</a></li>
-                                                            <li><a href="#" class="text-[#777] capitalize leading-[30px] font-normal text-[13px] block py-[5px] border-0 h-auto hover:text-[#5caf90]">Left sidebar 4 column</a></li>
-                                                            <li><a href="#" class="text-[#777] capitalize leading-[30px] font-normal text-[13px] block py-[5px] border-0 h-auto hover:text-[#5caf90]">Right sidebar 3 column</a></li>
-                                                            <li><a href="#" class="text-[#777] capitalize leading-[30px] font-normal text-[13px] block py-[5px] border-0 h-auto hover:text-[#5caf90]">Right sidebar 4 column</a></li>
-                                                            <li><a href="#" class="text-[#777] capitalize leading-[30px] font-normal text-[13px] block py-[5px] border-0 h-auto hover:text-[#5caf90]">Full width 4 column</a></li>
-                                                        </ul>
-                                                        <ul class="mega-block w-[calc(25%-30px)] mr-[30px] py-[15px] block">
-                                                            <li class="menu_title">
-                                                                <a href="javascript:void(0)" class="text-[#5caf90] text-[15px] capitalize leading-[30px] font-medium block border-b-[1px] border-solid border-[#eee] mb-[10px] pb-[5px] h-auto">Banner</a>
-                                                            </li>
-                                                            <li><a href="#" class="text-[#777] capitalize leading-[30px] font-normal text-[13px] block py-[5px] border-0 h-auto hover:text-[#5caf90]">left sidebar 3 column</a></li>
-                                                            <li><a href="#" class="text-[#777] capitalize leading-[30px] font-normal text-[13px] block py-[5px] border-0 h-auto hover:text-[#5caf90]">left sidebar 4 column</a></li>
-                                                            <li><a href="#" class="text-[#777] capitalize leading-[30px] font-normal text-[13px] block py-[5px] border-0 h-auto hover:text-[#5caf90]">right sidebar  column</a></li>
-                                                            <li><a href="#" class="text-[#777] capitalize leading-[30px] font-normal text-[13px] block py-[5px] border-0 h-auto hover:text-[#5caf90]">right sidebar 4 column</a></li>
-                                                            <li><a href="#" class="text-[#777] capitalize leading-[30px] font-normal text-[13px] block py-[5px] border-0 h-auto hover:text-[#5caf90]">Full width 4 column</a></li>
-                                                        </ul>
-                                                        <ul class="mega-block w-[calc(25%-30px)] mr-[30px] py-[15px] block">
-                                                            <li class="menu_title">
-                                                                <a href="javascript:void(0)" class="text-[#5caf90] text-[15px] capitalize leading-[30px] font-medium block border-b-[1px] border-solid border-[#eee] mb-[10px] pb-[5px] h-auto">Columns</a>
-                                                            </li>
-                                                            <li><a href="#" class="text-[#777] capitalize leading-[30px] font-normal text-[13px] block py-[5px] border-0 h-auto hover:text-[#5caf90]">3 Columns full width</a></li>
-                                                            <li><a href="#" class="text-[#777] capitalize leading-[30px] font-normal text-[13px] block py-[5px] border-0 h-auto hover:text-[#5caf90]">4 Columns full width</a></li>
-                                                            <li><a href="#" class="text-[#777] capitalize leading-[30px] font-normal text-[13px] block py-[5px] border-0 h-auto hover:text-[#5caf90]">5 Columns full width</a></li>
-                                                            <li><a href="#" class="text-[#777] capitalize leading-[30px] font-normal text-[13px] block py-[5px] border-0 h-auto hover:text-[#5caf90]">6 Columns full width</a></li>
-                                                            <li><a href="#" class="text-[#777] capitalize leading-[30px] font-normal text-[13px] block py-[5px] border-0 h-auto hover:text-[#5caf90]">Banner 3 Columns</a></li>
-                                                        </ul>
-                                                        <ul class="mega-block w-[calc(25%-30px)] mr-[30px] py-[15px] block">
-                                                            <li class="menu_title">
-                                                                <a href="javascript:void(0)" class="text-[#5caf90] text-[15px] capitalize leading-[30px] font-medium block border-b-[1px] border-solid border-[#eee] mb-[10px] pb-[5px] h-auto">List</a>
-                                                            </li>
-                                                            <li><a href="#" class="text-[#777] capitalize leading-[30px] font-normal text-[13px] block py-[5px] border-0 h-auto hover:text-[#5caf90]">Shop left sidebar</a></li>
-                                                            <li><a href="#" class="text-[#777] capitalize leading-[30px] font-normal text-[13px] block py-[5px] border-0 h-auto hover:text-[#5caf90]">Shop right sidebar</a></li>
-                                                            <li><a href="#" class="text-[#777] capitalize leading-[30px] font-normal text-[13px] block py-[5px] border-0 h-auto hover:text-[#5caf90]">Banner left sidebar</a></li>
-                                                            <li><a href="#" class="text-[#777] capitalize leading-[30px] font-normal text-[13px] block py-[5px] border-0 h-auto hover:text-[#5caf90]">Banner right sidebar</a></li>
-                                                            <li><a href="#" class="text-[#777] capitalize leading-[30px] font-normal text-[13px] block py-[5px] border-0 h-auto hover:text-[#5caf90]">Full width 2 columns</a></li>
-                                                        </ul>
-                                                    </li>
-                                                </ul>
-                                            </li>
-                                            <li class="dropdown drop-list relative ml-[20px] mr-[30px] transition-all duration-[0.3s] ease-in-out max-[1199px]:ml-[15px]">
-                                                <a href="javascript:void(0)" class="dropdown-arrow relative transition-all duration-[0.3s] ease-in-out text-[15px] leading-[60px] capitalize text-[#4b5966] flex items-center font-medium">Products<i class="fi-rr-angle-small-right transition-all duration-[0.3s] ease-in-out mr-[5px] text-[#4b5966] absolute right-[-27px] text-[18px] rotate-[90deg] flex"></i></a>
-                                                <ul class="sub-menu transition-all duration-[0.3s] ease-in-out mt-[15px] absolute z-[16] text-left opacity-0 invisible min-w-[205px] left-0 right-auto bg-[#fff] block rounded-[5px] border-[1px] border-solid border-[#eee] py-[5px]">
-                                                    <li class="dropdown position-static">
-                                                        <a href="javascript:void(0)" class="transition-all duration-[0.3s] ease-in-out leading-[20px] px-[20px] py-[10px] font-normal text-[13px] text-[#777] capitalize flex justify-between items-center hover:text-[#5caf90]">Product page 
-                                                            <i class="fi-rr-angle-small-right transition-all duration-[0.3s] ease-in-out mr-[5px] text-[#4b5966] absolute right-[2px] text-[18px] flex"></i>
-                                                        </a>
-                                                        <ul class="sub-menu sub-menu-child transition-all duration-[0.3s] ease-in-out mt-[15px] absolute z-[16] text-left opacity-0 invisible min-w-[205px] left-0 right-auto bg-[#fff] block rounded-[5px] border-[1px] border-solid border-[#eee] py-[5px]">
-                                                            <li><a href="#" class="transition-all duration-[0.3s] ease-in-out leading-[20px] px-[20px] py-[10px] font-normal text-[13px] text-[#777] capitalize flex justify-between items-center hover:text-[#5caf90]">Product left sidebar</a></li>
-                                                            <li><a href="#" class="transition-all duration-[0.3s] ease-in-out leading-[20px] px-[20px] py-[10px] font-normal text-[13px] text-[#777] capitalize flex justify-between items-center hover:text-[#5caf90]">Product right sidebar</a></li>
-                                                        </ul>
-                                                    </li>
-                                                    <li class="dropdown position-static">
-                                                        <a href="javascript:void(0)" class="transition-all duration-[0.3s] ease-in-out leading-[20px] px-[20px] py-[10px] font-normal text-[13px] text-[#777] capitalize flex justify-between items-center hover:text-[#5caf90]">Product Accordion 
-                                                            <i class="fi-rr-angle-small-right transition-all duration-[0.3s] ease-in-out mr-[5px] text-[#4b5966] absolute right-[2px] text-[18px] flex"></i>
-                                                        </a>
-                                                        <ul class="sub-menu sub-menu-child transition-all duration-[0.3s] ease-in-out mt-[15px] absolute z-[16] text-left opacity-0 invisible min-w-[205px] left-0 right-auto bg-[#fff] block rounded-[5px] border-[1px] border-solid border-[#eee] py-[5px]">
-                                                            <li><a href="product-accordion-left-sidebar.html" class="transition-all duration-[0.3s] ease-in-out leading-[20px] px-[20px] py-[10px] font-normal text-[13px] text-[#777] capitalize flex justify-between items-center hover:text-[#5caf90]">left sidebar</a></li>
-                                                            <li><a href="#" class="transition-all duration-[0.3s] ease-in-out leading-[20px] px-[20px] py-[10px] font-normal text-[13px] text-[#777] capitalize flex justify-between items-center hover:text-[#5caf90]">right sidebar</a></li>
-                                                        </ul>
-                                                    </li>
-                                                    <li><a href="product-full-width.html" class="transition-all duration-[0.3s] ease-in-out leading-[20px] px-[20px] py-[10px] font-normal text-[13px] text-[#777] capitalize flex justify-between items-center hover:text-[#5caf90]">Product full width</a></li>
-                                                    <li><a href="product-accordion-full-width.html" class="transition-all duration-[0.3s] ease-in-out leading-[20px] px-[20px] py-[10px] font-normal text-[13px] text-[#777] capitalize flex justify-between items-center hover:text-[#5caf90]">accordion full width</a></li>
-                                                </ul>
-                                            </li>
-                                            <li class="dropdown drop-list relative ml-[20px] mr-[30px] transition-all duration-[0.3s] ease-in-out max-[1199px]:ml-[15px]">
-                                                <a href="javascript:void(0)" class="dropdown-arrow relative transition-all duration-[0.3s] ease-in-out text-[15px] leading-[60px] capitalize text-[#4b5966] flex items-center font-medium">Blog<i class="fi-rr-angle-small-right transition-all duration-[0.3s] ease-in-out mr-[5px] text-[#4b5966] absolute right-[-27px] text-[18px] rotate-[90deg] flex"></i></a>
-                                                <ul class="sub-menu transition-all duration-[0.3s] ease-in-out mt-[15px] absolute z-[16] text-left opacity-0 invisible min-w-[205px] left-0 right-auto bg-[#fff] block rounded-[5px] border-[1px] border-solid border-[#eee] py-[5px]">
-                                                    <li><a href="blog-left-sidebar.html" class="transition-all duration-[0.3s] ease-in-out leading-[20px] px-[20px] py-[10px] font-normal text-[13px] text-[#777] capitalize flex justify-between items-center hover:text-[#5caf90]">left sidebar</a></li>
-                                                    <li><a href="blog-right-sidebar.html" class="transition-all duration-[0.3s] ease-in-out leading-[20px] px-[20px] py-[10px] font-normal text-[13px] text-[#777] capitalize flex justify-between items-center hover:text-[#5caf90]">right sidebar</a></li>
-                                                    <li><a href="blog-full-width.html" class="transition-all duration-[0.3s] ease-in-out leading-[20px] px-[20px] py-[10px] font-normal text-[13px] text-[#777] capitalize flex justify-between items-center hover:text-[#5caf90]">Full Width</a></li>
-                                                    <li><a href="blog-detail-left-sidebar.html" class="transition-all duration-[0.3s] ease-in-out leading-[20px] px-[20px] py-[10px] font-normal text-[13px] text-[#777] capitalize flex justify-between items-center hover:text-[#5caf90]">Detail left sidebar</a></li>
-                                                    <li><a href="blog-detail-right-sidebar.html" class="transition-all duration-[0.3s] ease-in-out leading-[20px] px-[20px] py-[10px] font-normal text-[13px] text-[#777] capitalize flex justify-between items-center hover:text-[#5caf90]">Detail right sidebar</a></li>
-                                                    <li><a href="blog-detail-full-width.html" class="transition-all duration-[0.3s] ease-in-out leading-[20px] px-[20px] py-[10px] font-normal text-[13px] text-[#777] capitalize flex justify-between items-center hover:text-[#5caf90]">Detail Full Width</a></li>
-                                                </ul>
-                                            </li>
-                                            <li class="dropdown drop-list relative ml-[20px] mr-[30px] transition-all duration-[0.3s] ease-in-out max-[1199px]:ml-[15px]">
-                                                <a href="javascript:void(0)" class="dropdown-arrow relative transition-all duration-[0.3s] ease-in-out text-[15px] leading-[60px] capitalize text-[#4b5966] flex items-center font-medium">Others<i class="fi-rr-angle-small-right transition-all duration-[0.3s] ease-in-out mr-[5px] text-[#4b5966] absolute right-[-27px] text-[18px] rotate-[90deg] flex"></i></a>
-                                                <ul class="sub-menu transition-all duration-[0.3s] ease-in-out mt-[15px] absolute z-[16] text-left opacity-0 invisible min-w-[205px] left-0 right-auto bg-[#fff] block rounded-[5px] border-[1px] border-solid border-[#eee] py-[5px]">
-                                                    <li><a href="about-us.html" class="transition-all duration-[0.3s] ease-in-out leading-[20px] px-[20px] py-[10px] font-normal text-[13px] text-[#777] capitalize flex justify-between items-center hover:text-[#5caf90]">About Us</a></li>
-                                                    <li><a href="contact-us.html" class="transition-all duration-[0.3s] ease-in-out leading-[20px] px-[20px] py-[10px] font-normal text-[13px] text-[#777] capitalize flex justify-between items-center hover:text-[#5caf90]">Contact Us</a></li>
-                                                    <li><a href="cart.html" class="transition-all duration-[0.3s] ease-in-out leading-[20px] px-[20px] py-[10px] font-normal text-[13px] text-[#777] capitalize flex justify-between items-center hover:text-[#5caf90]">Cart</a></li>
-                                                    <li><a href="checkout.html" class="transition-all duration-[0.3s] ease-in-out leading-[20px] px-[20px] py-[10px] font-normal text-[13px] text-[#777] capitalize flex justify-between items-center hover:text-[#5caf90]">Checkout</a></li>
-                                                    <li><a href="compare.html" class="transition-all duration-[0.3s] ease-in-out leading-[20px] px-[20px] py-[10px] font-normal text-[13px] text-[#777] capitalize flex justify-between items-center hover:text-[#5caf90]">Compare</a></li>
-                                                    <li><a href="faq.html" class="transition-all duration-[0.3s] ease-in-out leading-[20px] px-[20px] py-[10px] font-normal text-[13px] text-[#777] capitalize flex justify-between items-center hover:text-[#5caf90]">FAQ</a></li>
-                                                    <li><a href="login.html" class="transition-all duration-[0.3s] ease-in-out leading-[20px] px-[20px] py-[10px] font-normal text-[13px] text-[#777] capitalize flex justify-between items-center hover:text-[#5caf90]">Login</a></li>
-                                                    <li><a href="register.html" class="transition-all duration-[0.3s] ease-in-out leading-[20px] px-[20px] py-[10px] font-normal text-[13px] text-[#777] capitalize flex justify-between items-center hover:text-[#5caf90]">Register</a></li>
-                                                    <li><a href="track-order.html" class="transition-all duration-[0.3s] ease-in-out leading-[20px] px-[20px] py-[10px] font-normal text-[13px] text-[#777] capitalize flex justify-between items-center hover:text-[#5caf90]">Track Order</a></li>
-                                                    <li><a href="terms-condition.html" class="transition-all duration-[0.3s] ease-in-out leading-[20px] px-[20px] py-[10px] font-normal text-[13px] text-[#777] capitalize flex justify-between items-center hover:text-[#5caf90]">Terms Condition</a></li>
-                                                    <li><a href="privacy-policy.html" class="transition-all duration-[0.3s] ease-in-out leading-[20px] px-[20px] py-[10px] font-normal text-[13px] text-[#777] capitalize flex justify-between items-center hover:text-[#5caf90]">Privacy Policy</a></li>
-                                                </ul>
+                                            <li class="non-drop mx-[20px] transition-all duration-[0.3s] ease-in-out max-[1199px]:mx-[15px]">
+                                                <a href="{{ route('landing-page') }}" class="transition-all duration-[0.3s] ease-in-out text-[15px] leading-[60px] capitalize text-[#4b5966] flex items-center font-medium">
+                                                    <i class=" transition-all duration-[0.3s] ease-in-out mr-[5px] text-[18px] text-[#4b5966] flex"></i>Home
+                                                </a>
                                             </li>
                                             <li class="non-drop mx-[20px] transition-all duration-[0.3s] ease-in-out max-[1199px]:mx-[15px]">
-                                                <a href="shop-banner-left-sidebar-col-3.html" class="transition-all duration-[0.3s] ease-in-out text-[15px] leading-[60px] capitalize text-[#4b5966] flex items-center font-medium">
-                                                    <i class="fi-rr-badge-percent transition-all duration-[0.3s] ease-in-out mr-[5px] text-[18px] text-[#4b5966] flex"></i>Offers
+                                                <a href="{{ route('produk') }}" class="transition-all duration-[0.3s] ease-in-out text-[15px] leading-[60px] capitalize text-[#4b5966] flex items-center font-medium">
+                                                    <i class=" transition-all duration-[0.3s] ease-in-out mr-[5px] text-[18px] text-[#4b5966] flex"></i>Products
+                                                </a>
+                                            </li>
+                                            <li class="non-drop mx-[20px] transition-all duration-[0.3s] ease-in-out max-[1199px]:mx-[15px]">
+                                                <a class="transition-all duration-[0.3s] ease-in-out text-[15px] leading-[60px] capitalize text-[#4b5966] flex items-center font-medium">
+                                                    <i class=" transition-all duration-[0.3s] ease-in-out mr-[5px] text-[18px] text-[#4b5966] flex"></i>Orders
+                                                </a>
+                                            </li>
+                                            <li class="non-drop mx-[20px] transition-all duration-[0.3s] ease-in-out max-[1199px]:mx-[15px]">
+                                                <a class="transition-all duration-[0.3s] ease-in-out text-[15px] leading-[60px] capitalize text-[#4b5966] flex items-center font-medium">
+                                                    <i class=" transition-all duration-[0.3s] ease-in-out mr-[5px] text-[18px] text-[#4b5966] flex"></i>Offers
+                                                </a>
+                                            </li>
+                                            
+                                            <li class="non-drop mx-[20px] transition-all duration-[0.3s] ease-in-out max-[1199px]:mx-[15px]">
+                                                <a href="{{ route('about-us') }}" class="transition-all duration-[0.3s] ease-in-out text-[15px] leading-[60px] capitalize text-[#4b5966] flex items-center font-medium">
+                                                    <i class=" transition-all duration-[0.3s] ease-in-out mr-[5px] text-[18px] text-[#4b5966] flex"></i>About Us
+                                                </a>
+                                            </li>
+                                            <li class="non-drop mx-[20px] transition-all duration-[0.3s] ease-in-out max-[1199px]:mx-[15px]">
+                                                <a class="transition-all duration-[0.3s] ease-in-out text-[15px] leading-[60px] capitalize text-[#4b5966] flex items-center font-medium">
+                                                    <i class="transition-all duration-[0.3s] ease-in-out mr-[5px] text-[18px] text-[#4b5966] flex"></i>Profile
                                                 </a>
                                             </li>
                                         </ul>

@@ -22,7 +22,7 @@ class ProductController extends Controller
             })
             ->get();
 
-        return view('admin.products.index', compact('products', 'search'));
+        return view('admin.pages.product.produk.index', compact('products', 'search'));
     }
 
     // Menampilkan form untuk membuat produk baru

@@ -373,7 +373,7 @@
                                     </a>
                                 </li>
                                 <li class="gi-social-link">
-                                    <a href="#" class="h-[30px] w-[30px] m-[2px] flex items-center justify-center bg-[#4b5966] rounded-[5px] hover:bg-[#5caf90]">
+                                    <a href="" class="h-[30px] w-[30px] m-[2px] flex items-center justify-center bg-[#4b5966] rounded-[5px] hover:bg-[#5caf90]">
                                         <i class="gicon gi-linkedin text-[#fff] text-[15px]" aria-hidden="true"></i>
                                     </a>
                                 </li>
