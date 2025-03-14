@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\CategoryProductController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ServiceController;
@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('landing-page');
-});
+})->name('landing-page'); // Tambahkan name agar bisa digunakan di redirect
 
 Route::get('/about-us', function () {
     return view('landing.pages.about-us.about-us-index');
@@ -46,19 +46,23 @@ Route::get('/keranjang', function () {
     return view('landing.pages.cart.cart-index');
 });
 
-Route::get('/wishlist', function () {
-    return view('landing.pages.wishlist.wishlist-index');
+// Route::get('/wishlist', function () {
+//     return view('landing.pages.wishlist.wishlist-index');
+// });
+
+// Route::get('/checkout', function () {
+//     return view('landing.pages.checkout.checkout-index');
+// });
+
+
+
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
+    Route::get('/admin/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard.admin');
+    Route::get('/seller/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard.seller');
+    Route::get('/kurir/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard.kurir');
 });
-
-Route::get('/checkout', function () {
-    return view('landing.pages.checkout.checkout-index');
-});
-
-
-
-// Route::get('/dashboard', function () {
-//     return view('dashboard');
-// })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::resource('/kategori-produk', CategoryProductController::class);
@@ -90,11 +94,13 @@ Route::prefix('admin')->group(function () {
 });
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/transactions', [TransactionController::class, 'index']); // List transaksi
-    Route::post('/transactions', [TransactionController::class, 'store']); // Buat transaksi baru
-    Route::get('/transactions/{id}', [TransactionController::class, 'show']); // Detail transaksi
-    Route::put('/transactions/{id}', [TransactionController::class, 'update']); // Update transaksi
-    Route::delete('/transactions/{id}', [TransactionController::class, 'destroy']); // Hapus transaksi
+    Route::resource('transactions', TransactionController::class);
+
+    // Route::get('/transactions', [TransactionController::class, 'index']); // List transaksi
+    // Route::post('/transactions', [TransactionController::class, 'store']); // Buat transaksi baru
+    // Route::get('/transactions/{id}', [TransactionController::class, 'show']); // Detail transaksi
+    // Route::put('/transactions/{id}', [TransactionController::class, 'update']); // Update transaksi
+    // Route::delete('/transactions/{id}', [TransactionController::class, 'destroy']); // Hapus transaksi
 });
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -190,18 +196,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('/notifications/{id}/read', [NotificationController::class, 'markAsRead']); // Menandai notifikasi sebagai terbaca
     Route::delete('/notifications/{id}', [NotificationController::class, 'destroy']); // Menghapus notifikasi
 });
-// Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('auth', 'verified');
-// Route::get('/admin/dashboard', function () {
-//     return view('admin.dashboard');
-// })->name('admin.dashboard');
-
-// Route::get('/seller/dashboard', function () {
-//     return view('seller.dashboard');
-// })->name('seller.dashboard');
-
-// Route::get('/dashboard', function () {
-//     return view('dashboard');
-// })->name('dashboard');
 
 
 Route::get('/product-left-sidebar', function () {

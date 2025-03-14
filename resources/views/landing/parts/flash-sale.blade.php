@@ -15,6 +15,13 @@
                         <div class="section-detail">
                             <h2 class="gi-title mb-[0] text-[25px] font-semibold text-[#4b5966] relative inline p-[0] capitalize leading-[1] font-manrope max-[991px]:text-[24px] max-[767px]:text-[22px] max-[575px]:text-[20px]">Day of the <span class="text-[#5caf90]">deal</span></h2>
                             <p class="max-w-[400px] mt-[10px] text-[14px] text-[#777] leading-[18px]">Don't wait. The time will never be just right.</p>
+
+                            <form action="{{ route('logout') }}" method="POST">
+                                @csrf
+                                <button type="submit">Logout</button>
+                            </form>
+                            
+
                         </div>
                         <div id="dealend" class="dealend-timer max-[767px]:mt-[15px]"></div>
                     </div>
