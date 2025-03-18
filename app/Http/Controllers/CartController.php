@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cart;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
 
 class CartController extends Controller
 {
@@ -13,10 +13,20 @@ class CartController extends Controller
     public function index()
     {
         $carts = Cart::where('user_id', Auth::id())->with('product')->get();
-        return response()->json($carts);
+        $totalPrice = $this->getCartTotal(Auth::id());
+        return response()->json(['carts' => $carts, 'total_price' => $totalPrice]);
     }
 
-    // Tambah produk ke keranjang dengan batas maksimal 100 item
+    // Hitung total harga di keranjang
+    private function getCartTotal($userId)
+    {
+        return Cart::where('user_id', $userId)->with('product')->get()->sum(function ($cart) {
+            $discountedPrice = $cart->product->price * ((100 - $cart->product->discount) / 100);
+            return $discountedPrice * $cart->quantity;
+        });
+    }
+
+    // Tambah produk ke keranjang dengan validasi tambahan
     public function store(Request $request)
     {
         $request->validate([
@@ -25,9 +35,8 @@ class CartController extends Controller
             'cart_items' => 'nullable|json'
         ]);
 
-        $cart = Cart::where('user_id', Auth::id())
-                    ->where('product_id', $request->product_id)
-                    ->first();
+        $product = Product::find($request->product_id);
+        $cart = Cart::where('user_id', Auth::id())->where('product_id', $request->product_id)->first();
 
         if ($cart) {
             $newQuantity = $cart->quantity + $request->quantity;
@@ -36,21 +45,23 @@ class CartController extends Controller
             }
             $cart->update([
                 'quantity' => $newQuantity,
-                'cart_items' => $request->cart_items ?? $cart->cart_items
+                'cart_items' => json_encode(['product_name' => $product->name]),
+                'price' => $product->price * ((100 - $product->discount) / 100)
             ]);
         } else {
             $cart = Cart::create([
                 'user_id' => Auth::id(),
                 'product_id' => $request->product_id,
                 'quantity' => $request->quantity,
-                'cart_items' => $request->cart_items
+                'cart_items' => json_encode(['product_name' => $product->name]),
+                'price' => $product->price * ((100 - $product->discount) / 100)
             ]);
         }
 
         return response()->json(['message' => 'Product added to cart!', 'data' => $cart]);
     }
 
-    // Perbarui jumlah produk di keranjang dengan batas maksimal 100 item
+    // Perbarui jumlah produk di keranjang dengan update otomatis harga
     public function update(Request $request, $id)
     {
         $cart = Cart::findOrFail($id);
@@ -64,9 +75,11 @@ class CartController extends Controller
             'cart_items' => 'nullable|json'
         ]);
 
+        $product = Product::find($cart->product_id);
         $cart->update([
             'quantity' => $request->quantity,
-            'cart_items' => $request->cart_items ?? $cart->cart_items
+            'cart_items' => json_encode(['product_name' => $product->name]),
+            'price' => $product->price * ((100 - $product->discount) / 100)
         ]);
 
         return response()->json(['message' => 'Cart updated successfully!', 'data' => $cart]);
@@ -86,9 +99,13 @@ class CartController extends Controller
         return response()->json(['message' => 'Product removed from cart!']);
     }
 
-    // Hapus semua item di keranjang user
+    // Hapus semua item di keranjang user dengan konfirmasi
     public function clearCart()
     {
+        if (Cart::where('user_id', Auth::id())->count() == 0) {
+            return response()->json(['message' => 'Your cart is already empty.']);
+        }
+
         Cart::where('user_id', Auth::id())->delete();
         return response()->json(['message' => 'Cart cleared successfully!']);
     }

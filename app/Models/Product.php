@@ -9,11 +9,31 @@ class Product extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['category_product_id', 'name', 'description', 'price', 'image', 'status'];
+    protected $fillable = [
+        'category_product_id',
+        'name',
+        'variant',
+        'weight',
+        'dimension',
+        'color',
+        'slug',
+        'images',
+        'description',
+        'price',
+        'image',
+        'status',
+        'stock',
+        'discount',
+        'tags',
+    ];
 
-    // Relasi dengan kategori produk
+    protected $casts = [
+        'images' => 'array', // Supaya `images` otomatis dikonversi menjadi array
+    ];
+
     public function category()
     {
         return $this->belongsTo(CategoryProduct::class, 'category_product_id');
     }
 }
+

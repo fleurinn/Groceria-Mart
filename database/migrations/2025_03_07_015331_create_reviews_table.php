@@ -11,8 +11,9 @@ return new class extends Migration {
             $table->id(); // Primary key (id)
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // Foreign key ke users
             $table->foreignId('product_id')->constrained('products')->onDelete('cascade'); // Foreign key ke products
+            $table->string('email'); // Menyimpan email pengguna
             $table->integer('rating')->default(1); // Nilai rating dari 1-5
-            $table->text('review')->nullable(); // Review teks opsional
+            $table->text('comment')->nullable(); // Review teks opsional
             $table->timestamps(); // created_at & updated_at otomatis
         });
     }

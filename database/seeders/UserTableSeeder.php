@@ -42,5 +42,14 @@ class UserTableSeeder extends Seeder
             'role_id'   => 3,
         ]);
 
+        User::create([
+            'first_name'=> 'Riana',
+            'last_name' => 'Desima',
+            'name'      => 'courier',
+            'email'     => 'courier@gmail.com',
+            'password'  => bcrypt('12345678'),
+            'role_id'   => 4,
+        ]);
+
     }
 }

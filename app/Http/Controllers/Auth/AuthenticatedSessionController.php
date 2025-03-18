@@ -29,14 +29,14 @@ class AuthenticatedSessionController extends Controller
     
         $user = Auth::user();
     
-        if ($user->role === 'admin') {
-            return redirect()->route('admin.dashboard');
-        } 
-        if ($user->role === 'seller') {
-            return redirect()->route('seller.dashboard');
-        } 
-        return redirect()->route('dashboard'); // default untuk buyer    
-
+        if ($user->role_id == 1) {
+            return redirect()->route('dashboard.admin');
+        } elseif ($user->role_id == 2) {
+            return redirect()->route('dashboard.seller');
+        } elseif ($user->role_id == 4) {
+            return redirect()->route('dashboard.kurir');
+        }
+        return redirect()->route('landing-page'); // default untuk buyer    
     }
 
     /**

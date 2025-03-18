@@ -21,14 +21,17 @@ class ReviewController extends Controller
         $request->validate([
             'product_id' => 'required|exists:products,id',
             'rating' => 'required|integer|min:1|max:5',
-            'review' => 'nullable|string'
+            'comment' => 'nullable|string'
         ]);
 
+        $user = Auth::user();
+
         $review = Review::create([
-            'user_id' => Auth::id(),
+            'user_id' => $user->id,
             'product_id' => $request->product_id,
+            'email' => $user->email, // Menyimpan email dari user yang login
             'rating' => $request->rating,
-            'review' => $request->review
+            'comment' => $request->comment
         ]);
 
         return response()->json(['message' => 'Review added successfully!', 'data' => $review]);
@@ -52,10 +55,10 @@ class ReviewController extends Controller
 
         $request->validate([
             'rating' => 'integer|min:1|max:5',
-            'review' => 'nullable|string'
+            'comment' => 'nullable|string'
         ]);
 
-        $review->update($request->only(['rating', 'review']));
+        $review->update($request->only(['rating', 'comment']));
 
         return response()->json(['message' => 'Review updated successfully!', 'data' => $review]);
     }
@@ -74,3 +77,4 @@ class ReviewController extends Controller
         return response()->json(['message' => 'Review deleted successfully!']);
     }
 }
+

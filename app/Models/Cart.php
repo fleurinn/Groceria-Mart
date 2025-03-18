@@ -17,6 +17,10 @@ class Cart extends Model
         'cart_items'
     ];
 
+    protected $casts = [
+        'cart_items' => 'array', // Mengubah cart_items menjadi array secara otomatis
+    ];
+
     // Relasi ke User
     public function user()
     {
@@ -27,6 +31,21 @@ class Cart extends Model
     public function product()
     {
         return $this->belongsTo(Product::class);
+    }
+
+    // Menghitung harga setelah diskon otomatis
+    public function getPriceAttribute()
+    {
+        if ($this->product) {
+            return $this->product->price * ((100 - $this->product->discount) / 100);
+        }
+        return 0;
+    }
+
+    // Menghitung total harga berdasarkan quantity * harga setelah diskon
+    public function getTotalPriceAttribute()
+    {
+        return $this->quantity * $this->price;
     }
 
     // Validasi sebelum menyimpan data
