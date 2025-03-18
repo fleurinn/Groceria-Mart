@@ -6,25 +6,26 @@ use App\Http\Controllers\Admin\CategoryProductController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\SliderController;
-use App\Http\Controllers\TransactionController;
-use App\Http\Controllers\DiscountController;
+use App\Http\Controllers\DiscountVoucherController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\ReportController;
-use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\TestimonialController;
 use App\Http\Controllers\TeamController;
-use App\Http\Controllers\ShippingRateController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\ShippingController;
-use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\ProofOfDeliveryController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('landing-page');
 })->name('landing-page'); // Tambahkan name agar bisa digunakan di redirect
+
+Route::get('/login', function () {
+    return view('auth.login');
+})->name('login'); 
 
 Route::get('/about-us', function () {
     return view('landing.pages.about-us.about-us-index');
@@ -42,8 +43,10 @@ Route::get('/produk-detail', function () {
     return view('landing.pages.produk.product-show');
 });
 
-Route::get('/keranjang', function () {
-    return view('landing.pages.cart.cart-index');
+Route::middleware('web')->group(function () {
+    Route::get('/keranjang', function () {
+        return view('landing.pages.cart.cart-index');
+    })->name('cart.view');
 });
 
 // Route::get('/wishlist', function () {
@@ -65,12 +68,31 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::resource('/kategori-produk', CategoryProductController::class);
+    Route::resource('/category-products', CategoryProductController::class)->parameters([
+        'category-products' => 'categoryproduct:slug',
+    ])->names([
+        'index'   => 'categoryproducts.index',
+        'create'  => 'categoryproducts.create',
+        'store'   => 'categoryproducts.store',
+        'show'    => 'categoryproducts.show',
+        'edit'    => 'categoryproducts.edit',
+        'update'  => 'categoryproducts.update',
+        'destroy' => 'categoryproducts.destroy',
+    ]);
 
+    // Bulk Delete
+    Route::post('/category-products/bulk-delete', [CategoryProductController::class, 'bulkDelete'])->name('categoryproducts.bulkDelete');
+
+    // Bulk Update Status
+    Route::post('/category-products/bulk-update-status', [CategoryProductController::class, 'bulkUpdateStatus'])
+        ->name('categoryproducts.bulkUpdateStatus')
+        ->whereIn('status', ['Aktif', 'Non-Aktif']); // Sesuaikan dengan migration
+});
+
+    // Profile routes
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
 
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
     // Rute untuk produk
@@ -78,6 +100,9 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 
     // Rute pencarian produk berdasarkan tags atau nama
     Route::get('products/search', [ProductController::class, 'search'])->name('products.search');
+
+    // Rute untuk ekspor produk
+    Route::get('products/export', [ProductController::class, 'export'])->name('products.export');
 
     // Rute untuk layanan (services)
     Route::resource('services', ServiceController::class);
@@ -93,26 +118,18 @@ Route::prefix('admin')->group(function () {
     Route::get('/sliders/{id}', [SliderController::class, 'show'])->name('sliders.show'); // Menampilkan detail slider
 });
 
-Route::middleware('auth:sanctum')->group(function () {
-    Route::resource('transactions', TransactionController::class);
 
-    // Route::get('/transactions', [TransactionController::class, 'index']); // List transaksi
-    // Route::post('/transactions', [TransactionController::class, 'store']); // Buat transaksi baru
-    // Route::get('/transactions/{id}', [TransactionController::class, 'show']); // Detail transaksi
-    // Route::put('/transactions/{id}', [TransactionController::class, 'update']); // Update transaksi
-    // Route::delete('/transactions/{id}', [TransactionController::class, 'destroy']); // Hapus transaksi
+Route::middleware('auth:sanctum')->prefix('discount-vouchers')->group(function () {
+    Route::get('/', [DiscountVoucherController::class, 'index']); // List semua voucher
+    Route::post('/', [DiscountVoucherController::class, 'store']); // Tambah voucher baru
+    Route::get('/{id}', [DiscountVoucherController::class, 'show'])->where('id', '[0-9]+'); // Detail voucher
+    Route::put('/{id}', [DiscountVoucherController::class, 'update'])->where('id', '[0-9]+'); // Update voucher
+    Route::delete('/{id}', [DiscountVoucherController::class, 'destroy'])->where('id', '[0-9]+'); // Hapus voucher
+
+    Route::get('/apply/{voucherCode}', [DiscountVoucherController::class, 'applyVoucherCode'])->where('voucherCode', '[A-Z0-9]+'); // Terapkan kode voucher
+    Route::get('/active', [DiscountVoucherController::class, 'getVoucherList']); // Ambil daftar voucher aktif
 });
 
-Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/discounts', [DiscountController::class, 'index']); // List semua diskon
-    Route::post('/discounts', [DiscountController::class, 'store']); // Tambah diskon baru
-    Route::get('/discounts/{id}', [DiscountController::class, 'show']); // Detail diskon
-    Route::put('/discounts/{id}', [DiscountController::class, 'update']); // Update diskon
-    Route::delete('/discounts/{id}', [DiscountController::class, 'destroy']); // Hapus diskon
-
-    Route::get('/discounts/promo/{promoCode}', [DiscountController::class, 'applyPromoCode']); // Terapkan kode promo
-    Route::get('/discounts/active-promos', [DiscountController::class, 'getPromoList']); // Ambil daftar promo aktif
-});
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/reviews', [ReviewController::class, 'index']);
@@ -123,11 +140,11 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 Route::middleware('auth:sanctum')->prefix('cart')->group(function () {
-    Route::get('/', [CartController::class, 'index']);
-    Route::post('/', [CartController::class, 'store']);
-    Route::put('/{id}', [CartController::class, 'update']);
-    Route::delete('/{id}', [CartController::class, 'destroy']);
-    Route::delete('/', [CartController::class, 'clearCart']); // Hapus semua item di keranjang
+    Route::get('/', [CartController::class, 'index'])->name('cart.index'); // Menampilkan semua item di keranjang
+    Route::post('/', [CartController::class, 'store'])->name('cart.store'); // Menambahkan item ke keranjang
+    Route::put('/{id}', [CartController::class, 'update'])->name('cart.update'); // Mengupdate jumlah item
+    Route::delete('/{id}', [CartController::class, 'destroy'])->name('cart.destroy'); // Menghapus satu item
+    Route::delete('/clear', [CartController::class, 'clearCart'])->name('cart.clear'); // Menghapus semua item di keranjang
 });
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -137,9 +154,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/reports/{id}', [ReportController::class, 'destroy']);
 });
 
-Route::middleware(['auth'])->group(function () {
-    Route::resource('payments', PaymentController::class);
-});
+
 
 Route::get('/about', [AboutController::class, 'index'])->name('about.index');
 Route::get('/about/edit', [AboutController::class, 'edit'])->name('about.edit');
@@ -159,26 +174,17 @@ Route::get('/teams/{id}/edit', [TeamController::class, 'edit'])->name('teams.edi
 Route::patch('/teams/{id}', [TeamController::class, 'update'])->name('teams.update');
 Route::delete('/teams/{id}', [TeamController::class, 'destroy'])->name('teams.destroy');
 
-Route::get('/shipping-rates', [ShippingRateController::class, 'index'])->name('shipping_rates.index');
-Route::get('/shipping-rates/create', [ShippingRateController::class, 'create'])->name('shipping_rates.create');
-Route::post('/shipping-rates', [ShippingRateController::class, 'store'])->name('shipping_rates.store');
-Route::get('/shipping-rates/{id}/edit', [ShippingRateController::class, 'edit'])->name('shipping_rates.edit');
-Route::patch('/shipping-rates/{id}', [ShippingRateController::class, 'update'])->name('shipping_rates.update');
-Route::delete('/shipping-rates/{id}', [ShippingRateController::class, 'destroy'])->name('shipping_rates.destroy');
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/wishlist', [WishlistController::class, 'index']);
-    Route::post('/wishlist', [WishlistController::class, 'store']);
-    Route::delete('/wishlist/{id}', [WishlistController::class, 'destroy']);
-    Route::delete('/wishlist', [WishlistController::class, 'clearWishlist']); // Hapus semua item di wishlist
+    Route::get('/wishlist', [WishlistController::class, 'index']); // Mendapatkan semua wishlist user
+    Route::post('/wishlist', [WishlistController::class, 'store']); // Menambahkan produk ke wishlist
+    Route::delete('/wishlist/{id}', [WishlistController::class, 'destroy']); // Menghapus produk tertentu dari wishlist
+    Route::delete('/wishlist', [WishlistController::class, 'clearWishlist']); // Menghapus semua item di wishlist
+    Route::post('/wishlist/check', [WishlistController::class, 'check']); // Mengecek apakah produk ada di wishlist user
 });
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/checkout', [CheckoutController::class, 'index']); // Menampilkan semua checkout user
-    Route::post('/checkout', [CheckoutController::class, 'store']); // Membuat checkout baru
-    Route::get('/checkout/{id}', [CheckoutController::class, 'show']); // Menampilkan detail checkout tertentu
-    Route::put('/checkout/{id}', [CheckoutController::class, 'update']); // Mengupdate checkout
-    Route::delete('/checkout/{id}', [CheckoutController::class, 'destroy']); // Menghapus checkout
+    Route::apiResource('checkout', CheckoutController::class)->except(['edit', 'create']);
 });
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -187,14 +193,16 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/shippings/{id}', [ShippingController::class, 'show']); // Menampilkan detail pengiriman tertentu
     Route::put('/shippings/{id}', [ShippingController::class, 'update']); // Mengupdate pengiriman
     Route::delete('/shippings/{id}', [ShippingController::class, 'destroy']); // Menghapus pengiriman
+
+    // Endpoint tambahan untuk mengambil ongkos kirim berdasarkan asal & tujuan
+    Route::get('/shipping-rates', [ShippingController::class, 'getShippingRate']); 
 });
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/notifications', [NotificationController::class, 'index']); // Menampilkan semua notifikasi user
-    Route::post('/notifications', [NotificationController::class, 'store']); // Membuat notifikasi baru
-    Route::get('/notifications/{id}', [NotificationController::class, 'show']); // Menampilkan detail notifikasi tertentu
-    Route::patch('/notifications/{id}/read', [NotificationController::class, 'markAsRead']); // Menandai notifikasi sebagai terbaca
-    Route::delete('/notifications/{id}', [NotificationController::class, 'destroy']); // Menghapus notifikasi
+    Route::get('/proof-of-delivery', [ProofOfDeliveryController::class, 'index']); // Ambil semua bukti pengiriman
+    Route::post('/proof-of-delivery', [ProofOfDeliveryController::class, 'store']); // Tambah bukti pengiriman
+    Route::get('/proof-of-delivery/{id}', [ProofOfDeliveryController::class, 'show']); // Ambil detail bukti
+    Route::delete('/proof-of-delivery/{id}', [ProofOfDeliveryController::class, 'destroy']); // Hapus bukti pengiriman
 });
 
 

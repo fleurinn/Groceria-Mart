@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+
 class Review extends Model
 {
     use HasFactory;
@@ -12,8 +13,9 @@ class Review extends Model
     protected $fillable = [
         'user_id',
         'product_id',
+        'email',
         'rating',
-        'review'
+        'comment' // Perbaikan dari 'review' ke 'comment' agar sesuai dengan migration
     ];
 
     // Relasi ke User

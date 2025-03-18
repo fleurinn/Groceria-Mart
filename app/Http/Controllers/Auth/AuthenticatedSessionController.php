@@ -36,7 +36,7 @@ class AuthenticatedSessionController extends Controller
         } elseif ($user->role_id == 4) {
             return redirect()->route('dashboard.kurir');
         }
-        return redirect()->route('/'); // default untuk buyer    
+        return redirect()->route('landing-page'); // default untuk buyer    
     }
 
     /**

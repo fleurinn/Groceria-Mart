@@ -10,18 +10,22 @@ class Shipping extends Model
     use HasFactory;
 
     protected $fillable = [
-        'transaction_id',
+        'checkout_id',
         'tracking_number',
         'courier',
         'status',
         'estimated_arrival',
+        'origin',
+        'destination',
+        'price',
+        'estimated_time',
     ];
 
     /**
-     * Relasi ke model Transaction.
+     * Relasi ke model Checkout.
      */
-    public function transaction()
+    public function checkout()
     {
-        return $this->belongsTo(Transaction::class);
+        return $this->belongsTo(Checkout::class);
     }
 }

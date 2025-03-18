@@ -13,9 +13,11 @@ return new class extends Migration
     {
         Schema::create('category_products', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name')->unique();
+            $table->string('slug')->unique();
             $table->string('image');
-            $table->enum('status', ['draft', 'publik']);
+            $table->text('description')->nullable(); // Menambahkan deskripsi
+            $table->enum('status', ['Aktif', 'Non-Aktif'])->default('Aktif'); // Menyesuaikan status
             $table->timestamps();
         });
     }

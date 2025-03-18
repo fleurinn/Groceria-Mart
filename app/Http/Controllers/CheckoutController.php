@@ -2,85 +2,111 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Payment;
+use App\Models\Transaction;
 use App\Models\Checkout;
+use App\Models\Cart;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Validation\ValidationException;
 
 class CheckoutController extends Controller
 {
     /**
-     * Menampilkan semua checkout milik user yang sedang login.
+     * Menampilkan semua checkout dan pembayaran milik user yang sedang login.
      */
     public function index()
     {
-        $checkouts = Checkout::where('user_id', Auth::id())->get();
-        return response()->json($checkouts);
+        $userId = Auth::id();
+        $checkouts = Checkout::where('user_id', $userId)->with('transactions')->get();
+        
+        return response()->json(['checkouts' => $checkouts]);
     }
 
     /**
-     * Membuat checkout baru.
+     * Membuat checkout baru dengan validasi stok dan transaksi database.
      */
     public function store(Request $request)
     {
         $request->validate([
-            'total_price' => 'required|numeric|min:0',
-            'shipping_address' => 'required|string',
-            'payment_method' => 'required|string',
-            'status' => 'required|in:pending,paid,shipped,delivered,cancelled',
+            'shipping_address' => 'required|string|max:255',
+            'payment_method' => 'required|string|in:bank_transfer,credit_card,ewallet',
         ]);
 
-        $checkout = Checkout::create([
-            'user_id' => Auth::id(),
-            'total_price' => $request->total_price,
-            'shipping_address' => $request->shipping_address,
-            'payment_method' => $request->payment_method,
-            'status' => $request->status,
-        ]);
+        $userId = Auth::id();
 
-        return response()->json(['message' => 'Checkout created successfully!', 'data' => $checkout], 201);
+        // Ambil semua item dari keranjang user
+        $cartItems = Cart::where('user_id', $userId)->get();
+
+        if ($cartItems->isEmpty()) {
+            return response()->json(['message' => 'Keranjang belanja kosong!'], 400);
+        }
+
+        DB::beginTransaction(); // Mulai transaksi database
+
+        try {
+            // Hitung total harga otomatis
+            $totalPrice = 0;
+
+            foreach ($cartItems as $item) {
+                $product = Product::findOrFail($item->product_id);
+
+                if ($product->stock < $item->quantity) {
+                    throw ValidationException::withMessages([
+                        'message' => "Stok produk '{$product->name}' tidak mencukupi."
+                    ]);
+                }
+
+                // Kurangi stok produk
+                $product->stock -= $item->quantity;
+                $product->save();
+
+                // Hitung total harga
+                $totalPrice += $product->price * $item->quantity;
+            }
+
+            // Buat checkout
+            $checkout = Checkout::create([
+                'user_id' => $userId,
+                'total_price' => $totalPrice,
+                'shipping_address' => $request->shipping_address,
+                'payment_method' => $request->payment_method,
+                'status' => 'pending',
+            ]);
+
+            // Hapus item dari keranjang setelah checkout berhasil
+            Cart::where('user_id', $userId)->delete();
+
+            DB::commit(); // Simpan transaksi jika semua berhasil
+
+            return response()->json(['message' => 'Checkout berhasil!', 'data' => $checkout], 201);
+        } catch (\Exception $e) {
+            DB::rollBack(); // Batalkan transaksi jika terjadi kesalahan
+            return response()->json(['message' => 'Checkout gagal!', 'error' => $e->getMessage()], 500);
+        }
     }
 
     /**
-     * Menampilkan detail checkout tertentu berdasarkan ID.
+     * Mengunduh invoice dalam format PDF.
      */
-    public function show($id)
+    public function downloadInvoice($id)
     {
-        $checkout = Checkout::where('user_id', Auth::id())->findOrFail($id);
-        return response()->json($checkout);
-    }
+        try {
+            $payment = Payment::findOrFail($id);
+            
+            // Pastikan user hanya bisa mengunduh invoice miliknya
+            if ($payment->user_id !== Auth::id()) {
+                return response()->json(['message' => 'Unauthorized'], 403);
+            }
 
-    /**
-     * Mengupdate data checkout.
-     */
-    public function update(Request $request, $id)
-    {
-        $checkout = Checkout::where('user_id', Auth::id())->findOrFail($id);
-
-        $request->validate([
-            'total_price' => 'nullable|numeric|min:0',
-            'shipping_address' => 'nullable|string',
-            'payment_method' => 'nullable|string',
-            'status' => 'nullable|in:pending,paid,shipped,delivered,cancelled',
-        ]);
-
-        $checkout->update($request->only([
-            'total_price',
-            'shipping_address',
-            'payment_method',
-            'status',
-        ]));
-
-        return response()->json(['message' => 'Checkout updated successfully!', 'data' => $checkout]);
-    }
-
-    /**
-     * Menghapus checkout.
-     */
-    public function destroy($id)
-    {
-        $checkout = Checkout::where('user_id', Auth::id())->findOrFail($id);
-        $checkout->delete();
-
-        return response()->json(['message' => 'Checkout deleted successfully!']);
+            $pdf = Pdf::loadView('admin.payments.invoice', compact('payment'));
+            return $pdf->download('invoice-' . $payment->id . '.pdf');
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['message' => 'Payment not found!'], 404);
+        }
     }
 }

@@ -26,5 +26,10 @@ class RolesTableSeeder extends Seeder
         Role::create([
             'name' => 'buyer'
         ]);
+
+        // Buat role Courier
+        Role::create([
+            'name' => 'courier'
+        ]);
     }
 }
