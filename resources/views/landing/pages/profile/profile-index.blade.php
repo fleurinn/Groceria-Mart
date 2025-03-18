@@ -7,7 +7,7 @@
 <section class="gi-register py-[40px] max-[767px]:py-[30px]">
         <div class="flex flex-wrap justify-between items-center mx-auto min-[1600px]:max-w-[1600px] min-[1400px]:max-w-[1320px] min-[1200px]:max-w-[1140px] min-[992px]:max-w-[960px] min-[768px]:max-w-[720px] min-[576px]:max-w-[540px]">
             <div class="section-title-2 w-full mb-[20px] pb-[20px] flex flex-col justify-center items-center">
-                <h2 class="gi-title mb-[0] font-manrope text-[26px] font-semibold text-[#4b5966] relative inline p-[0] capitalize leading-[1]">Register<span></span></h2>
+                <h2 class="gi-title mb-[0] font-manrope text-[26px] font-semibold text-[#4b5966] relative inline p-[0] capitalize leading-[1]">Profile<span></span></h2>
                 <p class="max-w-[400px] mt-[15px] text-[14px] text-[#777] text-center leading-[23px]">Best place to buy and sell digital products.</p>
             </div>
             <div class="flex flex-wrap w-full">
@@ -83,9 +83,10 @@
                                     <input class="form-control hidden w-full bg-transparent border-[1px] border-solid border-[#eee] text-[#777] text-[14px] mb-[26px] px-[15px] outline-[0] rounded-[5px] h-[50px]" data-recaptcha="true" required data-error="Please complete the Captcha">
                                     <span class="help-block with-errors"></span>
                                 </span>
-                                <span class="gi-register-wrap gi-register-btn flex flex-row justify-between items-center w-full px-[15px] max-[767px]:flex-col ">
-                                    <span class="text-[#777] text-[14px] tracking-[0.02rem]">Already have an account?<a href="login.html" class="ml-[10px] text-[#4b5966] text-[14px] transition-all duration-[0.3s] ease-in-out hover:text-[#5caf90]">Login</a></span>
-                                    <button type="submit" class="gi-btn-1 py-[8px] px-[15px] bg-[#4b5966] text-[#fff] border-[0] transition-all duration-[0.3s] ease-in-out overflow-hidden text-center text-[14px] font-semibold relative rounded-[5px] max-[767px]:mt-[15px] hover:bg-[#5caf90]">Register</button>
+                                <span class="gi-register-wrap gi-register-btn flex flex-row justify-end w-full px-[15px] max-[767px]:flex-col">
+                                    <a href="{{ route('produk') }}" class="gi-btn-1 py-[8px] px-[15px] bg-[#4b5966] text-[#fff] border-[0] transition-all duration-[0.3s] ease-in-out overflow-hidden text-center text-[14px] font-semibold relative rounded-[5px] max-[767px]:mt-[15px] hover:bg-[#5caf90]">
+                                        Edit Profile
+                                    </a>
                                 </span>
                             </form>
                         </div>

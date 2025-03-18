@@ -22,14 +22,14 @@ class ProductController extends Controller
             })
             ->get();
 
-        return view('admin.pages.product.produk.index', compact('products', 'search'));
+        return view('admin.pages.products.produk.index', compact('products', 'search'));
     }
 
     // Menampilkan form untuk membuat produk baru
     public function create()
     {
         $categories = CategoryProduct::all();
-        return view('admin.products.create', compact('categories'));
+        return view('admin.pages.products.produk.create', compact('categories'));
     }
 
     // Menyimpan produk baru
@@ -67,7 +67,7 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
         $categories = CategoryProduct::all();
-        return view('admin.products.edit', compact('product', 'categories'));
+        return view('admin.pages.products.produk.edit', compact('product', 'categories'));
     }
 
     // Mengupdate produk

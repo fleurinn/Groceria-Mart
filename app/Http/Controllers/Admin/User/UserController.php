@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin\User;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller; // Pastikan ini ada
 use App\Models\User;
 use App\Models\Role;
 use Illuminate\Support\Facades\Hash;
@@ -12,13 +13,13 @@ class UserController extends Controller
     public function index()
     {
         $users = User::with('role')->get();
-        return view('users.index', compact('users'));
+        return view('admin.pages.users.index', compact('users'));
     }
 
     public function create()
     {
         $roles = Role::whereIn('id', [1, 2])->get(); // Hanya Admin dan Seller yang bisa dipilih
-        return view('users.create', compact('roles'));
+        return view('admin.pages.users.create', compact('roles'));
     }
 
     public function store(Request $request)
@@ -40,13 +41,13 @@ class UserController extends Controller
             'role_id' => $role_id,
         ]);
 
-        return redirect()->route('users.index')->with('success', 'User berhasil ditambahkan');
+        return redirect()->route('user.index')->with('success', 'User berhasil ditambahkan');
     }
 
     public function edit(User $user)
     {
         $roles = Role::all();
-        return view('users.edit', compact('user', 'roles'));
+        return view('admin.pages.users.edit', compact('user', 'roles'));
     }
 
     public function update(Request $request, User $user)
