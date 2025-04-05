@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->string('image');
             $table->text('description')->nullable(); // Menambahkan deskripsi
-            $table->enum('status', ['Aktif', 'Non-Aktif'])->default('Aktif'); // Menyesuaikan status
+            $table->enum('status', ['publish', 'draft'])->default('publish'); // Menyesuaikan status
             $table->timestamps();
         });
     }

@@ -14,7 +14,12 @@ class CategoryProductController extends Controller
     {
         $query = CategoryProduct::query();
 
+<<<<<<< HEAD
         if ($request->has('search')) {
+=======
+        // Pencarian berdasarkan nama kategori
+        if  ($request->has('search')) {
+>>>>>>> b4ada68a73851e38899054fcc6a22a34f8379740
             $query->where('name', 'like', '%' . $request->search . '%');
         }
 
