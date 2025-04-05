@@ -12,13 +12,11 @@ return new class extends Migration {
             $table->string('title'); // Nama diskon
             $table->text('description')->nullable(); // Deskripsi diskon (boleh kosong)
             $table->enum('type', ['global', 'specific_product']); // Jenis diskon
-            $table->foreignId('product_id')->nullable()->constrained('products')->onDelete('cascade'); // Relasi ke produk (jika ada)
+            $table->foreignId('category_product_id')->nullable()->constrained('category_products')->onDelete('cascade'); // Relasi ke produk (jika ada)
             $table->string('discount_code')->unique(); // Kode unik diskon
             $table->decimal('discount_value', 10, 2); // Besaran diskon (misalnya 10.50% atau 50000)
-            $table->enum('discount_type', ['nominal', 'percentage']); // Jenis potongan harga
             $table->date('start_date'); // Tanggal mulai diskon
             $table->date('end_date'); // Tanggal berakhir diskon
-            $table->softDeletes(); // Untuk penghapusan sementara
             $table->timestamps(); // created_at & updated_at
         });
     }

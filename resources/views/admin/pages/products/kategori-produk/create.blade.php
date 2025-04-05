@@ -1,6 +1,6 @@
-@extends('admin.layouts.app')
+@extends('admin.layouts.admin-layouts')
 
-@section('page_title', 'Product Edit | Groceria')
+@section('page_title', 'Product Create | Groceria')
 @section('content')
 
 <div class="content">

@@ -1,4 +1,4 @@
-@extends('admin.layouts.admin-layouts')
+@extends('admin.layouts.seller-layouts')
 
 @section('page_title', 'Beranda | Groceria')
 @section('content')

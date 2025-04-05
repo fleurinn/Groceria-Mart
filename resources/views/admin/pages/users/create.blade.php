@@ -1,4 +1,4 @@
-@extends('admin.layouts.app')
+@extends('admin.layouts.admin-layouts')
 
 @section('page_title', 'Profile Create | Groceria')
 @section('content')
