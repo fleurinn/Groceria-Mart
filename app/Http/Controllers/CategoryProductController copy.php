@@ -22,7 +22,7 @@ class CategoryProductController extends Controller
     }
 
     // Filter berdasarkan status (Aktif/Non-Aktif)
-    if ($request->has('status') && in_array($request->status, ['Aktif', 'Non-Aktif'])) {
+    if ($request->has('status') && in_array($request->status, ['publish', 'draft'])) {
         $query->where('status', $request->status);
     }
 
@@ -37,7 +37,7 @@ public function store(Request $request)
         'name'        => 'required|string|max:255|unique:category_products,name',
         'image'       => 'required|image|mimes:jpeg,jpg,png|max:2048',
         'description' => 'nullable|string',
-        'status'      => 'required|in:Aktif,Non-Aktif', // Sesuai migration
+        'status'      => 'required|in:publish,draft', // Sesuai migration
     ]);
 
     $image = $request->file('image');
@@ -61,7 +61,7 @@ public function update(Request $request, CategoryProduct $categoryproduct)
         'name'        => 'required|string|max:255|unique:category_products,name,' . $categoryproduct->id,
         'image'       => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
         'description' => 'nullable|string',
-        'status'      => 'required|in:Aktif,Non-Aktif',
+        'status'      => 'required|in:publish,draft',
     ]);
 
     if ($request->hasFile('image')) {
@@ -111,18 +111,18 @@ public function update(Request $request, CategoryProduct $categoryproduct)
         return redirect()->route('categoryproducts.index')->with('success', 'Kategori produk berhasil dihapus secara massal.')->withNotify(true);
     }
 
-// Bulk Update Status Kategori Produk
-public function bulkUpdateStatus(Request $request)
-{
-    $request->validate([
-        'ids'    => 'required|array',
-        'status' => 'required|in:Aktif,Non-Aktif',
-    ]);
+// // Bulk Update Status Kategori Produk
+// public function bulkUpdateStatus(Request $request)
+// {
+//     $request->validate([
+//         'ids'    => 'required|array',
+//         'status' => 'required|in:Aktif,Non-Aktif',
+//     ]);
 
-    CategoryProduct::whereIn('id', $request->ids)->update(['status' => $request->status]);
+//     CategoryProduct::whereIn('id', $request->ids)->update(['status' => $request->status]);
 
-    return redirect()->route('categoryproducts.index')->with('success', 'Status kategori produk berhasil diperbarui.')->withNotify(true);
-}
+//     return redirect()->route('categoryproducts.index')->with('success', 'Status kategori produk berhasil diperbarui.')->withNotify(true);
+// }
 
   // Menampilkan detail kategori produk
     public function show(string $id): View
@@ -130,4 +130,5 @@ public function bulkUpdateStatus(Request $request)
         $categoryproduct = CategoryProduct::with('products')->findOrFail($id);
         return view('admin.categoryproducts.show', compact('categoryproduct'));
     }
+
 }
