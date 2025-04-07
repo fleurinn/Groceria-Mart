@@ -73,7 +73,6 @@ Route::middleware(['auth'])->group(function () {
 
 Route::middleware(['auth'])->prefix('dashboard')->group(function () {
     Route::resource('/category-products', CategoryProductController::class);
-    Route::put('/category-products/{id}', [CategoryProductController::class, 'update'])->name('category-products.update');
 
     //PRODUCT
     Route::resource('products', ProductController::class)->except(['show']);

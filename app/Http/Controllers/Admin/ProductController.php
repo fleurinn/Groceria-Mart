@@ -20,7 +20,7 @@ class ProductController extends Controller
         $status = $request->input('status');
 
         $totalProducts = Product::count();
-        $publishedProducts = Product::where('status', 'public')->count();
+        $publishedProducts = Product::where('status', 'publish')->count();
         $draftProducts = Product::where('status', 'draft')->count();
         $discountedProducts = Product::whereNotNull('discount')->count();
 
@@ -61,7 +61,7 @@ class ProductController extends Controller
             'image'             => 'required|image|mimes:jpeg,jpg,png|max:2048',
             'price'             => 'required|numeric|min:0',
             'stock'             => 'required|integer|min:0',
-            'status'            => 'required|in:draft,public',
+            'status'            => 'required|in:draft,publish',
             'tags'              => 'nullable|string',
             'discount'          => 'nullable|numeric|min:0|max:100',
             'variants'          => 'nullable|array|max:10',
@@ -119,7 +119,7 @@ class ProductController extends Controller
             'image'             => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
             'price'             => 'required|numeric|min:0',
             'stock'             => 'required|integer|min:0',
-            'status'            => 'required|in:draft,public',
+            'status'            => 'required|in:draft,publish',
             'tags'              => 'nullable|string',
             'discount'          => 'nullable|numeric|min:0|max:100',
             'variants'          => 'nullable|array|max:10',

@@ -13,8 +13,7 @@ return new class extends Migration
     {
         Schema::create('category_products', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();
-            $table->string('slug')->unique();
+            $table->string('name');
             $table->string('image');
             $table->text('description')->nullable(); // Menambahkan deskripsi
             $table->enum('status', ['publish', 'draft'])->default('publish'); // Menyesuaikan status
