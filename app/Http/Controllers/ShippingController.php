@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Shipping;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 
 class ShippingController extends Controller
@@ -110,5 +111,53 @@ class ShippingController extends Controller
         $shipping->delete();
 
         return response()->json(['message' => 'Shipping deleted successfully!']);
+    }
+
+    // Bulk Delete
+    public function bulkDelete(Request $request)
+    {
+        $ids = $request->input('ids');
+
+        if (empty($ids)) {
+            return response()->json(['success' => false, 'message' => 'Tidak ada data pengiriman yang dipilih.'], 400);
+        }
+
+        $shippings = Shipping::whereIn('id', $ids)->get();
+
+        foreach ($shippings as $shipping) {
+            if ($shipping->proof_of_delivery) {
+                Storage::delete('public/proof_of_delivery/' . $shipping->proof_of_delivery);
+            }
+        }
+
+        Shipping::whereIn('id', $ids)->delete();
+
+        return response()->json(['success' => true, 'message' => 'Data pengiriman berhasil dihapus.']);
+    }
+
+    // Bulk Draft
+    public function bulkDraft(Request $request)
+    {
+        $ids = $request->input('ids');
+
+        if ($ids) {
+            Shipping::whereIn('id', $ids)->update(['status' => 'draft']);
+            return response()->json(['success' => true, 'message' => 'Status pengiriman berhasil diubah ke draft.']);
+        }
+
+        return response()->json(['success' => false, 'message' => 'Tidak ada data pengiriman yang dipilih.'], 400);
+    }
+
+    // Bulk Publish
+    public function bulkPublish(Request $request)
+    {
+        $ids = $request->input('ids');
+
+        if ($ids) {
+            Shipping::whereIn('id', $ids)->update(['status' => 'publish']);
+            return response()->json(['success' => true, 'message' => 'Status pengiriman berhasil dipublikasikan.']);
+        }
+
+        return response()->json(['success' => false, 'message' => 'Tidak ada data pengiriman yang dipilih.'], 400);
     }
 }

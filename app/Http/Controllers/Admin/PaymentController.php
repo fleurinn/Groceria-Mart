@@ -112,4 +112,5 @@ class PaymentController extends Controller
         $pdf = Pdf::loadView('admin.payments.invoice', compact('payment'));
         return $pdf->download('invoice-' . $payment->payment_id . '.pdf');
     }
+    
 }

@@ -14,12 +14,13 @@ class DiscountVoucher extends Model
         'title',
         'description',
         'type', // global atau specific_product
-        'product_id', // ID produk yang mendapat diskon (nullable jika global)
-        'discount_code', // Kode unik diskon
-        'discount_value', // Nilai diskon (nominal atau persentase)
+        'category_product_id', // sesuai dengan migration
+        'discount_code',
+        'discount_value',
         'discount_type', // nominal atau percentage
         'start_date',
         'end_date',
+        'status',
     ];
 
     protected $casts = [
@@ -28,11 +29,11 @@ class DiscountVoucher extends Model
     ];
 
     /**
-     * Relasi ke produk (jika ada)
+     * Relasi ke kategori produk (jika ada)
      */
-    public function product()
+    public function categoryProduct()
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(CategoryProduct::class);
     }
 
     /**

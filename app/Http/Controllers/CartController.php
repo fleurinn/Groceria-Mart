@@ -109,4 +109,18 @@ class CartController extends Controller
         Cart::where('user_id', Auth::id())->delete();
         return response()->json(['message' => 'Cart cleared successfully!']);
     }
+
+    //Bulk delete
+    public function bulkDelete(Request $request)
+    {
+        $ids = $request->input('ids');
+
+        if (empty($ids)) {
+            return response()->json(['success' => false, 'message' => 'Tidak ada item keranjang yang dipilih.'], 400);
+        }
+
+        Cart::whereIn('id', $ids)->delete();
+
+        return response()->json(['success' => true, 'message' => 'Item keranjang berhasil dihapus.']);
+    }
 }

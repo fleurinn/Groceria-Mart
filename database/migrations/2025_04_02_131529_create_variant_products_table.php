@@ -12,15 +12,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('variant_products', function (Blueprint $table) {
-                $table->id();
-                $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
-                $table->string('name'); // Nama varian
-                // $table->string('image'); // gambar varian
-                $table->string('description'); // deskripsi varian
-                $table->decimal('price', 10, 2)->nullable(); // Harga khusus varian
-                $table->decimal('discount', 5, 2)->nullable()->default(0);
-                $table->integer('stock')->default(0); // Stok varian
-                $table->timestamps();
+            $table->id();
+            $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
+            $table->string('name'); // Nama varian
+            $table->string('image')->nullable(); // Gambar varian (opsional)
+            $table->text('description')->nullable(); // Deskripsi varian (nullable biar fleksibel)
+            $table->decimal('price', 10, 2)->nullable(); // Harga khusus varian
+            $table->decimal('discount', 5, 2)->nullable()->default(0); // Diskon varian
+            $table->integer('stock')->default(0); // Stok varian
+            $table->enum('status', ['draft', 'publish'])->default('draft'); // Status varian
+            $table->timestamps();
         });
     }
 

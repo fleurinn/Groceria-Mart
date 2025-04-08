@@ -68,6 +68,45 @@ class TransactionController extends Controller
  
          return response()->json(['message' => 'Transaksi berhasil dihapus']);
      }
+
+     //Bulk 
+
+     public function bulkDelete(Request $request)
+    {
+    $ids = $request->input('ids');
+
+    if (empty($ids)) {
+        return response()->json(['success' => false, 'message' => 'Tidak ada transaksi yang dipilih.'], 400);
+    }
+
+    Transaction::whereIn('id', $ids)->delete();
+
+    return response()->json(['success' => true, 'message' => 'Transaksi berhasil dihapus.']);
+    }
+
+    public function bulkDraft(Request $request)
+    {
+        $ids = $request->input('ids');
+
+        if ($ids) {
+            Transaction::whereIn('id', $ids)->update(['status' => 'draft']);
+            return response()->json(['success' => true, 'message' => 'Transaksi berhasil diubah ke draft.']);
+        }
+
+        return response()->json(['success' => false, 'message' => 'Tidak ada transaksi yang dipilih.'], 400);
+    }
+
+    public function bulkPublish(Request $request)
+    {
+        $ids = $request->input('ids');
+
+        if ($ids) {
+            Transaction::whereIn('id', $ids)->update(['status' => 'publish']);
+            return response()->json(['success' => true, 'message' => 'Transaksi berhasil dipublikasikan.']);
+        }
+
+        return response()->json(['success' => false, 'message' => 'Tidak ada transaksi yang dipilih.'], 400);
+    }
 }
 
 

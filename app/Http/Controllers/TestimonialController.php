@@ -109,4 +109,50 @@ class TestimonialController extends Controller
 
         return redirect()->route('testimonials.index')->with('success', 'Testimonial deleted successfully.');
     }
+
+    //Bulk
+    public function bulkDelete(Request $request)
+    {
+        $ids = $request->input('ids');
+
+        if (empty($ids)) {
+            return response()->json(['success' => false, 'message' => 'Tidak ada testimonial yang dipilih.'], 400);
+        }
+
+        $testimonials = Testimonial::whereIn('id', $ids)->get();
+
+        foreach ($testimonials as $testimonial) {
+            if ($testimonial->image) {
+                Storage::delete('public/testimonials/' . $testimonial->image);
+            }
+        }
+
+        Testimonial::whereIn('id', $ids)->delete();
+
+        return response()->json(['success' => true, 'message' => 'Testimonial berhasil dihapus.']);
+    }
+
+    public function bulkDraft(Request $request)
+    {
+        $ids = $request->input('ids');
+
+        if ($ids) {
+            Testimonial::whereIn('id', $ids)->update(['status' => 'draft']);
+            return response()->json(['success' => true, 'message' => 'Layanan berhasil diubah ke draft.']);
+        }
+
+        return response()->json(['success' => false, 'message' => 'Tidak ada layanan yang dipilih.'], 400);
+    }
+
+    public function bulkPublish(Request $request)
+    {
+        $ids = $request->input('ids');
+
+        if ($ids) {
+            Testimonial::whereIn('id', $ids)->update(['status' => 'publik']);
+            return response()->json(['success' => true, 'message' => 'Layanan berhasil dipublikasikan.']);
+        }
+
+        return response()->json(['success' => false, 'message' => 'Tidak ada layanan yang dipilih.'], 400);
+    }
 }

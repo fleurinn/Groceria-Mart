@@ -20,7 +20,7 @@ class ProductController extends Controller
         $status = $request->input('status');
 
         $totalProducts = Product::count();
-        $publishedProducts = Product::where('status', 'public')->count();
+        $publishedProducts = Product::where('status', 'publish')->count();
         $draftProducts = Product::where('status', 'draft')->count();
         $discountedProducts = Product::whereNotNull('discount')->count();
 
@@ -55,7 +55,7 @@ class ProductController extends Controller
             'weight'            => 'nullable|string|max:50',
             'dimension'         => 'nullable|string|max:100',
             'color'             => 'nullable|string|max:50',
-            'slug'              => 'nullable|string|unique:products,slug|max:255',
+            // 'slug'              => 'nullable|string|unique:products,slug|max:255',
             'description'       => 'required|string|max:1000',
             'category_product_id' => 'required|exists:category_products,id',
             'image'             => 'required|image|mimes:jpeg,jpg,png|max:2048',
@@ -113,7 +113,7 @@ class ProductController extends Controller
             'weight'            => 'nullable|string|max:50',
             'dimension'         => 'nullable|string|max:100',
             'color'             => 'nullable|string|max:50',
-            'slug'              => 'nullable|string|max:255|unique:products,slug,' . $product->id,
+            // 'slug'              => 'nullable|string|max:255|unique:products,slug,' . $product->id,
             'description'       => 'required|string|max:1000',
             'category_product_id' => 'required|exists:category_products,id',
             'image'             => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
@@ -178,5 +178,51 @@ class ProductController extends Controller
         $product->delete();
 
         return redirect()->route('produk.index')->with('success', 'Produk berhasil dihapus.');
+    }
+
+    //Bulk
+    public function bulkDelete(Request $request)
+    {
+        $ids = $request->input('ids');
+
+        if (empty($ids)) {
+            return response()->json(['success' => false, 'message' => 'Tidak ada produk yang dipilih.'], 400);
+        }
+
+        $products = Product::whereIn('id', $ids)->get();
+
+        foreach ($products as $product) {
+            if ($product->image) {
+                Storage::delete('public/products/' . $product->image); //sesuaikan pathnya
+            }
+        }
+
+        Product::whereIn('id', $ids)->delete();
+
+        return response()->json(['success' => true, 'message' => 'Produk berhasil dihapus.']);
+    }
+
+    public function bulkDraft(Request $request)
+    {
+        $ids = $request->input('ids');
+
+        if ($ids) {
+            Product::whereIn('id', $ids)->update(['status' => 'draft']);
+            return response()->json(['success' => true, 'message' => 'Produk berhasil diubah ke draft.']);
+        }
+
+        return response()->json(['success' => false, 'message' => 'Tidak ada produk yang dipilih.'], 400);
+    }
+
+    public function bulkPublish(Request $request)
+    {
+        $ids = $request->input('ids');
+
+        if ($ids) {
+            Product::whereIn('id', $ids)->update(['status' => 'publik']);
+            return response()->json(['success' => true, 'message' => 'Produk berhasil dipublikasikan.']);
+        }
+
+        return response()->json(['success' => false, 'message' => 'Tidak ada produk yang dipilih.'], 400);
     }
 }

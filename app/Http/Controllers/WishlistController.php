@@ -129,4 +129,19 @@ class WishlistController extends Controller
 
         return response()->json($response, 200);
     }
+
+    // Bulk delete wishlist
+    public function bulkDelete(Request $request)
+    {
+        $ids = $request->input('ids');
+
+        if (empty($ids)) {
+            return response()->json(['success' => false, 'message' => 'Tidak ada wishlist yang dipilih.'], 400);
+        }
+
+        Wishlist::whereIn('id', $ids)->delete();
+
+        return response()->json(['success' => true, 'message' => 'Wishlist berhasil dihapus.']);
+    }
+
 }

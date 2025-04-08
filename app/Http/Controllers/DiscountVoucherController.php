@@ -152,4 +152,97 @@ class DiscountVoucherController extends Controller
             'vouchers' => $vouchers
         ]);
     }
+
+    // Perbarui status voucher
+    public function updateStatus(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required|in:draft,publish,expired',
+        ]);
+
+        $voucher = DiscountVoucher::findOrFail($id);
+        $voucher->status = $request->status;
+        $voucher->save();
+
+        return response()->json(['message' => 'Status voucher diperbarui', 'data' => $voucher]);
+    }
+
+    //Bulk
+    public function bulkDelete(Request $request)
+    {
+        $ids = $request->input('ids');
+
+        if (empty($ids)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Tidak ada voucher yang dipilih.'
+            ], 400);
+        }
+
+        DiscountVoucher::whereIn('id', $ids)->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Voucher berhasil dihapus secara massal.'
+        ]);
+    }
+
+    public function bulkDraft(Request $request)
+    {
+        $ids = $request->input('ids');
+
+        if ($ids) {
+            DiscountVoucher::whereIn('id', $ids)->update(['status' => 'draft']);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Voucher berhasil diubah menjadi draft.'
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Tidak ada voucher yang dipilih.'
+        ], 400);
+    }
+
+    public function bulkPublish(Request $request)
+    {
+        $ids = $request->input('ids');
+
+        if ($ids) {
+            DiscountVoucher::whereIn('id', $ids)->update(['status' => 'publish']);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Voucher berhasil dipublikasikan.'
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Tidak ada voucher yang dipilih.'
+        ], 400);
+    }
+
+    public function bulkExpire(Request $request)
+    {
+        $ids = $request->input('ids');
+
+        if ($ids) {
+            DiscountVoucher::whereIn('id', $ids)->update(['status' => 'expired']);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Voucher berhasil diubah menjadi kedaluwarsa.'
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Tidak ada voucher yang dipilih.'
+        ], 400);
+    }
+
+
 }

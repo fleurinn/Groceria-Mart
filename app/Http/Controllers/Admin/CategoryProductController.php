@@ -14,16 +14,12 @@ class CategoryProductController extends Controller
     {
         $query = CategoryProduct::query();
 
-<<<<<<< HEAD
-        if ($request->has('search')) {
-=======
         // Pencarian berdasarkan nama kategori
         if  ($request->has('search')) {
->>>>>>> b4ada68a73851e38899054fcc6a22a34f8379740
             $query->where('name', 'like', '%' . $request->search . '%');
         }
 
-        if ($request->has('status') && in_array($request->status, ['Aktif', 'Non-Aktif'])) {
+        if ($request->has('status') && in_array($request->status, ['publish', 'draft'])) {
             $query->where('status', $request->status);
         }
 
@@ -42,14 +38,14 @@ class CategoryProductController extends Controller
             'name'        => 'required|string|max:255|unique:category_products,name',
             'image'       => 'required|image|mimes:jpeg,jpg,png',
             'description' => 'nullable|string',
-            'status'      => 'required|in:Aktif,Non-Aktif',
+            'status'      => 'required|in:publish,draft',
         ]);
 
         $imagePath = $request->file('image')->store('categoryproducts', 'public');
 
         CategoryProduct::create([
             'name'        => $request->name,
-            'slug'        => Str::slug($request->name),
+            // 'slug'        => Str::slug($request->name),
             'image'       => $imagePath,
             'description' => $request->description,
             'status'      => $request->status,
@@ -69,12 +65,12 @@ class CategoryProductController extends Controller
             'name'        => 'required|string|max:255|unique:category_products,name,' . $categoryproduct->id,
             'image'       => 'nullable|image|mimes:jpeg,jpg,png',
             'description' => 'nullable|string',
-            'status'      => 'required|in:Aktif,Non-Aktif',
+            'status'      => 'required|in:publish,draft',
         ]);
 
         $data = [
             'name'        => $request->name,
-            'slug'        => Str::slug($request->name),
+            // 'slug'        => Str::slug($request->name),
             'description' => $request->description,
             'status'      => $request->status,
         ];
@@ -107,4 +103,52 @@ class CategoryProductController extends Controller
         $categoryproduct->delete();
         return redirect()->route('category-products.index')->with('success', 'Kategori produk berhasil dihapus.');
     }
+
+    //Bulk
+    public function bulkDelete(Request $request)
+    {
+        $ids = $request->input('ids');
+
+        if (empty($ids)) {
+            return response()->json(['success' => false, 'message' => 'Tidak ada kategori produk yang dipilih.'], 400);
+        }
+
+        $categories = CategoryProduct::whereIn('id', $ids)->get();
+
+        foreach ($categories as $category) {
+            if ($category->image) {
+                Storage::delete('public/category_products/' . $category->image);
+            }
+        }
+
+        CategoryProduct::whereIn('id', $ids)->delete();
+
+        return response()->json(['success' => true, 'message' => 'Kategori produk berhasil dihapus.']);
+    }
+
+    public function bulkDraft(Request $request)
+    {
+        $ids = $request->input('ids');
+
+        if ($ids) {
+            CategoryProduct::whereIn('id', $ids)->update(['status' => 'draft']);
+            return response()->json(['success' => true, 'message' => 'Kategori produk berhasil diubah ke draft.']);
+        }
+
+        return response()->json(['success' => false, 'message' => 'Tidak ada kategori produk yang dipilih.'], 400);
+    }
+
+    public function bulkPublish(Request $request)
+    {
+        $ids = $request->input('ids');
+
+        if ($ids) {
+            CategoryProduct::whereIn('id', $ids)->update(['status' => 'publik']);
+            return response()->json(['success' => true, 'message' => 'Kategori produk berhasil dipublikasikan.']);
+        }
+
+        return response()->json(['success' => false, 'message' => 'Tidak ada kategori produk yang dipilih.'], 400);
+    }
+
 }
+

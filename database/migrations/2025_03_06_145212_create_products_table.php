@@ -23,7 +23,7 @@ return new class extends Migration {
             $table->decimal('discount', 5, 2)->nullable()->default(0);
             $table->integer('stock');
             $table->foreignId('category_product_id')->constrained('category_products')->onDelete('cascade');
-            $table->enum('status', ['draft', 'public']);
+            $table->enum('status', ['publish', 'draft']);
             $table->string('tags')->nullable();
             $table->timestamps();
         });
