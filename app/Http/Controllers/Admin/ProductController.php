@@ -8,11 +8,9 @@ use App\Models\CategoryProduct;
 use App\Models\VariantProduct;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
-    // Menampilkan daftar produk
     public function index(Request $request)
     {
         $search = $request->input('search');
@@ -40,14 +38,12 @@ class ProductController extends Controller
         return view('admin.pages.products.produk.index', compact('products', 'search'));
     }
 
-    // Menampilkan halaman tambah produk
     public function create()
     {
         $categories = CategoryProduct::all();
         return view('admin.pages.products.produk.create', compact('categories'));
     }
 
-    // Menyimpan produk baru beserta variannya
     public function store(Request $request)
     {
         $request->validate([
@@ -55,13 +51,12 @@ class ProductController extends Controller
             'weight'            => 'nullable|string|max:50',
             'dimension'         => 'nullable|string|max:100',
             'color'             => 'nullable|string|max:50',
-            // 'slug'              => 'nullable|string|unique:products,slug|max:255',
             'description'       => 'required|string|max:1000',
             'category_product_id' => 'required|exists:category_products,id',
             'image'             => 'required|image|mimes:jpeg,jpg,png|max:2048',
             'price'             => 'required|numeric|min:0',
             'stock'             => 'required|integer|min:0',
-            'status'            => 'required|in:draft,public',
+            'status'            => 'required|in:draft,publish',
             'tags'              => 'nullable|string',
             'discount'          => 'nullable|numeric|min:0|max:100',
             'variants'          => 'nullable|array|max:10',
@@ -73,22 +68,22 @@ class ProductController extends Controller
             'variants.*.stock'  => 'required|integer|min:0',
         ]);
 
-        // Menyimpan data produk
-        $slug = $request->input('slug') ?: Str::slug($request->name);
-        $imagePath = $request->file('image')->storeAs('public/products', $request->file('image')->hashName());
+        // Simpan image utama
+        $imageName = $request->file('image')->hashName();
+        $request->file('image')->move(public_path('storage/products'), $imageName);
 
-        $product = Product::create($request->except(['image', 'slug', 'variants']) + [
-            'image' => $request->file('image')->hashName(),
-            'slug' => $slug,
+        // Simpan produk
+        $product = Product::create($request->except(['image', 'variants']) + [
+            'image' => $imageName,
         ]);
 
-        // Menyimpan data varian jika ada
+        // Simpan varian
         if ($request->has('variants')) {
             foreach ($request->variants as $variant) {
                 $variantImageName = null;
                 if (isset($variant['image'])) {
                     $variantImageName = $variant['image']->hashName();
-                    $variant['image']->storeAs('public/variants', $variantImageName);
+                    $variant['image']->move(public_path('storage/variants'), $variantImageName);
                 }
 
                 $product->variants()->create(array_merge($variant, ['image' => $variantImageName]));
@@ -98,14 +93,13 @@ class ProductController extends Controller
         return redirect()->route('produk.index')->with('success', 'Produk berhasil ditambahkan.');
     }
 
-    // Menampilkan halaman edit produk
+
     public function edit(Product $product)
     {
         $categories = CategoryProduct::all();
         return view('admin.pages.products.produk.edit', compact('product', 'categories'));
     }
 
-    // Mengupdate produk dan variannya
     public function update(Request $request, Product $product)
     {
         $request->validate([
@@ -113,13 +107,12 @@ class ProductController extends Controller
             'weight'            => 'nullable|string|max:50',
             'dimension'         => 'nullable|string|max:100',
             'color'             => 'nullable|string|max:50',
-            // 'slug'              => 'nullable|string|max:255|unique:products,slug,' . $product->id,
             'description'       => 'required|string|max:1000',
             'category_product_id' => 'required|exists:category_products,id',
             'image'             => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
             'price'             => 'required|numeric|min:0',
             'stock'             => 'required|integer|min:0',
-            'status'            => 'required|in:draft,public',
+            'status'            => 'required|in:draft,publish',
             'tags'              => 'nullable|string',
             'discount'          => 'nullable|numeric|min:0|max:100',
             'variants'          => 'nullable|array|max:10',
@@ -131,15 +124,14 @@ class ProductController extends Controller
             'variants.*.stock'  => 'required|integer|min:0',
         ]);
 
-        $slug = $request->input('slug') ?: Str::slug($request->name);
-
         if ($request->hasFile('image')) {
             Storage::delete('public/products/' . $product->image);
-            $imagePath = $request->file('image')->storeAs('public/products', $request->file('image')->hashName());
-            $product->image = $request->file('image')->hashName();
+            $imageName = $request->file('image')->hashName();
+            $request->file('image')->move(public_path('storage/products'), $imageName);
+            $product->image = $imageName;
         }
 
-        $product->update($request->except(['image', 'slug', 'variants']) + ['slug' => $slug]);
+        $product->update($request->except(['image', 'variants']));
 
         if ($request->has('variants')) {
             foreach ($request->variants as $variant) {
@@ -156,8 +148,9 @@ class ProductController extends Controller
                     if ($existingVariant && $existingVariant->image) {
                         Storage::delete('public/variants/' . $existingVariant->image);
                     }
-                    $variant['image']->storeAs('public/variants', $variant['image']->hashName());
-                    $variantData['image'] = $variant['image']->hashName();
+                    $variantImageName = $variant['image']->hashName();
+                    $variant['image']->move(public_path('storage/variants'), $variantImageName);
+                    $variantData['image'] = $variantImageName;
                 }
 
                 $product->variants()->updateOrCreate(['id' => $variant['id'] ?? null], $variantData);
@@ -167,7 +160,7 @@ class ProductController extends Controller
         return redirect()->route('produk.index')->with('success', 'Produk berhasil diperbarui.');
     }
 
-    // Menghapus produk beserta variannya
+
     public function destroy(Product $product)
     {
         Storage::delete('public/products/' . $product->image);

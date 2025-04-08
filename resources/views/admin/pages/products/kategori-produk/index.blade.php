@@ -124,14 +124,16 @@
                       <a class="dropdown-item edit-category" 
                         data-id="{{ $categoryproduct->id }}" 
                         data-name="{{ $categoryproduct->name }}" 
-                        data-status="{{ $categoryproduct->status }}" 
-                        href="javascript:void(0);">Edit</a>                      
+                        data-description="{{ $categoryproduct->description }}" 
+                        data-status="{{ $categoryproduct->status }}">
+                        Edit
+                      </a>
                       <div class="dropdown-divider"></div>
                       <form action="{{ route('category-products.destroy', $categoryproduct->id) }}" method="POST" class="d-inline">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="dropdown-item text-danger">Remove</button>
-                      </form>                    
+                          @csrf
+                          @method('DELETE')
+                          <button type="submit" class="dropdown-item text-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus kategori ini?');">Remove</button>
+                      </form>                   
                     </div>
                   </div>
                 </td>
@@ -176,95 +178,88 @@
     </div>
   </div>
 
-<!-- Modal untuk Edit Category -->
-<div class="modal fade" id="editCategoryModal" tabindex="-1" aria-labelledby="editCategoryModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="editCategoryModalLabel">Edit Category</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-
-      <form id="editCategoryForm" method="POST" enctype="multipart/form-data">
-        @csrf
-        @method('PUT')
-        <div class="modal-body">
-          <input type="hidden" id="editCategoryId" name="id">
-          
-          <div class="mb-3">
-            <label for="editCategoryName" class="form-label">Category Name</label>
-            <input type="text" class="form-control" id="editCategoryName" name="name" required>
-          </div>
-
-          <div class="mb-3">
-            <label for="editCategoryDescription" class="form-label">Description</label>
-            <textarea class="form-control" id="editCategoryDescription" name="description" rows="3"></textarea>
-          </div>
-
-          <div class="mb-3">
-            <label for="editCategoryImage" class="form-label">Image</label>
-            <input type="file" class="form-control" id="editCategoryImage" name="image" accept="image/*">
-            <small class="form-text text-muted">Leave blank if you don't want to change the image.</small>
-            <div class="mt-2">
-              <img id="editCategoryImagePreview" src="" class="img-thumbnail" style="max-width: 150px; display: none;">
+<!-- Modal untuk Create Category -->
+<div class="modal fade" id="createCategoryModal" tabindex="-1" aria-labelledby="createCategoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createCategoryModalLabel">Add New Category</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-          </div>
-
-          <div class="mb-3">
-            <label for="editCategoryStatus" class="form-label">Status</label>
-            <select class="form-select" id="editCategoryStatus" name="status" required>
-              <option value="Aktif">Aktif</option>
-              <option value="Non-Aktif">Non-Aktif</option>
-            </select>
-          </div>
+            <form action="{{ route('category-products.store') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="categoryName" class="form-label">Category Name</label>
+                        <input type="text" class="form-control" id="categoryName" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="categoryImage" class="form-label">Image</label>
+                        <input type="file" class="form-control" id="categoryImage" name="image" accept="image/*">
+                    </div>
+                    <div class="mb-3">
+                        <label for="categoryDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="categoryDescription" name="description" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="categoryStatus" class="form-label">Status</label>
+                        <select class="form-select" id="categoryStatus" name="status" required>
+                            <option value="publish">Publish</option>
+                            <option value="draft">Draft</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Add Category</button>
+                </div>
+            </form>
         </div>
-
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary">Update Category</button>
-        </div>
-      </form>
-
     </div>
-  </div>
 </div>
 
-
-  <!-- Modal untuk Create Category -->
-  <div class="modal fade" id="createCategoryModal" tabindex="-1" aria-labelledby="createCategoryModalLabel" aria-hidden="true">
+<!-- Modal untuk Edit Category -->
+<div class="modal fade" id="editCategoryModal" tabindex="-1" aria-labelledby="editCategoryModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="createCategoryModalLabel">Add New Category</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editCategoryModalLabel">Edit Category</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="editCategoryForm" method="POST" enctype="multipart/form-data">
+                @csrf
+                @method('PUT')
+                <div class="modal-body">
+                    <input type="hidden" id="editCategoryId" name="id">
+                    <div class="mb-3">
+                        <label for="editCategoryName" class="form-label">Category Name</label>
+                        <input type="text" class="form-control" id="editCategoryName" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editCategoryImage" class="form-label">Image</label>
+                        <input type="file" class="form-control" id="editCategoryImage" name="image" accept="image/*">
+                        <small class="form-text text-muted">Leave blank if you don't want to change the image.</small>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editCategoryDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="editCategoryDescription" name="description" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editCategoryStatus" class="form-label">Status</label>
+                        <select class="form-select" id="editCategoryStatus" name="status" required>
+                            <option value="publish">Publish</option>
+                            <option value="draft">Draft</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Update Category</button>
+                </div>
+            </form>
         </div>
-        <form action="{{ route('category-products.store') }}" method="POST" enctype="multipart/form-data">
-          @csrf
-          <div class="modal-body">
-            <div class="mb-3">
-              <label for="categoryName" class="form-label">Category Name</label>
-              <input type="text" class="form-control" id="categoryName" name="name" required>
-            </div>
-            <div class="mb-3">
-              <label for="categoryImage" class="form-label">Image</label>
-              <input type="file" class="form-control" id="categoryImage" name="image" accept="image">
-            </div>
-            <div class="mb-3">
-              <label for="categoryStatus" class="form-label">Status</label>
-              <select class="form-select" id="categoryStatus" name="status" required>
-                <option value="Aktif">Aktif</option>
-                <option value="Non-Aktif">Non-Aktif</option>
-              </select>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary">Add Category</button>
-          </div>
-        </form>
-      </div>
     </div>
-  </div>
+</div>
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -274,7 +269,6 @@
                 const categoryName = this.getAttribute("data-name");
                 const categoryDescription = this.getAttribute("data-description");
                 const categoryStatus = this.getAttribute("data-status");
-                const categoryImage = this.getAttribute("data-image");
 
                 // Isi nilai ke dalam input form
                 document.getElementById("editCategoryId").value = categoryId;
@@ -286,36 +280,10 @@
                 const form = document.getElementById("editCategoryForm");
                 form.action = `/dashboard/category-products/${categoryId}`;
 
-                // Menampilkan preview gambar jika tersedia
-                const imagePreview = document.getElementById("editCategoryImagePreview");
-                if (categoryImage) {
-                    imagePreview.src = `/storage/categoryproducts/${categoryImage}`;
-                    imagePreview.style.display = "block";
-                } else {
-                    imagePreview.style.display = "none";
-                }
-
                 // Tampilkan modal
                 const editModal = new bootstrap.Modal(document.getElementById("editCategoryModal"));
                 editModal.show();
             });
-        });
-
-        // Menampilkan preview gambar saat memilih file baru
-        document.getElementById("editCategoryImage").addEventListener("change", function (event) {
-            const file = event.target.files[0];
-            const imagePreview = document.getElementById("editCategoryImagePreview");
-
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    imagePreview.src = e.target.result;
-                    imagePreview.style.display = "block";
-                };
-                reader.readAsDataURL(file);
-            } else {
-                imagePreview.style.display = "none";
-            }
         });
     });
 </script>

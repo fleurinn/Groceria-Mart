@@ -74,7 +74,6 @@ Route::middleware(['auth'])->group(function () {
 
 Route::middleware(['auth'])->prefix('dashboard')->group(function () {
     Route::resource('/category-products', CategoryProductController::class);
-    Route::put('/category-products/{id}', [CategoryProductController::class, 'update'])->name('category-products.update');
 
     //Tambahan: Bulk actions for CategoryProduct
     Route::post('/category-products/bulk-delete', [CategoryProductController::class, 'bulkDelete'])->name('category-products.bulk-delete');

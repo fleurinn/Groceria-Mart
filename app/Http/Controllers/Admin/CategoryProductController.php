@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\CategoryProduct;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 class CategoryProductController extends Controller
 {
@@ -14,12 +13,11 @@ class CategoryProductController extends Controller
     {
         $query = CategoryProduct::query();
 
-        // Pencarian berdasarkan nama kategori
-        if  ($request->has('search')) {
+        if ($request->has('search')) {
             $query->where('name', 'like', '%' . $request->search . '%');
         }
 
-        if ($request->has('status') && in_array($request->status, ['publish', 'draft'])) {
+        if ($request->has('status') && in_array($request->status, ['draft', 'publish'])) {
             $query->where('status', $request->status);
         }
 
@@ -38,15 +36,16 @@ class CategoryProductController extends Controller
             'name'        => 'required|string|max:255|unique:category_products,name',
             'image'       => 'required|image|mimes:jpeg,jpg,png',
             'description' => 'nullable|string',
-            'status'      => 'required|in:publish,draft',
+            'status' => 'required|in:draft,publish',
         ]);
 
-        $imagePath = $request->file('image')->store('categoryproducts', 'public');
+        $image = $request->file('image');
+        $imageName = $image->hashName();
+        $image->move(public_path('storage/categoryproducts'), $imageName);
 
         CategoryProduct::create([
             'name'        => $request->name,
-            // 'slug'        => Str::slug($request->name),
-            'image'       => $imagePath,
+            'image'       => $imageName,
             'description' => $request->description,
             'status'      => $request->status,
         ]);
@@ -54,54 +53,79 @@ class CategoryProductController extends Controller
         return redirect()->route('category-products.index')->with('success', 'Kategori produk berhasil ditambahkan.');
     }
 
-    public function edit(CategoryProduct $categoryproduct)
+    public function edit($id)
     {
+        $categoryproduct = CategoryProduct::findOrFail($id);
         return view('admin.pages.products.kategori-produk.edit', compact('categoryproduct'));
     }
 
-    public function update(Request $request, CategoryProduct $categoryproduct)
+    public function update(Request $request, $id)
     {
-        $request->validate([
-            'name'        => 'required|string|max:255|unique:category_products,name,' . $categoryproduct->id,
+        $validated = $request->validate([
+            'name'        => 'required|string|max:255',
             'image'       => 'nullable|image|mimes:jpeg,jpg,png',
             'description' => 'nullable|string',
-            'status'      => 'required|in:publish,draft',
+            'status'      => 'required|in:draft,publish',
         ]);
 
-        $data = [
-            'name'        => $request->name,
-            // 'slug'        => Str::slug($request->name),
-            'description' => $request->description,
-            'status'      => $request->status,
-        ];
+        // Cek apakah nama sudah ada di database
+        $cekName = CategoryProduct::where('name', $request->name)->where('id', '!=', $id)->exists();
+        if ($cekName) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Nama ini sudah digunakan, silahkan gunakan nama lain.');
+        }
 
-        if ($request->hasFile('image')) {
-            // Hapus gambar lama jika ada
-            if ($categoryproduct->image) {
-                Storage::disk('public')->delete($categoryproduct->image);
+        try {
+            $categoryproduct = CategoryProduct::findOrFail($id);
+
+            if ($request->hasFile('image')) {
+                // Hapus gambar lama jika ada
+                $oldImagePath = public_path('storage/categoryproducts/' . $categoryproduct->image);
+                if ($categoryproduct->image && file_exists($oldImagePath)) {
+                    unlink($oldImagePath);
+                }
+
+                // Simpan gambar baru
+                $image = $request->file('image');
+                $imageName = $image->hashName();
+                $image->move(public_path('storage/categoryproducts'), $imageName);
+                $categoryproduct->image = $imageName; // Update image
             }
 
-            // Simpan gambar baru
-            $data['image'] = $request->file('image')->store('categoryproducts', 'public');
+            // Update data kategori
+            $categoryproduct->name = $request->name;
+            $categoryproduct->description = $request->description;
+            $categoryproduct->status = $request->status;
+            $categoryproduct->save();
+
+            return redirect()->route('category-products.index')->with('success', 'Kategori berhasil diubah!');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data.');
         }
-
-        $updateBerhasil = $categoryproduct->update($data);
-
-        return redirect()->route('category-products.index')->with(
-            $updateBerhasil ? 'success' : 'error',
-            $updateBerhasil ? 'Kategori produk berhasil diperbarui.' : 'Gagal memperbarui kategori.'
-        );
     }
 
-
-    public function destroy(CategoryProduct $categoryproduct)
+    public function destroy($id)
     {
-        if ($categoryproduct->image) {
-            Storage::disk('public')->delete($categoryproduct->image);
-        }
+        // Mencari kategori produk berdasarkan ID
+        $categoryproduct = CategoryProduct::findOrFail($id);
 
-        $categoryproduct->delete();
-        return redirect()->route('category-products.index')->with('success', 'Kategori produk berhasil dihapus.');
+        try {
+            // Hapus gambar dari storage jika ada
+            if ($categoryproduct->image) {
+                $oldImagePath = public_path('storage/categoryproducts/' . $categoryproduct->image);
+                if (file_exists($oldImagePath)) {
+                    unlink($oldImagePath); // Menghapus file gambar
+                }
+            }
+
+            // Hapus kategori produk dari database
+            $categoryproduct->delete();
+
+            return redirect()->route('category-products.index')->with('success', 'Kategori berhasil dihapus!');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menghapus kategori.');
+        }
     }
 
     //Bulk

@@ -32,7 +32,7 @@ class SliderController extends Controller
             'description'        => 'required|string|max:1000',
             'name'               => 'required|string|max:255',
             'image'              => 'required|image|mimes:jpeg,jpg,png|max:2048',
-            'status'             => 'required|in:publish,draft',
+            'status'             => 'required|in:draft,publish',
             'categoryproducts_id'=> 'required|exists:category_products,id', // Validasi ID kategori
         ]);
         
@@ -65,7 +65,7 @@ class SliderController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'image' => 'required|image|mimes:jpeg,jpg,png|max:2048',
-            'status' => 'required|in:publish,draft',
+            'status' => 'required|in:draft,publish',
         ]);
 
         // If a new image is uploaded, handle the image update

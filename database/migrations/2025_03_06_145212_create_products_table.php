@@ -11,11 +11,9 @@ return new class extends Migration {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('variant')->nullable(); // Menyimpan varian produk
             $table->string('weight')->nullable(); // Berat produk dalam gram/kg
             $table->string('dimension')->nullable(); // Dimensi produk dalam cm/km
             $table->string('color')->nullable(); // Warna produk
-            $table->string('slug')->unique(); // Slug untuk SEO-friendly URL
             $table->json('images')->nullable(); // Menyimpan hingga 10 gambar dalam JSON
             $table->string('image'); // Gambar utama tetap
             $table->text('description');
@@ -23,7 +21,7 @@ return new class extends Migration {
             $table->decimal('discount', 5, 2)->nullable()->default(0);
             $table->integer('stock');
             $table->foreignId('category_product_id')->constrained('category_products')->onDelete('cascade');
-            $table->enum('status', ['publish', 'draft']);
+            $table->enum('status', ['draft', 'publish']);
             $table->string('tags')->nullable();
             $table->timestamps();
         });
