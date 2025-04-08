@@ -11,7 +11,6 @@ return new class extends Migration {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('variant')->nullable(); // Menyimpan varian produk
             $table->string('weight')->nullable(); // Berat produk dalam gram/kg
             $table->string('dimension')->nullable(); // Dimensi produk dalam cm/km
             $table->string('color')->nullable(); // Warna produk

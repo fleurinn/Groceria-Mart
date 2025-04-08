@@ -195,6 +195,10 @@
               <button type="button" class="btn btn-danger btn-sm remove-variant">×</button>
             </div>
             <input type="text" name="variants[][name]" class="form-control mb-2" placeholder="Variant name" required>
+            <div class="mb-3">
+                        <label for="categoryImage" class="form-label">Image</label>
+                        <input type="file" class="form-control" id="categoryImage" name="image" accept="image/*">
+            </div>
             <textarea name="variants[][description]" class="form-control mb-2" placeholder="Description" required></textarea>
             <input type="number" step="0.01" name="variants[][price]" class="form-control mb-2" placeholder="Price" required>
             <input type="number" step="0.01" name="variants[][discount]" class="form-control mb-2" placeholder="Discount">

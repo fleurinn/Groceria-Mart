@@ -15,7 +15,7 @@ return new class extends Migration
                 $table->id();
                 $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
                 $table->string('name'); // Nama varian
-                // $table->string('image'); // gambar varian
+                $table->string('image'); // gambar varian
                 $table->string('description'); // deskripsi varian
                 $table->decimal('price', 10, 2)->nullable(); // Harga khusus varian
                 $table->decimal('discount', 5, 2)->nullable()->default(0);
