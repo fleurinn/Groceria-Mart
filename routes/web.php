@@ -81,12 +81,17 @@ Route::middleware(['auth'])->prefix('dashboard')->group(function () {
     Route::post('/category-products/bulk-publish', [CategoryProductController::class, 'bulkPublish'])->name('category-products.bulk-publish');
 
     //PRODUCT
+    Route::resource('/products', ProductController::class);
+
+    Route::resource('/variants', ProductController::class);
+
     Route::resource('products', ProductController::class)->except(['show']);
 
     //Tambahan: Bulk actions for Product
         Route::post('products/bulk-delete', [ProductController::class, 'bulkDelete'])->name('products.bulk-delete');
         Route::post('products/bulk-draft', [ProductController::class, 'bulkDraft'])->name('products.bulk-draft');
         Route::post('products/bulk-publish', [ProductController::class, 'bulkPublish'])->name('products.bulk-publish');
+
     
     //Route untuk export produk ke Excel
     Route::get('products/export', [ProductController::class, 'export'])->name('products.export');

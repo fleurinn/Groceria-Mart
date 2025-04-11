@@ -1,9 +1,28 @@
 @extends('admin.layouts.admin-layouts')
 
-@section('page_title', 'Product Edit | Groceria')
+@section('page_title', 'Product Create | Groceria')
 @section('content')
 
 <div class="content">
+
+{{-- ✅ Menampilkan pesan error jika ada --}}
+  @if ($errors->any())
+    <div class="alert alert-danger">
+      <ul class="mb-0">
+        @foreach ($errors->all() as $error)
+          <li>{{ $error }}</li>
+        @endforeach
+      </ul>
+    </div>
+  @endif
+
+  {{-- ✅ Menampilkan pesan sukses jika ada --}}
+  @if (session('success'))
+    <div class="alert alert-success">
+      {{ session('success') }}
+    </div>
+  @endif
+
   <form class="mb-9" action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data">
     @csrf
     <div class="row g-3 flex-between-end mb-5">
@@ -12,7 +31,7 @@
         <h5 class="text-body-tertiary fw-semibold">Orders placed across your store</h5>
       </div>
       <div class="col-auto">
-        <button class="btn btn-phoenix-secondary me-2 mb-2 mb-sm-0" type="button">Discard</button>
+        <a href="{{ route('products.index') }}" class="btn btn-phoenix-secondary me-2 mb-2 mb-sm-0">Cancel</a>
         <button class="btn btn-primary mb-2 mb-sm-0" type="submit">Save</button>
       </div>
     </div>
@@ -28,24 +47,7 @@
         </div>
 
         <h4 class="mb-3">Display images</h4>
-        <div class="dropzone dropzone-multiple p-0 mb-5" id="my-awesome-dropzone" data-dropzone="data-dropzone">
-          <div class="fallback">
-            <input name="image" type="file" required />
-          </div>
-          <div class="dz-preview d-flex flex-wrap">
-            <div class="border border-translucent bg-body-emphasis rounded-3 d-flex flex-center position-relative me-2 mb-2" style="height:80px;width:80px;">
-              <img class="dz-image" alt="..." data-dz-thumbnail="data-dz-thumbnail" />
-              <a class="dz-remove text-body-quaternary" href="#!" data-dz-remove="data-dz-remove">
-                <span data-feather="x"></span>
-              </a>
-            </div>
-          </div>
-          <div class="dz-message text-body-tertiary text-opacity-85" data-dz-message="data-dz-message">
-            Drag your photo here<span class="text-body-secondary px-1">or</span>
-            <button class="btn btn-link p-0" type="button">Browse from device</button><br />
-            <img class="mt-3 me-2" src="../../../assets/img/icons/image-icon.png" width="40" alt="" />
-          </div>
-        </div>
+        <input type="file" name="image" required class="form-control mb-6">
 
         <h4 class="mb-3">Inventory</h4>
         <div class="row g-0 border-top border-bottom">
@@ -99,15 +101,15 @@
                 </div>
               </div>
               <div class="tab-pane fade" id="attributesTabContent" role="tabpanel" aria-labelledby="attributesTab">
-                <div class="mb3">
+                <div class="mb-3">
                     <h5 class="mb-2 text-body-highlight">Color</h5>
                     <input type="text" class="form-control" name="color">
                     </div>
-                <div class="mb3">
+                <div class="mb-3">
                     <h5 class="mb-2 text-body-highlight">Dimension</h5>
                     <input type="text" class="form-control" name="dimension">
                     </div>
-                <div class="mb3">
+                <div class="mb-1">
                     <h5 class="mb-2 text-body-highlight">weight</h5>
                     <input type="text" class="form-control" name="weight">
                     </div>
@@ -142,7 +144,7 @@
                     <select class="form-select" name="status" id="status" required>
                       <option selected disabled>Select Status</option>
                       <option value="draft">Draft</option>
-                      <option value="public">Published</option>
+                      <option value="publish">Published</option>
                     </select>
                   </div>
                   <div class="col-12 mb-4">
@@ -155,21 +157,18 @@
             </div>
           </div>
         <div class="col-12">
-            <div class="card">
-              <div class="card-body">
-                <h4 class="card-title mb-4">Variants</h4>
-                <div class="swiper mySwiper">
-                  <div class="swiper-wrapper" id="variant-container"></div>
-                </div>
-                <div class="d-flex justify-content-between mt-3">
-                  <button type="button" class="btn btn-secondary" id="prev-variant">Previous</button>
-                  <button type="button" class="btn btn-secondary" id="next-variant">Next</button>
-                </div>
-                <button type="button" id="add-variant" class="btn btn-primary mt-3">Add Variant</button>
-                <div id="pagination" class="mt-2"></div>
+          <div class="card">
+            <div class="card-body">
+              <h4 class="card-title mb-4">Variants</h4>
+              <div class="swiper mySwiper">
+                <div class="swiper-wrapper" id="variant-container"></div>
               </div>
+              
+              <button type="button" id="add-variant" class="btn btn-phoenix-primary w-100">Add Variant</button>
+              <div id="pagination" class="mt-2"></div>
             </div>
           </div>
+        </div>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css">
 <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
@@ -186,38 +185,64 @@
 
   document.getElementById('add-variant').addEventListener('click', () => {
     if(variantCount < maxVariants) {
+      const index = variantCount;
       variantCount++;
+
       const variantHTML = `
-        <div class="swiper-slide">
-          <div class="variant-item p-3 border mb-3 rounded-2">
-            <div class="d-flex justify-content-between mb-3">
-              <h5>Variant ${variantCount}</h5>
-              <button type="button" class="btn btn-danger btn-sm remove-variant">×</button>
+        <div class="swiper-slide" data-index="${index}">
+          <div class="variant-item mb-3">
+            <div class="d-flex justify-content-between mb-3 align-items-center">
+              <button type="button" class="nav-variant-next me-2 border-0 bg-transparent fs-8">
+                &lt;
+              </button>
+              <h5 class="mb-0 flex-grow-1 text-center">Option ${variantCount}</h5>
+              <div class="d-flex align-items-center">
+                <button type="button" class="nav-variant-next me-2 border-0 bg-transparent fs-8">
+                  &gt;
+                </button>
+                <button type="button" class="remove-variant border-0 bg-transparent fs-8" style="cursor:pointer; color: red;">×</button>
+              </div>
             </div>
-            <input type="text" name="variants[][name]" class="form-control mb-2" placeholder="Variant name" required>
+            <input type="text" name="variants[${index}][name]" class="form-control mb-2" placeholder="Variant name">
             <div class="mb-3">
-                        <label for="categoryImage" class="form-label">Image</label>
-                        <input type="file" class="form-control" id="categoryImage" name="image" accept="image/*">
+              <label class="form-label">Image</label>
+              <input type="file" class="form-control" name="variants[${index}][image]">
             </div>
-            <textarea name="variants[][description]" class="form-control mb-2" placeholder="Description" required></textarea>
-            <input type="number" step="0.01" name="variants[][price]" class="form-control mb-2" placeholder="Price" required>
-            <input type="number" step="0.01" name="variants[][discount]" class="form-control mb-2" placeholder="Discount">
-            <input type="number" name="variants[][stock]" class="form-control" placeholder="Stock" required>
+            <textarea name="variants[${index}][description]" class="form-control mb-2" placeholder="Description"></textarea>
+            <input type="number" step="0.01" name="variants[${index}][price]" class="form-control mb-2" placeholder="Price">
+            <input type="number" name="variants[${index}][stock]" class="form-control mb-2" placeholder="Stock">
           </div>
         </div>`;
-      document.getElementById('variant-container').insertAdjacentHTML('beforeend', variantHTML);
+
+      const container = document.getElementById('variant-container');
+      container.insertAdjacentHTML('beforeend', variantHTML);
       swiper.update();
+
+      // Move to the newly added slide
       swiper.slideTo(variantCount - 1);
-      updatePagination();
     }
   });
 
-  document.getElementById('variant-container').addEventListener('click', (e) => {
-    if(e.target.classList.contains('remove-variant')) {
-      e.target.closest('.swiper-slide').remove();
-      variantCount--;
-      swiper.update();
-      updatePagination();
+  // Remove variant
+  document.addEventListener('click', function (e) {
+    if (e.target.classList.contains('remove-variant')) {
+      const slide = e.target.closest('.swiper-slide');
+      if (slide) {
+        slide.remove();
+        swiper.update();
+        variantCount--;
+      }
+    }
+  });
+
+  // Navigasi antar variant slide dari tombol dalam varian
+  document.addEventListener('click', function (e) {
+    if (e.target.classList.contains('nav-variant-prev')) {
+      swiper.slidePrev();
+    }
+
+    if (e.target.classList.contains('nav-variant-next')) {
+      swiper.slideNext();
     }
   });
 
