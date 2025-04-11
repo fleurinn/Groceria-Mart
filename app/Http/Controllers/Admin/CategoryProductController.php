@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\CategoryProduct;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 class CategoryProductController extends Controller
 {
@@ -74,7 +73,7 @@ class CategoryProductController extends Controller
         if ($cekName) {
             return redirect()->back()
                 ->withInput()
-                ->with('error', 'Nama ini sudah digunakan, silakan gunakan nama lain.');
+                ->with('error', 'Nama ini sudah digunakan, silahkan gunakan nama lain.');
         }
 
         try {
@@ -128,4 +127,52 @@ class CategoryProductController extends Controller
             return redirect()->back()->with('error', 'Terjadi kesalahan saat menghapus kategori.');
         }
     }
+
+    //Bulk
+    public function bulkDelete(Request $request)
+    {
+        $ids = $request->input('ids');
+
+        if (empty($ids)) {
+            return response()->json(['success' => false, 'message' => 'Tidak ada kategori produk yang dipilih.'], 400);
+        }
+
+        $categories = CategoryProduct::whereIn('id', $ids)->get();
+
+        foreach ($categories as $category) {
+            if ($category->image) {
+                Storage::delete('public/category_products/' . $category->image);
+            }
+        }
+
+        CategoryProduct::whereIn('id', $ids)->delete();
+
+        return response()->json(['success' => true, 'message' => 'Kategori produk berhasil dihapus.']);
+    }
+
+    public function bulkDraft(Request $request)
+    {
+        $ids = $request->input('ids');
+
+        if ($ids) {
+            CategoryProduct::whereIn('id', $ids)->update(['status' => 'draft']);
+            return response()->json(['success' => true, 'message' => 'Kategori produk berhasil diubah ke draft.']);
+        }
+
+        return response()->json(['success' => false, 'message' => 'Tidak ada kategori produk yang dipilih.'], 400);
+    }
+
+    public function bulkPublish(Request $request)
+    {
+        $ids = $request->input('ids');
+
+        if ($ids) {
+            CategoryProduct::whereIn('id', $ids)->update(['status' => 'publik']);
+            return response()->json(['success' => true, 'message' => 'Kategori produk berhasil dipublikasikan.']);
+        }
+
+        return response()->json(['success' => false, 'message' => 'Tidak ada kategori produk yang dipilih.'], 400);
+    }
+
 }
+

@@ -17,6 +17,7 @@ return new class extends Migration {
             $table->decimal('discount_value', 10, 2); // Besaran diskon (misalnya 10.50% atau 50000)
             $table->date('start_date'); // Tanggal mulai diskon
             $table->date('end_date'); // Tanggal berakhir diskon
+            $table->enum('status', ['draft', 'publish', 'expired'])->default('draft'); // Status diskon
             $table->timestamps(); // created_at & updated_at
         });
     }

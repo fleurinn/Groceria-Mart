@@ -187,4 +187,50 @@ class ProductController extends Controller
 
         return redirect()->route('products.index')->with('success', 'Produk berhasil dihapus.');
     }
+
+    //Bulk
+    public function bulkDelete(Request $request)
+    {
+        $ids = $request->input('ids');
+
+        if (empty($ids)) {
+            return response()->json(['success' => false, 'message' => 'Tidak ada produk yang dipilih.'], 400);
+        }
+
+        $products = Product::whereIn('id', $ids)->get();
+
+        foreach ($products as $product) {
+            if ($product->image) {
+                Storage::delete('public/products/' . $product->image); //sesuaikan pathnya
+            }
+        }
+
+        Product::whereIn('id', $ids)->delete();
+
+        return response()->json(['success' => true, 'message' => 'Produk berhasil dihapus.']);
+    }
+
+    public function bulkDraft(Request $request)
+    {
+        $ids = $request->input('ids');
+
+        if ($ids) {
+            Product::whereIn('id', $ids)->update(['status' => 'draft']);
+            return response()->json(['success' => true, 'message' => 'Produk berhasil diubah ke draft.']);
+        }
+
+        return response()->json(['success' => false, 'message' => 'Tidak ada produk yang dipilih.'], 400);
+    }
+
+    public function bulkPublish(Request $request)
+    {
+        $ids = $request->input('ids');
+
+        if ($ids) {
+            Product::whereIn('id', $ids)->update(['status' => 'publik']);
+            return response()->json(['success' => true, 'message' => 'Produk berhasil dipublikasikan.']);
+        }
+
+        return response()->json(['success' => false, 'message' => 'Tidak ada produk yang dipilih.'], 400);
+    }
 }

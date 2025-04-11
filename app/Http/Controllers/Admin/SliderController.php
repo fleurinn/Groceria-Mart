@@ -118,4 +118,50 @@ class SliderController extends Controller
         $slider = Slider::with('products')->findOrFail($id);
         return view('sliders.show', compact('slider'));
     }
+
+    //Bulk
+    public function bulkDelete(Request $request)
+{
+    $ids = $request->input('ids');
+
+    if (empty($ids)) {
+        return response()->json(['success' => false, 'message' => 'Tidak ada slider yang dipilih.'], 400);
+    }
+
+    $sliders = Slider::whereIn('id', $ids)->get();
+
+    foreach ($sliders as $slider) {
+        if ($slider->image) {
+            Storage::delete('public/sliders/' . $slider->image); //sesuaikan pathnya
+        }
+    }
+
+    Slider::whereIn('id', $ids)->delete();
+
+    return response()->json(['success' => true, 'message' => 'Slider berhasil dihapus.']);
+}
+
+public function bulkDraft(Request $request)
+{
+    $ids = $request->input('ids');
+
+    if ($ids) {
+        Slider::whereIn('id', $ids)->update(['status' => 'draft']);
+        return response()->json(['success' => true, 'message' => 'Slider berhasil diubah ke draft.']);
+    }
+
+    return response()->json(['success' => false, 'message' => 'Tidak ada slider yang dipilih.'], 400);
+}
+
+public function bulkPublish(Request $request)
+{
+    $ids = $request->input('ids');
+
+    if ($ids) {
+        Slider::whereIn('id', $ids)->update(['status' => 'publik']);
+        return response()->json(['success' => true, 'message' => 'Slider berhasil dipublikasikan.']);
+    }
+
+    return response()->json(['success' => false, 'message' => 'Tidak ada slider yang dipilih.'], 400);
+}
 }

@@ -109,4 +109,24 @@ class CheckoutController extends Controller
             return response()->json(['message' => 'Payment not found!'], 404);
         }
     }
+
+    //Bulk delete
+    public function bulkDelete(Request $request)
+    {
+        $ids = $request->input('ids');
+
+        if (empty($ids)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Tidak ada data checkout yang dipilih.'
+            ], 400);
+        }
+
+        Checkout::whereIn('id', $ids)->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data checkout berhasil dihapus.'
+        ]);
+    }
 }
