@@ -106,7 +106,22 @@
                     </span>
                 </td>
                 <td class="tags align-middle review pb-2 ps-3" style="min-width:225px;">
-                  <a class="text-decoration-none"><span class="badge badge-tag me-2 mb-2">{{ $product->tags }}</span></a>
+                    @if($product->tags)
+                        @php
+                            $tags = array_map('trim', explode(',', $product->tags));
+                            $limitedTags = array_slice($tags, 0, 5);
+                        @endphp
+
+                        @foreach($limitedTags as $tag)
+                            <a class="text-decoration-none">
+                                <span class="badge bg-primary text-white me-2 mb-2" style="font-size: 0.95rem;">{{ $tag }}</span>
+                            </a>
+                        @endforeach
+
+                        @if(count($tags) > 5)
+                            <span class=" text-black me-2 mb-2" style="font-size: 0.95rem;">...</span>
+                        @endif
+                    @endif
                 </td>
                 <td class="align-middle white-space-nowrap text-end pe-0 ps-4 btn-reveal-trigger">
                   <div class="btn-reveal-trigger position-static"><button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h fs-10"></span></button>
@@ -115,10 +130,10 @@
                       <a class="dropdown-item" href="{{ route('products.edit', $product->id) }}">Edit</a>
                       <div class="dropdown-divider"></div>
                       <form action="{{ route('products.destroy', $product->id) }}" method="POST" class="d-inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="dropdown-item text-danger">Remove</button>
-                      </form>                    
+                          @csrf
+                          @method('DELETE')
+                          <button type="submit" class="dropdown-item text-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus produk ini?');">Remove</button>
+                      </form>                   
                     </div>
                   </div>
                 </td>
@@ -128,36 +143,35 @@
           </table>
         </div>
         <div class="row align-items-center justify-content-between py-2 pe-0 fs-9">
-    <div class="col-auto d-flex">
-        <p class="mb-0 d-none d-sm-block me-3 fw-semibold text-body">
-            Menampilkan {{ $products->firstItem() }} - {{ $products->lastItem() }} dari {{ $products->total() }} data
-        </p>
-    </div>
+            <div class="col-auto d-flex">
+                <p class="mb-0 d-none d-sm-block me-3 fw-semibold text-body">
+                    Menampilkan {{ $products->firstItem() }} - {{ $products->lastItem() }} dari {{ $products->total() }} data
+                </p>
+            </div>
 
-    <div class="col-auto d-flex">
-        <!-- Tombol Prev -->
-        <button class="page-link {{ $products->onFirstPage() ? 'disabled' : '' }}" data-list-pagination="prev"
-            onclick="window.location='{{ $products->previousPageUrl() }}'">
-            <span class="fas fa-chevron-left"></span>
-        </button>
+            <div class="col-auto d-flex">
+                <!-- Tombol Prev -->
+                <button class="page-link {{ $products->onFirstPage() ? 'disabled' : '' }}" data-list-pagination="prev"
+                    onclick="window.location='{{ $products->previousPageUrl() }}'">
+                    <span class="fas fa-chevron-left"></span>
+                </button>
 
-        <!-- Pagination Number -->
-        <ul class="mb-0 pagination">
-            @for ($i = 1; $i <= $products->lastPage(); $i++)
-                <li class="page-item {{ $products->currentPage() == $i ? 'active' : '' }}">
-                    <a class="page-link" href="{{ $products->url($i) }}">{{ $i }}</a>
-                </li>
-            @endfor
-        </ul>
+                <!-- Pagination Number -->
+                <ul class="mb-0 pagination">
+                    @for ($i = 1; $i <= $products->lastPage(); $i++)
+                        <li class="page-item {{ $products->currentPage() == $i ? 'active' : '' }}">
+                            <a class="page-link" href="{{ $products->url($i) }}">{{ $i }}</a>
+                        </li>
+                    @endfor
+                </ul>
 
-        <!-- Tombol Next -->
-        <button class="page-link pe-0 {{ $products->hasMorePages() ? '' : 'disabled' }}" data-list-pagination="next"
-            onclick="window.location='{{ $products->nextPageUrl() }}'">
-            <span class="fas fa-chevron-right"></span>
-        </button>
-    </div>
-</div>
-
+                <!-- Tombol Next -->
+                <button class="page-link pe-0 {{ $products->hasMorePages() ? '' : 'disabled' }}" data-list-pagination="next"
+                    onclick="window.location='{{ $products->nextPageUrl() }}'">
+                    <span class="fas fa-chevron-right"></span>
+                </button>
+            </div>
+        </div>
       </div>
     </div>
   </div>

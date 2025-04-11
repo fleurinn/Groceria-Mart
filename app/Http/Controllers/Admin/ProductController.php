@@ -17,22 +17,11 @@ class ProductController extends Controller
         $category = $request->input('category');
         $status = $request->input('status');
 
-        $totalProducts = Product::count();
-        $publishedProducts = Product::where('status', 'publish')->count();
-        $draftProducts = Product::where('status', 'draft')->count();
-        $discountedProducts = Product::whereNotNull('discount')->count();
-
         $products = Product::with('category', 'variants')
-            ->when($search, function ($query) use ($search) {
-                $query->where('name', 'like', "%{$search}%")
-                      ->orWhere('tags', 'like', "%{$search}%");
-            })
-            ->when($category, function ($query) use ($category) {
-                $query->where('category_product_id', $category);
-            })
-            ->when($status, function ($query) use ($status) {
-                $query->where('status', $status);
-            })
+            ->when($search, fn ($q) => $q->where('name', 'like', "%$search%")
+                ->orWhere('tags', 'like', "%$search%"))
+            ->when($category, fn ($q) => $q->where('category_product_id', $category))
+            ->when($status, fn ($q) => $q->where('status', $status))
             ->paginate(10);
 
         return view('admin.pages.products.produk.index', compact('products', 'search'));
@@ -47,119 +36,144 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name'              => 'required|string|max:255',
-            'weight'            => 'nullable|string|max:50',
-            'dimension'         => 'nullable|string|max:100',
-            'color'             => 'nullable|string|max:50',
-            'description'       => 'required|string|max:1000',
+            'name' => 'required|string|max:255',
+            'weight' => 'nullable|string|max:50',
+            'dimension' => 'nullable|string|max:100',
+            'color' => 'nullable|string|max:50',
+            'description' => 'required|string|max:1000',
             'category_product_id' => 'required|exists:category_products,id',
-            'image'             => 'required|image|mimes:jpeg,jpg,png|max:2048',
-            'price'             => 'required|numeric|min:0',
-            'stock'             => 'required|integer|min:0',
-            'status'            => 'required|in:draft,publish',
-            'tags'              => 'nullable|string',
-            'discount'          => 'nullable|numeric|min:0|max:100',
-            'variants'          => 'nullable|array|max:10',
-            'variants.*.name'   => 'required|string|max:255',
-            'variants.*.image'  => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
-            'variants.*.description' => 'required|string|max:1000',
-            'variants.*.price'  => 'required|numeric|min:0',
+            'image' => 'required|image|mimes:jpeg,jpg,png',
+            'price' => 'required|numeric|min:0',
+            'stock' => 'required|integer|min:0',
+            'status' => 'required|in:draft,publish',
+            'tags' => 'nullable|string',
+            'discount' => 'nullable|numeric|min:0|max:100',
+            'variants.*.name' => 'nullable|string|max:255',
+            'variants.*.image' => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
+            'variants.*.description' => 'nullable|string|max:1000',
+            'variants.*.price' => 'nullable|numeric|min:0',
             'variants.*.discount' => 'nullable|numeric|min:0|max:100',
-            'variants.*.stock'  => 'required|integer|min:0',
+            'variants.*.stock' => 'nullable|integer|min:0',
         ]);
 
-        // Simpan image utama
-        $imageName = $request->file('image')->hashName();
-        $request->file('image')->move(public_path('storage/products'), $imageName);
+        try {
+            $imageName = $request->file('image')->hashName();
+            $request->file('image')->storeAs('public/products', $imageName);
 
-        // Simpan produk
-        $product = Product::create($request->except(['image', 'variants']) + [
-            'image' => $imageName,
-        ]);
+            $product = Product::create([
+                'name' => $request->name,
+                'weight' => $request->weight,
+                'dimension' => $request->dimension,
+                'color' => $request->color,
+                'description' => $request->description,
+                'category_product_id' => $request->category_product_id,
+                'image' => $imageName,
+                'price' => $request->price,
+                'stock' => $request->stock,
+                'status' => $request->status,
+                'tags' => $request->tags,
+                'discount' => $request->discount,
+            ]);
 
-        // Simpan varian
-        if ($request->has('variants')) {
-            foreach ($request->variants as $variant) {
-                $variantImageName = null;
-                if (isset($variant['image'])) {
-                    $variantImageName = $variant['image']->hashName();
-                    $variant['image']->move(public_path('storage/variants'), $variantImageName);
+            if ($request->has('variants')) {
+                foreach ($request->variants as $variant) {
+                    $variantImage = null;
+
+                    if (!empty($variant['image']) && $variant['image'] instanceof \Illuminate\Http\UploadedFile) {
+                        $variantImage = $variant['image']->hashName();
+                        $variant['image']->storeAs('public/variants', $variantImage);
+                    }
+
+                    $product->variants()->create([
+                        'name' => $variant['name'] ?? null,
+                        'description' => $variant['description'] ?? null,
+                        'price' => $variant['price'] ?? null,
+                        'discount' => $variant['discount'] ?? null,
+                        'stock' => $variant['stock'] ?? null,
+                        'image' => $variantImage,
+                    ]);
                 }
-
-                $product->variants()->create(array_merge($variant, ['image' => $variantImageName]));
             }
+
+            return redirect()->route('products.index')->with('success', 'Product berhasil ditambahkan!');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal menyimpan produk: ' . $e->getMessage());
         }
-
-        return redirect()->route('produk.index')->with('success', 'Produk berhasil ditambahkan.');
     }
-
 
     public function edit(Product $product)
     {
-        $categories = CategoryProduct::all();
-        return view('admin.pages.products.produk.edit', compact('product', 'categories'));
+        $variants = $product->variants; // akan mengambil semua variant milik product
+        $categories = CategoryProduct::all(); 
+
+        return view('admin.pages.products.produk.edit', compact('product', 'variants', 'categories')); 
     }
+
 
     public function update(Request $request, Product $product)
     {
         $request->validate([
-            'name'              => 'required|string|max:255',
-            'weight'            => 'nullable|string|max:50',
-            'dimension'         => 'nullable|string|max:100',
-            'color'             => 'nullable|string|max:50',
-            'description'       => 'required|string|max:1000',
+            'name' => 'required|string|max:255',
+            'weight' => 'nullable|string|max:50',
+            'dimension' => 'nullable|string|max:100',
+            'color' => 'nullable|string|max:50',
+            'description' => 'required|string|max:1000',
             'category_product_id' => 'required|exists:category_products,id',
-            'image'             => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
-            'price'             => 'required|numeric|min:0',
-            'stock'             => 'required|integer|min:0',
-            'status'            => 'required|in:draft,publish',
-            'tags'              => 'nullable|string',
-            'discount'          => 'nullable|numeric|min:0|max:100',
-            'variants'          => 'nullable|array|max:10',
-            'variants.*.name'   => 'required|string|max:255',
-            'variants.*.image'  => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
-            'variants.*.description' => 'required|string|max:1000',
-            'variants.*.price'  => 'required|numeric|min:0',
+            'image' => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
+            'price' => 'required|numeric|min:0',
+            'stock' => 'required|integer|min:0',
+            'status' => 'required|in:draft,publish',
+            'tags' => 'nullable|string',
+            'discount' => 'nullable|numeric|min:0|max:100',
+            'variants.*.id' => 'nullable|integer|exists:variant_products,id',
+            'variants.*.name' => 'nullable|string|max:255',
+            'variants.*.image' => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
+            'variants.*.description' => 'nullable|string|max:1000',
+            'variants.*.price' => 'nullable|numeric|min:0',
             'variants.*.discount' => 'nullable|numeric|min:0|max:100',
-            'variants.*.stock'  => 'required|integer|min:0',
+            'variants.*.stock' => 'nullable|integer|min:0',
         ]);
 
-        if ($request->hasFile('image')) {
-            Storage::delete('public/products/' . $product->image);
-            $imageName = $request->file('image')->hashName();
-            $request->file('image')->move(public_path('storage/products'), $imageName);
-            $product->image = $imageName;
-        }
-
-        $product->update($request->except(['image', 'variants']));
-
-        if ($request->has('variants')) {
-            foreach ($request->variants as $variant) {
-                $variantData = [
-                    'name' => $variant['name'],
-                    'description' => $variant['description'],
-                    'price' => $variant['price'],
-                    'discount' => $variant['discount'],
-                    'stock' => $variant['stock'],
-                ];
-
-                if (isset($variant['image'])) {
-                    $existingVariant = $product->variants()->find($variant['id'] ?? null);
-                    if ($existingVariant && $existingVariant->image) {
-                        Storage::delete('public/variants/' . $existingVariant->image);
-                    }
-                    $variantImageName = $variant['image']->hashName();
-                    $variant['image']->move(public_path('storage/variants'), $variantImageName);
-                    $variantData['image'] = $variantImageName;
-                }
-
-                $product->variants()->updateOrCreate(['id' => $variant['id'] ?? null], $variantData);
+        try {
+            if ($request->hasFile('image')) {
+                Storage::delete('public/products/' . $product->image);
+                $imageName = $request->file('image')->hashName();
+                $request->file('image')->storeAs('public/products', $imageName);
+                $product->image = $imageName;
             }
+
+            $product->update($request->except(['image', 'variants']));
+
+            if ($request->has('variants')) {
+                foreach ($request->variants as $variant) {
+                    $data = [
+                        'name' => $variant['name'] ?? null,
+                        'description' => $variant['description'] ?? null,
+                        'price' => $variant['price'] ?? null,
+                        'discount' => $variant['discount'] ?? null,
+                        'stock' => $variant['stock'] ?? null,
+                    ];
+
+                    if (isset($variant['image'])) {
+                        $existing = $product->variants()->find($variant['id'] ?? null);
+                        if ($existing && $existing->image) {
+                            Storage::delete('public/variants/' . $existing->image);
+                        }
+
+                        $variantImageName = $variant['image']->hashName();
+                        $variant['image']->storeAs('public/variants', $variantImageName);
+                        $data['image'] = $variantImageName;
+                    }
+
+                    $product->variants()->updateOrCreate(['id' => $variant['id'] ?? null], $data);
+                }
+            }
+
+            return redirect()->route('products.index')->with('success', 'Produk berhasil diperbarui.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal memperbarui produk: ' . $e->getMessage());
         }
-
-        return redirect()->route('produk.index')->with('success', 'Produk berhasil diperbarui.');
     }
-
 
     public function destroy(Product $product)
     {
@@ -167,9 +181,10 @@ class ProductController extends Controller
         foreach ($product->variants as $variant) {
             Storage::delete('public/variants/' . $variant->image);
         }
+
         $product->variants()->delete();
         $product->delete();
 
-        return redirect()->route('produk.index')->with('success', 'Produk berhasil dihapus.');
+        return redirect()->route('products.index')->with('success', 'Produk berhasil dihapus.');
     }
 }

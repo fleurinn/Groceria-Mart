@@ -75,7 +75,10 @@ Route::middleware(['auth'])->prefix('dashboard')->group(function () {
     Route::resource('/category-products', CategoryProductController::class);
 
     //PRODUCT
-    Route::resource('products', ProductController::class)->except(['show']);
+    Route::resource('/products', ProductController::class);
+
+    Route::resource('/variants', ProductController::class);
+
     
     // Route untuk export produk ke Excel
     Route::get('products/export', [ProductController::class, 'export'])->name('products.export');
