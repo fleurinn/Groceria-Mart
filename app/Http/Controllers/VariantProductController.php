@@ -36,8 +36,12 @@ class VariantProductController extends Controller
 
         $imagePath = null;
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('variant-images', 'public');
+            $image = $request->file('image');
+            $imageName = $image->hashName();
+            $image->move(public_path('storage/variant-images'), $imageName);
+            $imagePath = 'variant-images/' . $imageName;
         }
+        
 
         VariantProduct::create([
             'product_id' => $request->product_id,
@@ -72,14 +76,20 @@ class VariantProductController extends Controller
             'status' => 'required|in:draft,publish',
         ]);
 
-        if ($request->hasFile('image')) {
-            if ($variantProduct->image && Storage::disk('public')->exists($variantProduct->image)) {
-                Storage::disk('public')->delete($variantProduct->image);
-            }
-            $variantProduct->image = $request->file('image')->store('variant-images', 'public');
+    // Cek apakah ada file gambar baru yang diupload
+    if ($request->hasFile('image')) {
+        // Hapus gambar lama jika ada
+        if ($variantProduct->image && Storage::disk('public')->exists($variantProduct->image)) {
+            Storage::disk('public')->delete($variantProduct->image);
         }
 
-        $variantProduct->update([
+        // Simpan gambar baru
+        $imagePath = $request->file('image')->store('variant-images', 'public');
+        $variantProduct->image = $imagePath; // update kolom image
+    }
+
+    // Update data lainnya
+    $variantProduct->update([
             'product_id' => $request->product_id,
             'name' => $request->name,
             'description' => $request->description,
@@ -87,17 +97,18 @@ class VariantProductController extends Controller
             'discount' => $request->discount ?? 0,
             'stock' => $request->stock,
             'status' => $request->status,
-            'image' => $variantProduct->image, // Pastikan tidak null jika tidak diubah
+            'image' => $variantProduct->image, // Tetap masukkan nilainya yang lama jika tidak diubah
         ]);
 
-        return redirect()->route('variant-products.index')->with('success', 'Varian produk berhasil diperbarui.');
-    }
+    return redirect()->route('variant-products.index')->with('success', 'Varian produk berhasil diperbarui.');
+}
 
     public function destroy(VariantProduct $variantProduct)
     {
         if ($variantProduct->image && Storage::disk('public')->exists($variantProduct->image)) {
             Storage::disk('public')->delete($variantProduct->image);
         }
+        
 
         $variantProduct->delete();
         return redirect()->route('variant-products.index')->with('success', 'Varian produk berhasil dihapus.');
@@ -154,7 +165,7 @@ public function bulkPublish(Request $request)
     $ids = $request->input('ids');
 
     if (!empty($ids)) {
-        VariantProduct::whereIn('id', $ids)->update(['status' => 'publik']);
+        VariantProduct::whereIn('id', $ids)->update(['status' => 'publish']);
         return response()->json([
             'success' => true,
             'message' => 'Varian produk berhasil dipublikasikan.'

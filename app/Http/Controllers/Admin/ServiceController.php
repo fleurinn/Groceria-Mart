@@ -89,13 +89,17 @@ class ServiceController extends Controller
 
     foreach ($services as $service) {
         if ($service->image) {
-            Storage::delete('public/services/' . $service->image); //sesuaikan pathnya
+            $path = public_path('storage/services/' . $service->image);
+            if (file_exists($path)) {
+                unlink($path);
+            }
         }
-    }
+        
 
     Service::whereIn('id', $ids)->delete();
 
     return response()->json(['success' => true, 'message' => 'Layanan berhasil dihapus.']);
+}
 }
 
 public function bulkDraft(Request $request)

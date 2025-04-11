@@ -25,7 +25,7 @@ class ProductController extends Controller
         $products = Product::with('category', 'variants')
             ->when($search, function ($query) use ($search) {
                 $query->where('name', 'like', "%{$search}%")
-                      ->orWhere('tags', 'like', "%{$search}%");
+                    ->orWhere('tags', 'like', "%{$search}%");
             })
             ->when($category, function ($query) use ($category) {
                 $query->where('category_product_id', $category);
@@ -69,8 +69,9 @@ class ProductController extends Controller
         ]);
 
         // Simpan image utama
-        $imageName = $request->file('image')->hashName();
-        $request->file('image')->move(public_path('storage/products'), $imageName);
+        $image = $request->file('image');
+        $imageName = $image->hashName();
+        $image->move(public_path('storage/products'), $imageName);
 
         // Simpan produk
         $product = Product::create($request->except(['image', 'variants']) + [
@@ -126,6 +127,7 @@ class ProductController extends Controller
 
         if ($request->hasFile('image')) {
             Storage::delete('public/products/' . $product->image);
+
             $imageName = $request->file('image')->hashName();
             $request->file('image')->move(public_path('storage/products'), $imageName);
             $product->image = $imageName;
@@ -178,21 +180,39 @@ class ProductController extends Controller
     {
         $ids = $request->input('ids');
 
-        if (empty($ids)) {
-            return response()->json(['success' => false, 'message' => 'Tidak ada produk yang dipilih.'], 400);
+        if (empty($ids) || !is_array($ids)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Tidak ada produk yang dipilih atau format ID salah.'
+            ], 400);
         }
 
-        $products = Product::whereIn('id', $ids)->get();
+        $products = Product::with('variants')->whereIn('id', $ids)->get();
 
         foreach ($products as $product) {
-            if ($product->image) {
-                Storage::delete('public/products/' . $product->image); //sesuaikan pathnya
+            // Hapus gambar produk utama
+            if ($product->image && Storage::exists('public/products/' . $product->image)) {
+                Storage::delete('public/products/' . $product->image);
             }
+
+            // Hapus gambar pada semua varian produk
+            foreach ($product->variants as $variant) {
+                if ($variant->image && Storage::exists('public/variants/' . $variant->image)) {
+                    Storage::delete('public/variants/' . $variant->image);
+                }
+            }
+
+            // Hapus relasi varian dari database
+            $product->variants()->delete();
         }
 
+        // Hapus produk dari database
         Product::whereIn('id', $ids)->delete();
 
-        return response()->json(['success' => true, 'message' => 'Produk berhasil dihapus.']);
+        return response()->json([
+            'success' => true,
+            'message' => 'Produk berhasil dihapus.'
+        ]);
     }
 
     public function bulkDraft(Request $request)

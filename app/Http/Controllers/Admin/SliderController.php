@@ -39,12 +39,14 @@ class SliderController extends Controller
 
         // Upload image
         $image = $request->file('image');
-        $imagePath = $image->storeAs('public/sliders/', $image->hashName()); // Ubah path
+        $imageName = $image->hashName();
+        $image->move(public_path('storage/sliders'), $imageName);
+        
 
         // Menyimpan slider
         Slider::create([
             'name' => $request->name,
-            'image' => $image->hashName(),
+            'image' => $imageName,
             'status' => $request->status,
         ]);
 
@@ -75,12 +77,14 @@ class SliderController extends Controller
 
             // Upload new image
             $image = $request->file('image');
-            $imagePath = $image->storeAs('public/sliders/', $image->hashName()); // Ubah path
+            $imageName = $image->hashName();
+            $image->move(public_path('storage/sliders'), $imageName);
+
 
             // Update slider
             $slider->update([
                 'name' => $request->name,
-                'image' => $image->hashName(),
+                'image' => $imageName,
                 'status' => $request->status,
             ]);
         } else {
@@ -98,6 +102,10 @@ class SliderController extends Controller
     // Menghapus slider
     public function destroy(Slider $slider)
     {
+        if ($slider->image) {
+            Storage::delete('public/sliders/' . $slider->image); // 
+        }
+
         $slider->delete();
         return redirect()->route('sliders.index')->with('success', 'Slider berhasil dihapus.'); // Ubah route
     }

@@ -46,12 +46,15 @@ class TestimonialController extends Controller
 
         // Upload image jika ada
         if ($request->hasFile('image')) {
-            $testimonial->image = $request->file('image')->store('testimonials');
+            $image = $request->file('image');
+            $imageName = $image->hashName();
+            $image->move(public_path('storage/testimonials'), $imageName);
+            $testimonial->image = 'testimonials/' . $imageName;
         }
 
         $testimonial->save();
 
-        return redirect()->route('testimonials.index')->with('success', 'Testimonial added successfully.');
+        return redirect()->route('testimonials.index')->with('success', 'Testimonial berhasil ditambahkan');
     }
 
     /**
@@ -84,13 +87,21 @@ class TestimonialController extends Controller
 
         // Ganti gambar jika ada file baru
         if ($request->hasFile('image')) {
-            if ($testimonial->image) Storage::delete($testimonial->image);
-            $testimonial->image = $request->file('image')->store('testimonials');
+            // Hapus gambar lama jika ada
+            if ($testimonial->image && file_exists(public_path('storage/' . $testimonial->image))) {
+                unlink(public_path('storage/' . $testimonial->image));
+            }
+        
+            $image = $request->file('image');
+            $imageName = $image->hashName();
+            $image->move(public_path('storage/testimonials'), $imageName);
+            $testimonial->image = 'testimonials/' . $imageName;
         }
+        
 
         $testimonial->save();
 
-        return redirect()->route('testimonials.index')->with('success', 'Testimonial updated successfully.');
+        return redirect()->route('testimonials.index')->with('success', 'Testimoni berhasil diperbarui.');
     }
 
     /**
@@ -101,13 +112,14 @@ class TestimonialController extends Controller
         $testimonial = Testimonial::findOrFail($id);
 
         // Hapus gambar jika ada
-        if ($testimonial->image) {
-            Storage::delete($testimonial->image);
+        if ($testimonial->image && file_exists(public_path('storage/' . $testimonial->image))) {
+            unlink(public_path('storage/' . $testimonial->image));
         }
+        
 
         $testimonial->delete();
 
-        return redirect()->route('testimonials.index')->with('success', 'Testimonial deleted successfully.');
+        return redirect()->route('testimonials.index')->with('success', 'Testimoni berhasil dihapus.');
     }
 
     //Bulk
@@ -116,15 +128,15 @@ class TestimonialController extends Controller
         $ids = $request->input('ids');
 
         if (empty($ids)) {
-            return response()->json(['success' => false, 'message' => 'Tidak ada testimonial yang dipilih.'], 400);
+            return response()->json(['success' => false, 'message' => 'Tidak ada Testimonial yang dipilih.'], 400);
         }
 
         $testimonials = Testimonial::whereIn('id', $ids)->get();
 
         foreach ($testimonials as $testimonial) {
-            if ($testimonial->image) {
-                Storage::delete('public/testimonials/' . $testimonial->image);
-            }
+            if ($testimonial->image && file_exists(public_path('storage/' . $testimonial->image))) {
+                unlink(public_path('storage/' . $testimonial->image));
+            }            
         }
 
         Testimonial::whereIn('id', $ids)->delete();
@@ -138,10 +150,10 @@ class TestimonialController extends Controller
 
         if ($ids) {
             Testimonial::whereIn('id', $ids)->update(['status' => 'draft']);
-            return response()->json(['success' => true, 'message' => 'Layanan berhasil diubah ke draft.']);
+            return response()->json(['success' => true, 'message' => 'Testimonial berhasil diubah ke draft.']);
         }
 
-        return response()->json(['success' => false, 'message' => 'Tidak ada layanan yang dipilih.'], 400);
+        return response()->json(['success' => false, 'message' => 'Tidak ada Testimonial yang dipilih.'], 400);
     }
 
     public function bulkPublish(Request $request)
@@ -150,9 +162,9 @@ class TestimonialController extends Controller
 
         if ($ids) {
             Testimonial::whereIn('id', $ids)->update(['status' => 'publik']);
-            return response()->json(['success' => true, 'message' => 'Layanan berhasil dipublikasikan.']);
+            return response()->json(['success' => true, 'message' => 'Testimonial berhasil dipublikasikan.']);
         }
 
-        return response()->json(['success' => false, 'message' => 'Tidak ada layanan yang dipilih.'], 400);
+        return response()->json(['success' => false, 'message' => 'Tidak ada Testimonial yang dipilih.'], 400);
     }
 }

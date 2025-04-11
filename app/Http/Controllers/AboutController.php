@@ -38,27 +38,41 @@ class AboutController extends Controller
             'image2' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'image3' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
-
+    
         $about = About::firstOrCreate([]);
-
-        // Upload image jika ada
+    
+        // Upload image1 jika ada
         if ($request->hasFile('image1')) {
-            if ($about->image1) Storage::delete($about->image1);
-            $about->image1 = $request->file('image1')->store('about');
+            if ($about->image1) Storage::delete('public/about/' . $about->image1);
+            $image1 = $request->file('image1');
+            $image1Name = $image1->hashName();
+            $image1->move(public_path('storage/about'), $image1Name);
+            $about->image1 = $image1Name;
         }
+    
+        // Upload image2 jika ada
         if ($request->hasFile('image2')) {
-            if ($about->image2) Storage::delete($about->image2);
-            $about->image2 = $request->file('image2')->store('about');
+            if ($about->image2) Storage::delete('public/about/' . $about->image2);
+            $image2 = $request->file('image2');
+            $image2Name = $image2->hashName();
+            $image2->move(public_path('storage/about'), $image2Name);
+            $about->image2 = $image2Name;
         }
+    
+        // Upload image3 jika ada
         if ($request->hasFile('image3')) {
-            if ($about->image3) Storage::delete($about->image3);
-            $about->image3 = $request->file('image3')->store('about');
+            if ($about->image3) Storage::delete('public/about/' . $about->image3);
+            $image3 = $request->file('image3');
+            $image3Name = $image3->hashName();
+            $image3->move(public_path('storage/about'), $image3Name);
+            $about->image3 = $image3Name;
         }
-
+    
         $about->title = $request->title;
         $about->description = $request->description;
         $about->save();
-
+    
         return redirect()->route('about.index')->with('success', 'About page updated successfully.');
     }
+
 }

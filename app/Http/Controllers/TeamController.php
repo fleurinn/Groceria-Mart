@@ -48,7 +48,10 @@ class TeamController extends Controller
 
         // Upload photo jika ada
         if ($request->hasFile('photo')) {
-            $team->photo = $request->file('photo')->store('teams');
+            $image = $request->file('photo');
+            $imageName = $image->hashName();
+            $image->move(public_path('storage/teams'), $imageName);
+            $team->photo = 'teams/' . $imageName;
         }
 
         $team->save();
@@ -88,10 +91,15 @@ class TeamController extends Controller
 
         // Ganti photo jika ada file baru
         if ($request->hasFile('photo')) {
-            if ($team->photo) Storage::delete($team->photo);
-            $team->photo = $request->file('photo')->store('teams');
+            if ($team->photo && file_exists(public_path('storage/' . $team->photo))) {
+                unlink(public_path('storage/' . $team->photo));
+            }
+        
+            $image = $request->file('photo');
+            $imageName = $image->hashName();
+            $image->move(public_path('storage/teams'), $imageName);
+            $team->photo = 'teams/' . $imageName;
         }
-
         $team->save();
 
         return redirect()->route('teams.index')->with('success', 'Team member updated successfully.');
@@ -102,15 +110,17 @@ class TeamController extends Controller
      */
     public function destroy($id)
     {
-        $team = Team::findOrFail($id);
+        
+    $team = Team::findOrFail($id);
 
-        // Hapus foto jika ada
-        if ($team->photo) {
-            Storage::delete($team->photo);
-        }
-
-        $team->delete();
-
-        return redirect()->route('teams.index')->with('success', 'Team member deleted successfully.');
+    // Hapus foto jika ada
+    if ($team->photo && file_exists(public_path('storage/' . $team->photo))) {
+        unlink(public_path('storage/' . $team->photo));
     }
+
+    $team->delete();
+
+    return redirect()->route('teams.index')->with('success', 'Team member deleted successfully.');
+    }
+
 }
