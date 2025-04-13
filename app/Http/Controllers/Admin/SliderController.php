@@ -164,7 +164,7 @@ public function bulkPublish(Request $request)
     $ids = $request->input('ids');
 
     if ($ids) {
-        Slider::whereIn('id', $ids)->update(['status' => 'publik']);
+        Slider::whereIn('id', $ids)->update(['status' => 'publish']);
         return response()->json(['success' => true, 'message' => 'Slider berhasil dipublikasikan.']);
     }
 

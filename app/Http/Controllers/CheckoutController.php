@@ -110,23 +110,33 @@ class CheckoutController extends Controller
         }
     }
 
-    //Bulk delete
+    
+
+    // Bulk delete
     public function bulkDelete(Request $request)
     {
-        $ids = $request->input('ids');
+    $ids = $request->input('ids');
 
-        if (empty($ids)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Tidak ada data checkout yang dipilih.'
-            ], 400);
-        }
+    if (empty($ids)) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Tidak ada data checkout yang dipilih.'
+        ], 400);
+    }
 
+    try {
         Checkout::whereIn('id', $ids)->delete();
 
         return response()->json([
             'success' => true,
             'message' => 'Data checkout berhasil dihapus.'
         ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Terjadi kesalahan saat menghapus data checkout.'
+        ], 500);
     }
+    }
+
 }

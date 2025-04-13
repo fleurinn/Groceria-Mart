@@ -119,7 +119,7 @@ public function bulkPublish(Request $request)
     $ids = $request->input('ids');
 
     if ($ids) {
-        Service::whereIn('id', $ids)->update(['status' => 'publik']);
+        Service::whereIn('id', $ids)->update(['status' => 'publish']);
         return response()->json(['success' => true, 'message' => 'Layanan berhasil dipublikasikan.']);
     }
 

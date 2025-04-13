@@ -127,6 +127,8 @@ Route::middleware(['auth'])->prefix('dashboard')->group(function () {
     Route::post('/checkouts/bulk-delete', [CheckoutController::class, 'bulkDelete'])->name('checkouts.bulk-delete');
 
     Route::resource('/discount-vouchers', DiscountVoucherController::class);
+    Route::get('/vouchers/update-expired-status', [DiscountVoucherController::class, 'autoUpdateExpiredVouchers']);
+
     // Bulk for Discount Voucher
     Route::post('/discount-vouchers/bulk-delete', [DiscountVoucherController::class, 'bulkDelete'])->name('discount-vouchers.bulk-delete');
     Route::post('/discount-vouchers/bulk-draft', [DiscountVoucherController::class, 'bulkDraft'])->name('discount-vouchers.bulk-draft');

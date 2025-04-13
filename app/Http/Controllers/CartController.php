@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Cart;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
@@ -110,17 +111,25 @@ class CartController extends Controller
         return response()->json(['message' => 'Cart cleared successfully!']);
     }
 
-    //Bulk delete
-    public function bulkDelete(Request $request)
-    {
-        $ids = $request->input('ids');
+    // Bulk Delete
+public function bulkDelete(Request $request)
+{
+    $ids = $request->input('ids');
 
-        if (empty($ids)) {
-            return response()->json(['success' => false, 'message' => 'Tidak ada item keranjang yang dipilih.'], 400);
-        }
-
-        Cart::whereIn('id', $ids)->delete();
-
-        return response()->json(['success' => true, 'message' => 'Item keranjang berhasil dihapus.']);
+    if (empty($ids)) {
+        return response()->json(['success' => false, 'message' => 'Tidak ada item keranjang yang dipilih.'], 400);
     }
+
+    $carts = Cart::whereIn('id', $ids)->get();
+
+    foreach ($carts as $cart) {
+        if ($cart->image) {
+            Storage::delete('public/carts/' . $cart->image); // Sesuaikan path folder gambar
+        }
+    }
+
+    Cart::whereIn('id', $ids)->delete();
+
+    return response()->json(['success' => true, 'message' => 'Item keranjang berhasil dihapus.']);
+}
 }

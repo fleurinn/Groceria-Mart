@@ -246,7 +246,7 @@ class ProductController extends Controller
         $ids = $request->input('ids');
 
         if ($ids) {
-            Product::whereIn('id', $ids)->update(['status' => 'publik']);
+            Product::whereIn('id', $ids)->update(['status' => 'publish']);
             return response()->json(['success' => true, 'message' => 'Produk berhasil dipublikasikan.']);
         }
 

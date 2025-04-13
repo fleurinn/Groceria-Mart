@@ -161,7 +161,7 @@ class TestimonialController extends Controller
         $ids = $request->input('ids');
 
         if ($ids) {
-            Testimonial::whereIn('id', $ids)->update(['status' => 'publik']);
+            Testimonial::whereIn('id', $ids)->update(['status' => 'publish']);
             return response()->json(['success' => true, 'message' => 'Testimonial berhasil dipublikasikan.']);
         }
 
