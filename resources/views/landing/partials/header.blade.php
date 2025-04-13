@@ -91,7 +91,7 @@
                                 </div>
                                 <!-- Header User End -->
                                 <!-- Header wishlist Start -->
-                                <a href="{{ route('wishlist') }}" class="gi-header-btn gi-wish-toggle mr-[30px] transition-all duration-[0.3s] ease-in-out relative flex text-[#4b5966] w-[auto] items-center whitespace-nowrap" title="Wishlist">
+                                <a href="{{ route('wishlist.index') }}" class="gi-header-btn gi-wish-toggle mr-[30px] transition-all duration-[0.3s] ease-in-out relative flex text-[#4b5966] w-[auto] items-center whitespace-nowrap" title="Wishlist">
                                     <div class="header-icon relative flex">
                                         <i class="fi-rr-heart text-[24px] leading-[17px]"></i>
                                     </div>

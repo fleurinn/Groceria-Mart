@@ -20,11 +20,25 @@ use App\Http\Controllers\ShippingController;
 use App\Http\Controllers\ProofOfDeliveryController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\VariantProductController;
+use App\Http\Controllers\LandingPageController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('landing-page');
-})->name('landing-page');
+Route::get('/', [LandingPageController::class, 'index'])->name('landing-page');
+
+Route::controller(LandingPageController::class)->group(function () {
+    Route::get('/', 'index')->name('landing-page');
+    Route::get('/produk', 'productIndex')->name('produk');
+
+    Route::get('/produk', 'productIndex')->name('produk');
+
+    Route::get('/keranjang', 'cartIndex')->name('keranjang');
+    Route::post('/keranjang/increase', 'increaseQuantity')->name('keranjang.increase');
+    Route::post('/keranjang/decrease', 'decreaseQuantity')->name('keranjang.decrease');
+
+});
+
+Route::resource('/wishlist', WishlistController::class);
+
 
 Route::get('/about-us', function () {
     return view('landing.pages.about-us.about-us-index');
@@ -34,21 +48,12 @@ Route::get('/service', function () {
     return view('landing.pages.layanan.service-index');
 })->name('service');
 
-Route::get('/produk', function () {
-    return view('landing.pages.produk.product-index');
-})->name('produk');
-
 Route::get('/produk-detail', function () {
     return view('landing.pages.produk.product-show');
 })->name('produk-detail');
 
-Route::get('/keranjang', function () {
-    return view('landing.pages.cart.cart-index');
-})->name('keranjang');
 
-Route::get('/wishlist', function () {
-    return view('landing.pages.wishlist.wishlist-index');
-})->name('wishlist');
+
 
 Route::get('/checkout', function () {
     return view('landing.pages.checkout.checkout-index');
@@ -61,6 +66,7 @@ Route::get('/coupons', function () {
 Route::get('/profile', function () {
     return view('landing.pages.profile.profile-index');
 })->name('profile');
+
 
 
 
@@ -107,8 +113,6 @@ Route::middleware(['auth'])->prefix('dashboard')->group(function () {
     Route::resource('/services', ServiceController::class);
     //Tambahan Bulk actions for Service
     Route::post('/services/bulk-delete', [ServiceController::class, 'bulkDelete'])->name('services.bulk-delete');
-    Route::post('/services/bulk-draft', [ServiceController::class, 'bulkDraft'])->name('services.bulk-draft');
-    Route::post('/services/bulk-publish', [ServiceController::class, 'bulkPublish'])->name('services.bulk-publish');
 
     Route::resource('/slider', SliderController::class);
     //Tambahan Bulk actions for Slider

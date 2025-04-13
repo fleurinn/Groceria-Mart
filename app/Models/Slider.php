@@ -9,6 +9,10 @@ class Slider extends Model
 {
     use HasFactory;
 
-    protected $fillable = [ 'image', 'title', 'description', 'categoryproducts_id' , 'status'];
+    protected $fillable = [ 'image', 'title', 'description', 'category_product_id' , 'status'];
 
+    public function categoryproduct()
+    {
+        return $this->belongsTo(CategoryProduct::class, 'category_product_id');
+    }
 }

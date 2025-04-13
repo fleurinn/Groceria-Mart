@@ -23,6 +23,7 @@ class DiscountVoucherController extends Controller
         // Validasi input
         $request->validate([
             'title' => 'required|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'description' => 'nullable|string',
             'type' => 'required|in:global,specific_product',
             'product_id' => [
@@ -34,10 +35,18 @@ class DiscountVoucherController extends Controller
                 }),
             ],
             'discount_value' => 'required|numeric|min:0',
-            'discount_type' => 'required|in:nominal,percentage',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
         ]);
+
+        $voucherData = $request->except('image');
+
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = $image->hashName();
+            $image->move(public_path('storage/voucher_images'), $imageName);
+            $voucherData['image'] = 'voucher_images/' . $imageName;
+        }
 
         // Generate kode voucher unik
         do {
@@ -64,9 +73,10 @@ class DiscountVoucherController extends Controller
 
         // Validasi input
         $request->validate([
-            'title' => 'sometimes|required|string|max:255',
+            'title' => 'required|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'description' => 'nullable|string',
-            'type' => 'sometimes|required|in:global,specific_product',
+            'type' => 'required|in:global,specific_product',
             'product_id' => [
                 'nullable',
                 Rule::exists('products', 'id')->where(function ($query) use ($request) {
@@ -75,14 +85,25 @@ class DiscountVoucherController extends Controller
                     });
                 }),
             ],
-            'discount_value' => 'sometimes|required|numeric|min:0',
-            'discount_type' => 'sometimes|required|in:nominal,percentage',
-            'start_date' => 'sometimes|required|date',
-            'end_date' => 'sometimes|required|date|after_or_equal:start_date',
+            'discount_value' => 'required|numeric|min:0',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
         ]);
 
-        // Update voucher
-        $voucher->update($request->all());
+        $dataToUpdate = $request->except('image');
+
+        if ($request->hasFile('image')) {
+            if ($voucher->image && file_exists(public_path('storage/' . $voucher->image))) {
+                unlink(public_path('storage/' . $voucher->image));
+            }
+        
+            $image = $request->file('image');
+            $imageName = $image->hashName();
+            $image->move(public_path('storage/voucher_images'), $imageName);
+            $dataToUpdate['image'] = 'voucher_images/' . $imageName;
+        }
+        
+        $voucher->update($dataToUpdate);
 
         return response()->json(['message' => 'Voucher berhasil diperbarui', 'data' => $voucher]);
     }
@@ -90,11 +111,18 @@ class DiscountVoucherController extends Controller
     // Hapus voucher
     public function destroy($id)
     {
-        $voucher = DiscountVoucher::findOrFail($id);
-        $voucher->delete();
+    $voucher = DiscountVoucher::findOrFail($id);
 
-        return response()->json(['message' => 'Voucher berhasil dihapus']);
+    // Hapus gambar jika ada
+    if ($voucher->image && file_exists(public_path('storage/' . $voucher->image))) {
+        unlink(public_path('storage/' . $voucher->image));
     }
+
+    $voucher->delete();
+
+    return response()->json(['message' => 'Voucher berhasil dihapus']);
+    }
+
 
     // Terapkan kode voucher
     public function applyVoucherCode($voucherCode, $productId = null)
@@ -117,19 +145,14 @@ class DiscountVoucherController extends Controller
 
         // Hitung harga setelah diskon
         if ($originalPrice !== null) {
-            if ($voucher->discount_type === 'nominal') {
-                $finalPrice = max(0, $originalPrice - $voucher->discount_value);
-            } elseif ($voucher->discount_type === 'percentage') {
-                $discountAmount = ($voucher->discount_value / 100) * $originalPrice;
-                $finalPrice = max(0, $originalPrice - $discountAmount);
-            }
+            $finalPrice = max(0, $originalPrice - $voucher->discount_value);
         }
+        
 
         return response()->json([
             'success' => true,
             'discount_code' => $voucher->discount_code,
             'discount_value' => $voucher->discount_value,
-            'discount_type' => $voucher->discount_type,
             'start_date' => $voucher->start_date,
             'end_date' => $voucher->end_date,
             'original_price' => $originalPrice,
@@ -144,7 +167,7 @@ class DiscountVoucherController extends Controller
         $vouchers = DiscountVoucher::where('start_date', '<=', $now)
             ->where('end_date', '>=', $now)
             ->with('product:id,name,price')
-            ->select('id', 'discount_code', 'discount_value', 'discount_type', 'start_date', 'end_date', 'product_id')
+            ->select('id', 'discount_code', 'discount_value', 'start_date', 'end_date', 'product_id')
             ->get();
 
         return response()->json([

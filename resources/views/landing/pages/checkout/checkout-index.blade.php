@@ -10,99 +10,6 @@
             <div class="flex flex-wrap w-full">
                 <!-- Sidebar Area Start -->
                 <div class="gi-checkout-rightside px-[12px] min-[992px]:w-[33.33%] w-full">
-                    <div class="gi-sidebar-wrap border-[1px] border-solid border-[#eee] mb-[30px] p-[15px] rounded-[5px]">
-                        <!-- Sidebar Summary Block -->
-                        <div class="gi-sidebar-block">
-                            <div class="gi-sb-title">
-                                <h3 class="gi-sidebar-title text-[20px] max-[1199px]:text-[18px] font-semibold tracking-[0] mb-[0] relative text-[#4b5966] leading-[1.2]">Summary</h3>
-                            </div>
-                            <div class="gi-sb-block-content mt-[15px]">
-                                <div class="gi-checkout-summary">
-                                    <div class="flex justify-between items-center mb-[10px]">
-                                        <span class="text-left text-[#777] text-[14px] leading-[24px] tracking-[0]">Sub-Total</span>
-                                        <span class="text-right text-[#4b5966] text-[15px] leading-[24px] font-medium">$80.00</span>
-                                    </div>
-                                    <div class="flex justify-between items-center mb-[10px]">
-                                        <span class="text-left text-[#777] text-[14px] leading-[24px] tracking-[0]">Delivery Charges</span>
-                                        <span class="text-right text-[#4b5966] text-[15px] leading-[24px] font-medium">$80.00</span>
-                                    </div>
-                                    <div class="flex justify-between items-center mb-[10px]">
-                                        <span class="text-left text-[#777] text-[14px] leading-[24px] tracking-[0]">Coupan Discount</span>
-                                        <span class="text-right text-[#4b5966] text-[15px] leading-[24px] font-medium"><a class="gi-checkout-coupan text-[#5caf90] text-[14px] font-medium">Apply Coupan</a></span>
-                                    </div>
-                                    <div class="gi-checkout-coupan-content hidden flex justify-between items-center mb-[10px]">
-                                        <form class="gi-checkout-coupan-form flex border-[1px] border-solid border-[#eee] p-[5px] rounded-[5px]" name="gi-checkout-coupan-form" method="post" action="#">
-                                            <input class="gi-coupan inline-block align-top leading-[35px] h-[35px] w-full text-[#777] text-[14px] border-[0] bg-transparent text-left pl-[10px] pr-[10px] tracking-[0.5px] rounded-[5px] outline-[0]" type="text" required="" placeholder="Enter Your Coupan Code" name="gi-coupan" value="">
-                                            <button type="submit" class="gi-coupan-btn gi-btn-2 text-[16px] text-center px-[15px] transition-all duration-[0.3s] ease-in-out font-medium bg-[#5caf90] text-[#fff] rounded-[5px] hover:bg-[#4b5966] hover:text-[#fff]" name="subscribe" value="">Apply</button>
-                                        </form>
-                                    </div>
-                                    <div class="gi-checkout-summary-total border-t-[1px] border-solid border-[#eee] pt-[19px] mb-[0] mt-[16px] flex justify-between items-center">
-                                        <span class="text-left text-[16px] font-semibold text-[#4b5966] tracking-[0] font-manrope">Total Amount</span>
-                                        <span class="text-right text-[16px] font-semibold text-[#4b5966] font-manrope">$80.00</span>
-                                    </div>
-                                </div>
-                                <div class="gi-checkout-pro">
-                                    <div class="w-full mb-[15px]">
-                                        <div class="gi-product-inner transition-all duration-[0.3s] ease-in-out cursor-pointer flex flex-col overflow-hidden border-[1px] border-solid border-[#eee] rounded-[5px]">
-                                            <div class="gi-pro-image-outer transition-all duration-[0.3s] delay-[0s] ease z-[11] relative">
-                                                <div class="gi-pro-image overflow-hidden">
-                                                    <a href="product-left-sidebar.html" class="image relative block overflow-hidden pointer-events-none">
-                                                        <img class="main-image max-w-full transition-all duration-[0.3s] ease delay-[0s]" src="assets/img/product-images/2_1.jpg" alt="Product">
-                                                        <img class="hover-image absolute z-[1] top-[0] left-[0] opacity-[0] transition-all duration-[0.3s] ease delay-[0s]" src="assets/img/product-images/2_2.jpg" alt="Product">
-                                                    </a>
-                                                </div>
-                                            </div>
-                                            <div class="gi-pro-content h-full p-[20px] relative z-[10] flex flex-col text-left border-t-[1px] border-solid border-[#eee]">
-                                                <h5 class="gi-pro-title h-full mb-[10px] text-[16px]">
-                                                    <a href="product-left-sidebar.html" class="block text-[14px] leading-[22px] font-normal text-[#4b5966] tracking-[0.85px] capitalize font-Poppins hover:text-[#5caf90]">Dates Value Pack Pouch</a>
-                                                </h5>
-                                                <div class="gi-pro-rating mb-[10px] opacity-[0.7] relative">
-                                                    <i class="gicon gi-star fill text-[14px] text-[#f27d0c] mr-[3px] float-left mr-[3px]"></i>
-                                                    <i class="gicon gi-star fill text-[14px] text-[#f27d0c] mr-[3px] float-left mr-[3px]"></i>
-                                                    <i class="gicon gi-star fill text-[14px] text-[#f27d0c] mr-[3px] float-left mr-[3px]"></i>
-                                                    <i class="gicon gi-star fill text-[14px] text-[#f27d0c] mr-[3px] float-left mr-[3px]"></i>
-                                                    <i class="gicon gi-star text-[14px] text-[#777] mr-[3px] float-left mr-[3px]"></i>
-                                                </div>
-                                                <span class="gi-price">
-                                                    <span class="old-price text-[14px] text-[#777] line-through">$95.00</span>
-                                                    <span class="new-price text-[#4b5966] font-bold text-[14px] mr-[7px]">$79.00</span>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="w-full mb-0">
-                                        <div class="gi-product-inner transition-all duration-[0.3s] ease-in-out cursor-pointer flex flex-col overflow-hidden border-[1px] border-solid border-[#eee] rounded-[5px]">
-                                            <div class="gi-pro-image-outer transition-all duration-[0.3s] delay-[0s] ease z-[11] relative">
-                                                <div class="gi-pro-image overflow-hidden">
-                                                    <a href="product-left-sidebar.html" class="image relative block overflow-hidden pointer-events-none">
-                                                        <img class="main-image max-w-full transition-all duration-[0.3s] ease delay-[0s]" src="assets/img/product-images/8_1.jpg" alt="Product">
-                                                        <img class="hover-image absolute z-[1] top-[0] left-[0] opacity-[0] transition-all duration-[0.3s] ease delay-[0s]" src="assets/img/product-images/8_2.jpg" alt="Product">
-                                                    </a>
-                                                </div>
-                                            </div>
-                                            <div class="gi-pro-content h-full p-[20px] relative z-[10] flex flex-col text-left border-t-[1px] border-solid border-[#eee]">
-                                                <h5 class="gi-pro-title h-full mb-[10px] text-[16px]">
-                                                    <a href="product-left-sidebar.html" class="block text-[14px] leading-[22px] font-normal text-[#4b5966] tracking-[0.85px] capitalize font-Poppins hover:text-[#5caf90]">Smoked Honey Spiced Nuts</a>
-                                                </h5>
-                                                <div class="gi-pro-rating mb-[10px] opacity-[0.7] relative">
-                                                    <i class="gicon gi-star fill text-[14px] text-[#f27d0c] mr-[3px] float-left mr-[3px]"></i>
-                                                    <i class="gicon gi-star fill text-[14px] text-[#f27d0c] mr-[3px] float-left mr-[3px]"></i>
-                                                    <i class="gicon gi-star fill text-[14px] text-[#f27d0c] mr-[3px] float-left mr-[3px]"></i>
-                                                    <i class="gicon gi-star fill text-[14px] text-[#f27d0c] mr-[3px] float-left mr-[3px]"></i>
-                                                    <i class="gicon gi-star text-[14px] text-[#777] mr-[3px] float-left mr-[3px]"></i>
-                                                </div>
-                                                <span class="gi-price">
-                                                    <span class="old-price text-[14px] text-[#777] line-through">$58.00</span>
-                                                    <span class="new-price text-[#4b5966] font-bold text-[14px] mr-[7px]">$45.00</span>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Sidebar Summary Block -->
-                    </div>
                     <div class="gi-sidebar-wrap gi-checkout-del-wrap border-[1px] border-solid border-[#eee] mb-[30px] p-[15px] rounded-[5px]">
                         <!-- Sidebar Summary Block -->
                         <div class="gi-sidebar-block">
@@ -189,49 +96,143 @@
                         <div class="gi-checkout-inner">
                             <div class="gi-checkout-wrap p-[30px] border-[1px] border-solid border-[#eee] bg-[#fff] rounded-[5px] mb-[40px]">
                                 <div class="gi-checkout-block gi-check-new mb-[30px]">
-                                    <h3 class="gi-checkout-title text-[20px] font-semibold tracking-[0] mb-[25px] relative block text-[#4b5966] font-Montserrat leading-[1] max-[575px]:text-[18px]">New Customer</h3>
-                                    <div class="gi-check-block-content">
-                                        <div class="gi-check-subtitle mb-[14px] text-[#4b5966] text-[15px] font-medium tracking-[0] leading-[1]">Checkout Options</div>
-                                        <form action="#">
-                                            <span class="gi-new-option">
-                                                <span class="mr-[45px]">
-                                                    <input type="radio" id="account1" name="radio-group" checked>
-                                                    <label for="account1" class="relative pl-[26px] cursor-pointer leading-[16px] inline-block text-[#777] tracking-[0] mb-[15px]">Register Account</label>
-                                                </span>
-                                                <span class="mr-[45px]">
-                                                    <input type="radio" id="account2" name="radio-group">
-                                                    <label for="account2" class="relative pl-[26px] cursor-pointer leading-[16px] inline-block text-[#777] tracking-[0] mb-[15px]">Guest Account</label>
-                                                </span>
-                                            </span>
+                                <div class="gi-sb-title">
+                                <h3 class="text-[20px] max-[1199px]:text-[18px] font-semibold tracking-[0] mb-[0] relative text-[#4b5966] leading-[1.2]">Summary</h3>
+                            </div>
+                            <div class="gi-sb-block-content mt-[15px]">
+                                <div class="gi-checkout-summary">
+                                    <div class="flex justify-between items-center mb-[10px]">
+                                        <span class="text-left text-[#777] text-[14px] leading-[24px] tracking-[0]">Sub-Total</span>
+                                        <span class="text-right text-[#4b5966] text-[15px] leading-[24px] font-medium">$80.00</span>
+                                    </div>
+                                    <div class="flex justify-between items-center mb-[10px]">
+                                        <span class="text-left text-[#777] text-[14px] leading-[24px] tracking-[0]">Delivery Charges</span>
+                                        <span class="text-right text-[#4b5966] text-[15px] leading-[24px] font-medium">$80.00</span>
+                                    </div>
+                                    <div class="flex justify-between items-center mb-[10px]">
+                                        <span class="text-left text-[#777] text-[14px] leading-[24px] tracking-[0]">Coupan Discount</span>
+                                        <span class="text-right text-[#4b5966] text-[15px] leading-[24px] font-medium"><a class="gi-checkout-coupan text-[#5caf90] text-[14px] font-medium">Apply Coupan</a></span>
+                                    </div>
+                                    <div class="gi-checkout-coupan-content hidden flex justify-between items-center mb-[10px]">
+                                        <form class="gi-checkout-coupan-form flex border-[1px] border-solid border-[#eee] p-[5px] rounded-[5px]" name="gi-checkout-coupan-form" method="post" action="#">
+                                            <input class="gi-coupan inline-block align-top leading-[35px] h-[35px] w-full text-[#777] text-[14px] border-[0] bg-transparent text-left pl-[10px] pr-[10px] tracking-[0.5px] rounded-[5px] outline-[0]" type="text" required="" placeholder="Enter Your Coupan Code" name="gi-coupan" value="">
+                                            <button type="submit" class="gi-coupan-btn gi-btn-2 text-[16px] text-center px-[15px] transition-all duration-[0.3s] ease-in-out font-medium bg-[#5caf90] text-[#fff] rounded-[5px] hover:bg-[#4b5966] hover:text-[#fff]" name="subscribe" value="">Apply</button>
                                         </form>
-                                        <div class="gi-new-desc relative leading-[24px] text-[#777] tracking-[0] max-w-[64%]">By creating an account you will be able to shop faster,
-                                            be up to date on an order's status, and keep track of the orders you have
-                                            previously made.
+                                    </div>
+                                    <div class="gi-checkout-summary-total border-t-[1px] border-solid border-[#eee] pt-[19px] mb-[0] mt-[16px] flex justify-between items-center">
+                                        <span class="text-left text-[16px] font-semibold text-[#4b5966] tracking-[0] font-manrope">Total Amount</span>
+                                        <span class="text-right text-[16px] font-semibold text-[#4b5966] font-manrope">$80.00</span>
+                                    </div>
+                                </div>
+                                <div class="gi-checkout-pro">
+                                    <div class="w-full mb-4">
+                                        <div class="gi-product-inner flex flex-row items-center border border-[#eee] rounded-[5px] overflow-hidden cursor-pointer transition-all duration-300">
+                                            
+                                            <!-- Gambar di sebelah kiri -->
+                                            <div class="gi-pro-image-outer w-[150px] flex-shrink-0">
+                                                <div class="gi-pro-image overflow-hidden">
+                                                    <a href="product-left-sidebar.html" class="image block relative overflow-hidden">
+                                                        <img class="main-image w-full transition-all duration-300" src="assets/img/product-images/8_1.jpg" alt="Product">
+                                                        <img class="hover-image absolute top-0 left-0 opacity-0 transition-all duration-300" src="assets/img/product-images/8_2.jpg" alt="Product">
+                                                    </a>
+                                                </div>
+                                            </div>
+
+                                            <!-- Konten di sebelah kanan -->
+                                            <div class="gi-pro-content flex flex-col justify-center p-4 w-full">
+                                                <h5 class="gi-pro-title text-[16px] mb-2">
+                                                    <a href="product-left-sidebar.html" class="text-[14px] leading-[22px] font-normal text-[#4b5966] tracking-[0.85px] capitalize font-Poppins hover:text-[#5caf90]">Smoked Honey Spiced Nuts</a>
+                                                </h5>
+
+                                                <div class="gi-pro-rating mb-2 opacity-70 flex">
+                                                    <i class="gicon gi-star fill text-[14px] text-[#f27d0c] mr-1"></i>
+                                                    <i class="gicon gi-star fill text-[14px] text-[#f27d0c] mr-1"></i>
+                                                    <i class="gicon gi-star fill text-[14px] text-[#f27d0c] mr-1"></i>
+                                                    <i class="gicon gi-star fill text-[14px] text-[#f27d0c] mr-1"></i>
+                                                    <i class="gicon gi-star text-[14px] text-[#777] mr-1"></i>
+                                                </div>
+
+                                                <div class="gi-price">
+                                                    <span class="old-price text-[14px] text-[#777] line-through mr-2">$58.00</span>
+                                                    <span class="new-price text-[#4b5966] font-bold text-[14px]">$45.00</span>
+                                                </div>
+                                            </div>
+
                                         </div>
-                                        <div class="gi-new-btn mt-[26px]">
-                                            <a href="#" class="gi-btn-2 uppercase text-[16px] min-w-[150px] leading-[40px] tracking-[0] transition-all duration-[0.3s] ease-in-out py-[10px] px-[15px] font-medium bg-[#5caf90] text-[#fff] text-center rounded-[5px] hover:bg-[#4b5966] hover:text-[#fff]">Continue</a>
+                                    </div>
+                                    <div class="w-full mb-4">
+                                        <div class="gi-product-inner flex flex-row items-center border border-[#eee] rounded-[5px] overflow-hidden cursor-pointer transition-all duration-300">
+                                            
+                                            <!-- Gambar di sebelah kiri -->
+                                            <div class="gi-pro-image-outer w-[150px] flex-shrink-0">
+                                                <div class="gi-pro-image overflow-hidden">
+                                                    <a href="product-left-sidebar.html" class="image block relative overflow-hidden">
+                                                        <img class="main-image w-full transition-all duration-300" src="assets/img/product-images/8_1.jpg" alt="Product">
+                                                        <img class="hover-image absolute top-0 left-0 opacity-0 transition-all duration-300" src="assets/img/product-images/8_2.jpg" alt="Product">
+                                                    </a>
+                                                </div>
+                                            </div>
+
+                                            <!-- Konten di sebelah kanan -->
+                                            <div class="gi-pro-content flex flex-col justify-center p-4 w-full">
+                                                <h5 class="gi-pro-title text-[16px] mb-2">
+                                                    <a href="product-left-sidebar.html" class="text-[14px] leading-[22px] font-normal text-[#4b5966] tracking-[0.85px] capitalize font-Poppins hover:text-[#5caf90]">Smoked Honey Spiced Nuts</a>
+                                                </h5>
+
+                                                <div class="gi-pro-rating mb-2 opacity-70 flex">
+                                                    <i class="gicon gi-star fill text-[14px] text-[#f27d0c] mr-1"></i>
+                                                    <i class="gicon gi-star fill text-[14px] text-[#f27d0c] mr-1"></i>
+                                                    <i class="gicon gi-star fill text-[14px] text-[#f27d0c] mr-1"></i>
+                                                    <i class="gicon gi-star fill text-[14px] text-[#f27d0c] mr-1"></i>
+                                                    <i class="gicon gi-star text-[14px] text-[#777] mr-1"></i>
+                                                </div>
+
+                                                <div class="gi-price">
+                                                    <span class="old-price text-[14px] text-[#777] line-through mr-2">$58.00</span>
+                                                    <span class="new-price text-[#4b5966] font-bold text-[14px]">$45.00</span>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="w-full mb-4">
+                                        <div class="gi-product-inner flex flex-row items-center border border-[#eee] rounded-[5px] overflow-hidden cursor-pointer transition-all duration-300">
+                                            
+                                            <!-- Gambar di sebelah kiri -->
+                                            <div class="gi-pro-image-outer w-[150px] flex-shrink-0">
+                                                <div class="gi-pro-image overflow-hidden">
+                                                    <a href="product-left-sidebar.html" class="image block relative overflow-hidden">
+                                                        <img class="main-image w-full transition-all duration-300" src="assets/img/product-images/8_1.jpg" alt="Product">
+                                                        <img class="hover-image absolute top-0 left-0 opacity-0 transition-all duration-300" src="assets/img/product-images/8_2.jpg" alt="Product">
+                                                    </a>
+                                                </div>
+                                            </div>
+
+                                            <!-- Konten di sebelah kanan -->
+                                            <div class="gi-pro-content flex flex-col justify-center p-4 w-full">
+                                                <h5 class="gi-pro-title text-[16px] mb-2">
+                                                    <a href="product-left-sidebar.html" class="text-[14px] leading-[22px] font-normal text-[#4b5966] tracking-[0.85px] capitalize font-Poppins hover:text-[#5caf90]">Smoked Honey Spiced Nuts</a>
+                                                </h5>
+
+                                                <div class="gi-pro-rating mb-2 opacity-70 flex">
+                                                    <i class="gicon gi-star fill text-[14px] text-[#f27d0c] mr-1"></i>
+                                                    <i class="gicon gi-star fill text-[14px] text-[#f27d0c] mr-1"></i>
+                                                    <i class="gicon gi-star fill text-[14px] text-[#f27d0c] mr-1"></i>
+                                                    <i class="gicon gi-star fill text-[14px] text-[#f27d0c] mr-1"></i>
+                                                    <i class="gicon gi-star text-[14px] text-[#777] mr-1"></i>
+                                                </div>
+
+                                                <div class="gi-price">
+                                                    <span class="old-price text-[14px] text-[#777] line-through mr-2">$58.00</span>
+                                                    <span class="new-price text-[#4b5966] font-bold text-[14px]">$45.00</span>
+                                                </div>
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
-                                <div class="gi-checkout-block gi-check-login">
-                                    <h3 class="gi-checkout-title text-[20px] font-semibold tracking-[0] mb-[22px] relative block text-[#4b5966] font-Montserrat leading-[1] max-[575px]:text-[18px]">Returning Customer</h3>
-                                    <div class="gi-check-login-form">
-                                        <form action="#" method="post" class="flex flex-col">
-                                            <span class="gi-check-login-wrap">
-                                                <label class="text-[11px] text-[#4b5966] text-[15px] mb-[11px] font-medium tracking-[0] leading-[1] inline-block">Email Address</label>
-                                                <input type="text" name="name" placeholder="Enter your email address" class="bg-transparent border-[1px] border-solid border-[#eee] text-[#4b5966] text-[14px] mb-[16px] px-[15px] w-full outline-[0] rounded-[5px] h-[50px]" required>
-                                            </span>
-                                            <span class="gi-check-login-wrap">
-                                                <label class="text-[11px] text-[#4b5966] text-[15px] mb-[11px] font-medium tracking-[0] leading-[1] inline-block">Password</label>
-                                                <input type="password" name="password" placeholder="Enter your password" class="bg-transparent border-[1px] border-solid border-[#eee] text-[#4b5966] text-[14px] mb-[16px] px-[15px] w-full outline-[0] rounded-[5px] h-[50px]" required>
-                                            </span>
-                                            <span class="gi-check-login-wrap gi-check-login-btn flex items-center mt-[14px]">
-                                                <button type="submit" class="gi-btn-2 transition-all duration-[0.3s] ease-in-out py-[10px] px-[15px] text-[14px] font-medium bg-[#5caf90] text-[#fff] text-center rounded-[5px] hover:bg-[#4b5966] hover:text-[#fff] mr-[20px]">Login</button>
-                                                <a class="gi-check-login-fp text-[#4b5966] font-semibold tracking-[0.8px] underline text-[15px] leading-[24px]" href="#">Forgot Password?</a>
-                                            </span>
-                                        </form>
-                                    </div>
-                                </div>
+                            </div>
+                            </div>
                             </div>
                             <div class="gi-checkout-wrap pb-[3px] p-[30px] border-[1px] border-solid border-[#eee] bg-[#fff] rounded-[5px] mb-[40px]">
                                 <div class="gi-checkout-block gi-check-bill">

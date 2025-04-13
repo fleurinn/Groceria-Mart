@@ -16,4 +16,10 @@ class CategoryProduct extends Model
     {
         return $this->hasMany(Product::class);
     }
+
+    // Relasi dengan slider
+    public function sliders()
+    {
+        return $this->hasMany(Slider::class);
+    }
 }

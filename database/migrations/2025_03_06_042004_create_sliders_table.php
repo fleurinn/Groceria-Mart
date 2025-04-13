@@ -14,10 +14,9 @@ return new class extends Migration
         Schema::create('sliders', function (Blueprint $table) {
             $table->id();
             $table->string('image');
-            // $table->string('title');
+            $table->string('title');
             $table->string('description');
-            $table->string('categoryproducts_id');
-            $table->foreignId('category_products_id')->references('id')->on('category_products')->onDelete('cascade');
+            $table->foreignId('category_product_id')->constrained('category_products')->onDelete('cascade');
             $table->enum('status', ['draft', 'publish'])->default('publish'); // Tambahkan default 'draft'
             $table->timestamps();
         });

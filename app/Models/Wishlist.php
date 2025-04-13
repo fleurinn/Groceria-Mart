@@ -20,13 +20,7 @@ class Wishlist extends Model
      */
     public function product()
     {
-        return $this->belongsTo(Product::class)->select([
-            'id as produk_id', 
-            'name', 
-            'image', 
-            'stock_status as stok_status', 
-            'price as harga'
-        ]);
+        return $this->belongsTo(Product::class);
     }
 
     /**
