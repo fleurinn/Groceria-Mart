@@ -87,10 +87,10 @@
                     <input class="form-check-input" id="selectAll" type="checkbox" data-bulk-select='{"body":"category-products-table-body"}' />
                   </div>
                 </th>
-                <th class="align-middle ps-2 text-center" style="width:70px;">IMAGE</th>
-                <th class="align-middle ps-2 text-center" style="width:350px;">CATEGORY PRODUCT NAME</th>
-                <th class="align-middle ps-2 text-center" style="width:150px;">STATUS</th>
-                <th class="align-middle ps-2 text-center" style="width:50px;">ACTION</th>
+                <th class="align-middle ps-2 text-center">IMAGE</th>
+                <th class="align-middle ps-2 text-center" style="width:300px;">CATEGORY PRODUCT NAME</th>
+                <th class="align-middle ps-2 text-center">STATUS</th>
+                <th class="align-middle ps-2 text-center">ACTION</th>
               </tr>
             </thead>
             <tbody class="list" id="products-table-body">

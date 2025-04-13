@@ -31,6 +31,16 @@ class Product extends Model
         'images' => 'array', // Supaya `images` otomatis dikonversi menjadi array
     ];
 
+    public function categoryproducts()
+    {
+        return $this->belongsTo(CategoryProduct::class, 'category_product_id');
+    }
+
+    public function carts()
+    {
+        return $this->hasMany(Cart::class);
+    }
+
     public function category()
     {
         return $this->belongsTo(CategoryProduct::class, 'category_product_id');

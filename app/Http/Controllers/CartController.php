@@ -11,20 +11,19 @@ use Illuminate\Support\Facades\Auth;
 class CartController extends Controller
 {
     // Tampilkan semua item di keranjang user yang sedang login
+    // Menampilkan isi keranjang
     public function index()
     {
         $carts = Cart::where('user_id', Auth::id())->with('product')->get();
-        $totalPrice = $this->getCartTotal(Auth::id());
-        return response()->json(['carts' => $carts, 'total_price' => $totalPrice]);
-    }
 
-    // Hitung total harga di keranjang
-    private function getCartTotal($userId)
-    {
-        return Cart::where('user_id', $userId)->with('product')->get()->sum(function ($cart) {
-            $discountedPrice = $cart->product->price * ((100 - $cart->product->discount) / 100);
-            return $discountedPrice * $cart->quantity;
+        $total = $carts->sum(function ($cart) {
+            return $cart->product->price * $cart->quantity;
         });
+
+        return view('landing.pages.keranjang.cart-index', [
+            'carts' => $carts,
+            'total' => $total
+        ]);
     }
 
     // Tambah produk ke keranjang dengan validasi tambahan
@@ -59,7 +58,7 @@ class CartController extends Controller
             ]);
         }
 
-        return response()->json(['message' => 'Product added to cart!', 'data' => $cart]);
+        return redirect()->back()->withInput()->with('success', 'Produk berhasil dimasukkan ke keranjang.');
     }
 
     // Perbarui jumlah produk di keranjang dengan update otomatis harga
@@ -100,21 +99,10 @@ class CartController extends Controller
         return response()->json(['message' => 'Product removed from cart!']);
     }
 
-    // Hapus semua item di keranjang user dengan konfirmasi
-    public function clearCart()
+    //Bulk delete
+    public function bulkDelete(Request $request)
     {
-        if (Cart::where('user_id', Auth::id())->count() == 0) {
-            return response()->json(['message' => 'Your cart is already empty.']);
-        }
-
-        Cart::where('user_id', Auth::id())->delete();
-        return response()->json(['message' => 'Cart cleared successfully!']);
-    }
-
-    // Bulk Delete
-public function bulkDelete(Request $request)
-{
-    $ids = $request->input('ids');
+        $ids = $request->input('ids');
 
     if (empty($ids)) {
         return response()->json(['success' => false, 'message' => 'Tidak ada item keranjang yang dipilih.'], 400);

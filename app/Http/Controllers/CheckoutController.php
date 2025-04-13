@@ -2,114 +2,73 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Payment;
-use App\Models\Transaction;
 use App\Models\Checkout;
-use App\Models\Cart;
-use App\Models\Product;
+use App\Models\DiscountVoucher;
+use App\Models\ShippingAddress;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Str;
 
 class CheckoutController extends Controller
 {
     /**
-     * Menampilkan semua checkout dan pembayaran milik user yang sedang login.
+     * Display a listing of the resource (optional for admin).
      */
     public function index()
     {
-        $userId = Auth::id();
-        $checkouts = Checkout::where('user_id', $userId)->with('transactions')->get();
-        
-        return response()->json(['checkouts' => $checkouts]);
+        $checkouts = Checkout::with(['user', 'shippingAddress', 'discountVoucher'])->get();
+        return view('checkouts.index', compact('checkouts'));
     }
 
     /**
-     * Membuat checkout baru dengan validasi stok dan transaksi database.
+     * Show the form for creating a new checkout.
+     */
+    public function create()
+    {
+        $discounts = DiscountVoucher::all();
+        $addresses = Auth::user()->shippingAddresses; // asumsi relasi user->shippingAddresses
+        return view('checkouts.create', compact('discounts', 'addresses'));
+    }
+
+    /**
+     * Store a newly created checkout in storage.
      */
     public function store(Request $request)
     {
         $request->validate([
-            'shipping_address' => 'required|string|max:255',
-            'payment_method' => 'required|string|in:bank_transfer,credit_card,ewallet',
+            'discount_voucher_id' => 'nullable|exists:discount_vouchers,id',
+            'shipping_address_id' => 'required|exists:shipping_addresses,id',
+            'payment_method' => 'required|string',
+            'total_price' => 'required|numeric',
         ]);
 
-        $userId = Auth::id();
+        $checkout = Checkout::create([
+            'order_id' => 'ORD-' . strtoupper(Str::random(8)),
+            'tracking_number' => 'TRK-' . strtoupper(Str::random(10)),
+            'user_id' => Auth::id(),
+            'discount_voucher_id' => $request->discount_voucher_id,
+            'shipping_address_id' => $request->shipping_address_id,
+            'payment_method' => $request->payment_method,
+            'total_price' => $request->total_price,
+            'status_pembayaran' => 'menunggu',
+            'status_pengiriman' => 'pending',
+        ]);
 
-        // Ambil semua item dari keranjang user
-        $cartItems = Cart::where('user_id', $userId)->get();
-
-        if ($cartItems->isEmpty()) {
-            return response()->json(['message' => 'Keranjang belanja kosong!'], 400);
-        }
-
-        DB::beginTransaction(); // Mulai transaksi database
-
-        try {
-            // Hitung total harga otomatis
-            $totalPrice = 0;
-
-            foreach ($cartItems as $item) {
-                $product = Product::findOrFail($item->product_id);
-
-                if ($product->stock < $item->quantity) {
-                    throw ValidationException::withMessages([
-                        'message' => "Stok produk '{$product->name}' tidak mencukupi."
-                    ]);
-                }
-
-                // Kurangi stok produk
-                $product->stock -= $item->quantity;
-                $product->save();
-
-                // Hitung total harga
-                $totalPrice += $product->price * $item->quantity;
-            }
-
-            // Buat checkout
-            $checkout = Checkout::create([
-                'user_id' => $userId,
-                'total_price' => $totalPrice,
-                'shipping_address' => $request->shipping_address,
-                'payment_method' => $request->payment_method,
-                'status' => 'pending',
-            ]);
-
-            // Hapus item dari keranjang setelah checkout berhasil
-            Cart::where('user_id', $userId)->delete();
-
-            DB::commit(); // Simpan transaksi jika semua berhasil
-
-            return response()->json(['message' => 'Checkout berhasil!', 'data' => $checkout], 201);
-        } catch (\Exception $e) {
-            DB::rollBack(); // Batalkan transaksi jika terjadi kesalahan
-            return response()->json(['message' => 'Checkout gagal!', 'error' => $e->getMessage()], 500);
-        }
+        // Tambahkan proses pembayaran atau redirect ke Midtrans/Snap jika perlu
+        return redirect()->route('checkouts.show', $checkout->id)
+                         ->with('success', 'Checkout berhasil dibuat.');
     }
 
     /**
-     * Mengunduh invoice dalam format PDF.
+     * Display the specified checkout.
      */
-    public function downloadInvoice($id)
+    public function show($id)
     {
-        try {
-            $payment = Payment::findOrFail($id);
-            
-            // Pastikan user hanya bisa mengunduh invoice miliknya
-            if ($payment->user_id !== Auth::id()) {
-                return response()->json(['message' => 'Unauthorized'], 403);
-            }
-
-            $pdf = Pdf::loadView('admin.payments.invoice', compact('payment'));
-            return $pdf->download('invoice-' . $payment->id . '.pdf');
-        } catch (ModelNotFoundException $e) {
-            return response()->json(['message' => 'Payment not found!'], 404);
-        }
+        $checkout = Checkout::with(['user', 'shippingAddress', 'discountVoucher'])->findOrFail($id);
+        return view('checkouts.show', compact('checkout'));
     }
 
+<<<<<<< HEAD
     
 
     // Bulk delete
@@ -136,6 +95,51 @@ class CheckoutController extends Controller
             'success' => false,
             'message' => 'Terjadi kesalahan saat menghapus data checkout.'
         ], 500);
+=======
+    /**
+     * Show the form for editing the specified checkout.
+     */
+    public function edit($id)
+    {
+        $checkout = Checkout::findOrFail($id);
+        $discounts = DiscountVoucher::all();
+        return view('checkouts.edit', compact('checkout', 'discounts'));
+    }
+
+    /**
+     * Update the specified checkout in storage.
+     */
+    public function update(Request $request, $id)
+    {
+        $checkout = Checkout::findOrFail($id);
+
+        $request->validate([
+            'status_pembayaran' => 'required|in:menunggu,konfirmasi,belum dibayar,paid',
+            'status_pengiriman' => 'required|in:pending,processing,shipped,delivered,cancelled',
+        ]);
+
+        $checkout->update($request->only([
+            'status_pembayaran',
+            'status_pengiriman',
+            'payment_date',
+            'snap_token',
+        ]));
+
+        return redirect()->route('checkouts.index')
+                         ->with('success', 'Checkout berhasil diperbarui.');
+    }
+
+    /**
+     * Remove the specified checkout from storage.
+     */
+    public function destroy($id)
+    {
+        $checkout = Checkout::findOrFail($id);
+        $checkout->delete();
+
+        return redirect()->route('checkouts.index')
+                         ->with('success', 'Checkout berhasil dihapus.');
+>>>>>>> 8f62adab55f540d2b00e536fa2cdcd97eb2db0db
     }
     }
 

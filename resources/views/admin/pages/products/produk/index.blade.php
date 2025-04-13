@@ -11,7 +11,7 @@
         <h2 class="mb-0">Products</h2>
       </div>
     </div>
-    <div id="products" data-list='{"valueNames":["product","price","category","tags","vendor","time"],"page":10,"pagination":true}'>
+    <div id="products" data-list='{"valueNames":["product","price","category  ","tags","vendor","time"],"page":10,"pagination":true}'>
     <div class="mb-4">
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
             <div style="display: flex; align-items: center; gap: 10px;">
@@ -68,13 +68,13 @@
                   <input class="form-check-input" id="selectAll" type="checkbox" data-bulk-select='{"body":"products-table-body"}' />
                 </div>
               </th>
-              <th class="align-middle ps-2 text-center" style="width:70px;">IMAGE</th>
-              <th class="align-middle ps-2 text-center" style="width:350px;">PRODUCT NAME</th>
-              <th class="align-middle ps-2 text-center" style="width:150px;">PRICE</th>
-              <th class="align-middle ps-2 text-center" style="width:150px;">CATEGORY</th>
-              <th class="align-middle ps-2 text-center" style="width:150px;">STATUS</th>
-              <th class="align-middle ps-2 text-center" style="width:250px;">TAGS</th>
-              <th class="align-middle ps-2 text-center" style="width:50px;">ACTION</th>
+              <th class="align-middle ps-2 text-center">IMAGE</th>
+              <th class="align-middle ps-2 text-center" style="width:300px;">PRODUCT NAME</th>
+              <th class="align-middle ps-2 text-center">PRICE</th>
+              <th class="align-middle ps-2 text-center">CATEGORY</th>
+              <th class="align-middle ps-2 text-center">STATUS</th>
+              <th class="align-middle ps-2 text-center">TAGS</th>
+              <th class="align-middle ps-2 text-center">ACTION</th>
             </tr>
           </thead>
             <tbody class="list" id="products-table-body">
@@ -87,7 +87,7 @@
                 </td>
                 <td class="align-middle white-space-nowrap py-0">
                   <a class="d-block border border-translucent rounded-2" href="../landing/product-details.html">
-                    <img src="../../../assets/img/products/1.png" alt="" width="53" /></a>
+                    <img src="{{ asset('storage/products/' . $product->image) }}" alt="" width="53" /></a>
                 </td>
                 <td class="product align-middle ps-4">
                   <a class="fw-semibold line-clamp-3 mb-0" href="../landing/product-details.html">

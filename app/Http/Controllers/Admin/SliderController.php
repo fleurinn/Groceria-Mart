@@ -4,170 +4,160 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Slider;
+use App\Models\CategoryProduct;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 class SliderController extends Controller
 {
-    // Menampilkan daftar slider
     public function index()
     {
-        $sliders = Slider::all();
-        return view('admin.sliders.index', compact('sliders'));
+        $categoryproducts = CategoryProduct::all();
+        $sliders = Slider::with('categoryproduct')->paginate(10);
+        return view('admin.pages.banner.hero-index', compact('sliders', 'categoryproducts'));
     }
 
-    // Menampilkan form untuk membuat slider baru
     public function create()
     {
-        return view('admin.sliders.create');
+        $categoryproducts = CategoryProduct::all();
+        return view('admin.pages.banner.hero-create', compact('categoryproducts'));
     }
 
-    // Menyimpan slider baru
     public function store(Request $request)
     {
-        // Validasi input
         $request->validate([
             'title'               => 'required|string|max:255',
             'description'         => 'required|string|max:1000',
             'image'               => 'required|image|mimes:jpeg,jpg,png',
             'status'              => 'required|in:draft,publish',
-            'categoryproducts_id' => 'required|exists:category_products,id',
+            'category_product_id' => 'required|exists:category_products,id',
         ]);
 
-        // Upload gambar
         $image = $request->file('image');
-        $image->storeAs('public/sliders/', $image->hashName());
+        $imageName = $image->hashName();
+        $image->move(public_path('storage/sliders'), $imageName);
 
-        // Simpan data slider
         Slider::create([
             'title'               => $request->title,
             'description'         => $request->description,
-            'image'               => $image->hashName(),
+            'image'               => $imageName,
             'status'              => $request->status,
-            'categoryproducts_id' => $request->categoryproducts_id,
+            'category_product_id' => $request->category_product_id,
         ]);
 
-        return redirect()->route('sliders.index')->with('success', 'Slider berhasil ditambahkan.');
+        return redirect()->route('slider.index')->with('success', 'Slider berhasil ditambahkan.');
     }
 
-    // Menampilkan form edit slider
     public function edit(Slider $slider)
     {
-        return view('admin.sliders.edit', compact('slider'));
+        $categoryproducts = CategoryProduct::all();
+        return view('admin.pages.banner.hero-edit', compact('slider', 'categoryproducts'));
     }
 
-    // Memperbarui data slider
     public function update(Request $request, Slider $slider)
     {
-        // Validasi input
+        Log::info('Mulai proses update slider', [
+            'slider_id' => $slider->id,
+            'request_data' => $request->all()
+        ]);
+
         $request->validate([
             'title'               => 'required|string|max:255',
             'description'         => 'required|string|max:1000',
             'image'               => 'nullable|image|mimes:jpeg,jpg,png',
             'status'              => 'required|in:draft,publish',
-            'categoryproducts_id' => 'required|exists:category_products,id',
+            'category_product_id' => 'required|exists:category_products,id',
         ]);
 
-        // Cek jika ada gambar baru
+        $data = [
+            'title'               => $request->title,
+            'description'         => $request->description,
+            'status'              => $request->status,
+            'category_product_id' => $request->category_product_id,
+        ];
+
         if ($request->hasFile('image')) {
             // Hapus gambar lama
-            Storage::delete('public/sliders/' . $slider->image);
+            if ($slider->image && Storage::exists('public/sliders/' . $slider->image)) {
+                Storage::delete('public/sliders/' . $slider->image);
+            }
 
-            // Upload gambar baru
             $image = $request->file('image');
-
-            $image->storeAs('public/sliders/', $image->hashName());
-
-
-            // Update dengan gambar baru
-            $slider->update([
-
-                'title'               => $request->title,
-                'description'         => $request->description,
-                'image'               => $image->hashName(),
-                'status'              => $request->status,
-                'categoryproducts_id' => $request->categoryproducts_id,
-
-            ]);
-        } else {
-            // Update tanpa ubah gambar
-            $slider->update([
-                'title'               => $request->title,
-                'description'         => $request->description,
-                'status'              => $request->status,
-                'categoryproducts_id' => $request->categoryproducts_id,
-            ]);
+            $imageName = $image->hashName();
+            $image->storeAs('public/sliders', $imageName);
+            $data['image'] = $imageName;
         }
 
-        return redirect()->route('sliders.index')->with('success', 'Slider berhasil diperbarui.');
+        $slider->update($data);
+
+        return redirect()->route('slider.index')->with('success', 'Slider berhasil diperbarui.');
     }
 
-    // Menghapus slider
     public function destroy(Slider $slider)
     {
-
-        // Hapus gambar terkait jika ada
-        if ($slider->image) {
+        if ($slider->image && Storage::exists('public/sliders/' . $slider->image)) {
             Storage::delete('public/sliders/' . $slider->image);
-
         }
 
         $slider->delete();
 
-        return redirect()->route('sliders.index')->with('success', 'Slider berhasil dihapus.');
+        return redirect()->route('slider.index')->with('success', 'Slider berhasil dihapus.');
     }
 
-    // Menampilkan detail slider
     public function show(string $id): View
     {
-        $slider = Slider::with('products')->findOrFail($id);
+        $slider = Slider::with('categoryproduct')->findOrFail($id);
         return view('sliders.show', compact('slider'));
     }
 
-    //Bulk
     public function bulkDelete(Request $request)
-{
-    $ids = $request->input('ids');
+    {
+        $ids = $request->input('ids');
 
-    if (empty($ids)) {
+        if (empty($ids)) {
+            return response()->json(['success' => false, 'message' => 'Tidak ada slider yang dipilih.'], 400);
+        }
+
+        $sliders = Slider::whereIn('id', $ids)->get();
+
+        foreach ($sliders as $slider) {
+            if ($slider->image) {
+                $imagePath = public_path('storage/sliders/' . $slider->image);
+                if (File::exists($imagePath)) {
+                    File::delete($imagePath);
+                }
+            }
+        }
+
+        Slider::whereIn('id', $ids)->delete();
+
+        return response()->json(['success' => true, 'message' => 'Slider berhasil dihapus.']);
+    }
+
+    public function bulkDraft(Request $request)
+    {
+        $ids = $request->input('ids');
+
+        if ($ids) {
+            Slider::whereIn('id', $ids)->update(['status' => 'draft']);
+            return response()->json(['success' => true, 'message' => 'Slider berhasil diubah ke draft.']);
+        }
+
         return response()->json(['success' => false, 'message' => 'Tidak ada slider yang dipilih.'], 400);
     }
 
-    $sliders = Slider::whereIn('id', $ids)->get();
+    public function bulkPublish(Request $request)
+    {
+        $ids = $request->input('ids');
 
-    foreach ($sliders as $slider) {
-        if ($slider->image) {
-            Storage::delete('public/sliders/' . $slider->image); //sesuaikan pathnya
+        if ($ids) {
+            Slider::whereIn('id', $ids)->update(['status' => 'publish']);
+            return response()->json(['success' => true, 'message' => 'Slider berhasil dipublikasikan.']);
         }
+
+        return response()->json(['success' => false, 'message' => 'Tidak ada slider yang dipilih.'], 400);
     }
-
-    Slider::whereIn('id', $ids)->delete();
-
-    return response()->json(['success' => true, 'message' => 'Slider berhasil dihapus.']);
-}
-
-public function bulkDraft(Request $request)
-{
-    $ids = $request->input('ids');
-
-    if ($ids) {
-        Slider::whereIn('id', $ids)->update(['status' => 'draft']);
-        return response()->json(['success' => true, 'message' => 'Slider berhasil diubah ke draft.']);
-    }
-
-    return response()->json(['success' => false, 'message' => 'Tidak ada slider yang dipilih.'], 400);
-}
-
-public function bulkPublish(Request $request)
-{
-    $ids = $request->input('ids');
-
-    if ($ids) {
-        Slider::whereIn('id', $ids)->update(['status' => 'publish']);
-        return response()->json(['success' => true, 'message' => 'Slider berhasil dipublikasikan.']);
-    }
-
-    return response()->json(['success' => false, 'message' => 'Tidak ada slider yang dipilih.'], 400);
-}
 }

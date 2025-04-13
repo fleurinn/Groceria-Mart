@@ -15,26 +15,16 @@ class WishlistController extends Controller
     public function index()
     {
         $userId = Auth::id();
-        
+
+        // Ambil wishlist beserta produk yang masih tersedia
         $wishlists = Wishlist::where('user_id', $userId)
             ->with('product')
             ->get()
-            ->map(function ($wishlist) {
-                if ($wishlist->product) { // Cek apakah produk masih tersedia
-                    return [
-                        'produk_id' => $wishlist->product->produk_id,
-                        'image' => $wishlist->product->image,
-                        'name' => $wishlist->product->name,
-                        'stok_status' => $wishlist->product->stok_status,
-                        'harga' => $wishlist->product->harga
-                    ];
-                }
-            })->filter(); // Hapus data null jika produk sudah dihapus dari database
+            ->filter(function ($wishlist) {
+                return $wishlist->product !== null;
+            });
 
-        return response()->json([
-            'message' => 'Wishlist berhasil diambil.',
-            'data' => $wishlists
-        ], 200);
+        return view('landing.pages.wishlist.wishlist-index', compact('wishlists'));
     }
 
     /**
@@ -56,20 +46,21 @@ class WishlistController extends Controller
         }
 
         // Cek apakah produk sudah ada di wishlist
-        if (Wishlist::where('user_id', $userId)->where('product_id', $productId)->exists()) {
+        $existing = Wishlist::where('user_id', $userId)
+            ->where('product_id', $productId)
+            ->exists();
+
+        if ($existing) {
             return response()->json(['message' => 'Produk ini sudah ada di wishlist Anda.'], 409);
         }
 
         // Simpan produk ke wishlist
-        $wishlist = Wishlist::create([
+        Wishlist::create([
             'user_id' => $userId,
             'product_id' => $productId
         ]);
 
-        return response()->json([
-            'message' => 'Produk berhasil ditambahkan ke wishlist!',
-            'data' => $wishlist
-        ], 201);
+        return redirect()->back()->withInput()->with('success', 'Produk berhasil dimasukkan ke wishlist.');
     }
 
     /**
@@ -86,7 +77,7 @@ class WishlistController extends Controller
 
         $wishlist->delete();
 
-        return response()->json(['message' => 'Produk dihapus dari wishlist!'], 200);
+        return redirect()->back()->withInput()->with('success', 'Produk berhasil dihapus.');
     }
 
     /**
@@ -113,7 +104,6 @@ class WishlistController extends Controller
         $userId = Auth::id();
         $productIds = $request->input('product_ids');
 
-        // Ambil daftar produk yang ada di wishlist
         $wishlists = Wishlist::where('user_id', $userId)
             ->whereIn('product_id', $productIds)
             ->pluck('id', 'product_id');
@@ -130,26 +120,20 @@ class WishlistController extends Controller
         return response()->json($response, 200);
     }
 
-    // Bulk delete wishlist
+    /**
+     * Menghapus beberapa item wishlist sekaligus.
+     */
     public function bulkDelete(Request $request)
     {
-        $request->validate([
-            'ids' => 'required|array|min:1',
-            'ids.*' => 'integer|exists:wishlists,id'
-        ]);
-    
-        $userId = Auth::id();
-    
-        // Hapus wishlist yang sesuai user_id dan id dari input
-        $deleted = Wishlist::where('user_id', $userId)
-            ->whereIn('id', $request->ids)
-            ->delete();
-    
-        if ($deleted > 0) {
-            return response()->json(['success' => true, 'message' => 'Wishlist berhasil dihapus.']);
-        } else {
-            return response()->json(['success' => false, 'message' => 'Tidak ada wishlist yang dihapus.'], 404);
+        $ids = $request->input('ids');
+
+        if (empty($ids)) {
+            return response()->json(['success' => false, 'message' => 'Tidak ada wishlist yang dipilih.'], 400);
         }
+
+        Wishlist::whereIn('id', $ids)->where('user_id', Auth::id())->delete();
+
+        return response()->json(['success' => true, 'message' => 'Wishlist berhasil dihapus.']);
     }
-    
 }
+    

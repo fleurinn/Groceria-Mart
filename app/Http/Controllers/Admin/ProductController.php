@@ -16,16 +16,45 @@ class ProductController extends Controller
         $search = $request->input('search');
         $category = $request->input('category');
         $status = $request->input('status');
+        $sort = $request->input('sort');
+        $tag = $request->input('tag');
+
+        // Ambil semua tag dari produk, explode lalu ambil yang unik
+        $allTags = Product::pluck('tags')
+            ->flatMap(function ($tagString) {
+                return collect(explode(',', $tagString));
+            })
+            ->map(function ($tag) {
+                return trim($tag);
+            })
+            ->unique()
+            ->filter() // hilangkan null/kosong
+            ->values();
 
         $products = Product::with('category', 'variants')
-            ->when($search, fn ($q) => $q->where('name', 'like', "%$search%")
-                ->orWhere('tags', 'like', "%$search%"))
+            ->when($search, function ($query) use ($search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'like', "%$search%")
+                    ->orWhere('tags', 'like', "%$search%");
+                });
+            })
             ->when($category, fn ($q) => $q->where('category_product_id', $category))
             ->when($status, fn ($q) => $q->where('status', $status))
-            ->paginate(10);
+            ->when($tag, function ($q) use ($tag) {
+                $q->where('tags', 'like', "%$tag%");
+            })
+            ->when($sort, function ($query) use ($sort) {
+                switch ($sort) {
+                    case '3': $query->orderBy('name', 'asc'); break;
+                    case '4': $query->orderBy('name', 'desc'); break;
+                    case '5': $query->orderBy('price', 'asc'); break;
+                    case '6': $query->orderBy('price', 'desc'); break;
+                }
+            })->paginate(10);
 
-        return view('admin.pages.products.produk.index', compact('products', 'search'));
+        return view('admin.pages.products.produk.index', compact('products', 'search', 'category', 'status', 'sort', 'tag', 'allTags'));
     }
+
 
     public function create()
     {
@@ -60,7 +89,6 @@ class ProductController extends Controller
             $imageName = $request->file('image')->hashName();
             $request->file('image')->storeAs('public/products', $imageName);
 
-
             $product = Product::create([
                 'name' => $request->name,
                 'weight' => $request->weight,
@@ -82,7 +110,7 @@ class ProductController extends Controller
 
                     if (!empty($variant['image']) && $variant['image'] instanceof \Illuminate\Http\UploadedFile) {
                         $variantImage = $variant['image']->hashName();
-                        $variant['image']->storeAs('public/variants', $variantImage);
+                        $variant['image']->move(public_path('storage/variants'), $variantImage);
                     }
 
                     $product->variants()->create([
@@ -104,12 +132,10 @@ class ProductController extends Controller
 
     public function edit(Product $product)
     {
-        $variants = $product->variants; // akan mengambil semua variant milik product
-        $categories = CategoryProduct::all(); 
-
-        return view('admin.pages.products.produk.edit', compact('product', 'variants', 'categories')); 
+        $variants = $product->variants;
+        $categories = CategoryProduct::all();
+        return view('admin.pages.products.produk.edit', compact('product', 'variants', 'categories'));
     }
-
 
     public function update(Request $request, Product $product)
     {
@@ -139,7 +165,7 @@ class ProductController extends Controller
             if ($request->hasFile('image')) {
                 Storage::delete('public/products/' . $product->image);
                 $imageName = $request->file('image')->hashName();
-                $request->file('image')->storeAs('public/products', $imageName);
+                $request->file('image')->move(public_path('storage/products'), $imageName);
                 $product->image = $imageName;
             }
 
@@ -162,7 +188,7 @@ class ProductController extends Controller
                         }
 
                         $variantImageName = $variant['image']->hashName();
-                        $variant['image']->storeAs('public/variants', $variantImageName);
+                        $variant['image']->move(public_path('storage/variants'), $variantImageName);
                         $data['image'] = $variantImageName;
                     }
 
@@ -189,7 +215,6 @@ class ProductController extends Controller
         return redirect()->route('products.index')->with('success', 'Produk berhasil dihapus.');
     }
 
-    //Bulk
     public function bulkDelete(Request $request)
     {
         $ids = $request->input('ids');
@@ -204,23 +229,11 @@ class ProductController extends Controller
         $products = Product::with('variants')->whereIn('id', $ids)->get();
 
         foreach ($products as $product) {
-            // Hapus gambar produk utama
-            if ($product->image && Storage::exists('public/products/' . $product->image)) {
-                Storage::delete('public/products/' . $product->image);
+            if ($product->image) {
+                Storage::delete('public/products/' . $product->image); //sesuaikan pathnya
             }
-
-            // Hapus gambar pada semua varian produk
-            foreach ($product->variants as $variant) {
-                if ($variant->image && Storage::exists('public/variants/' . $variant->image)) {
-                    Storage::delete('public/variants/' . $variant->image);
-                }
-            }
-
-            // Hapus relasi varian dari database
-            $product->variants()->delete();
         }
 
-        // Hapus produk dari database
         Product::whereIn('id', $ids)->delete();
 
         return response()->json([
