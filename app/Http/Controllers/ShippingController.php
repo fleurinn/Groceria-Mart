@@ -126,7 +126,10 @@ class ShippingController extends Controller
 
         foreach ($shippings as $shipping) {
             if ($shipping->proof_of_delivery) {
-                Storage::delete('public/proof_of_delivery/' . $shipping->proof_of_delivery);
+                $path = public_path('storage/proof_of_delivery/' . $shipping->proof_of_delivery);
+                if (file_exists($path)) {
+                    unlink($path);
+                }
             }
         }
 

@@ -119,12 +119,44 @@ class ServiceController extends Controller
     {
         $ids = $request->input('ids');
 
-        if (empty($ids)) {
-            return response()->json(['success' => false, 'message' => 'Tidak ada layanan yang dipilih.'], 400);
+    if (empty($ids)) {
+        return response()->json(['success' => false, 'message' => 'Tidak ada layanan yang dipilih.'], 400);
+    }
+
+    $services = Service::whereIn('id', $ids)->get();
+
+    foreach ($services as $service) {
+        if ($service->image) {
+            Storage::delete('public/services/' . $service->image); //sesuaikan pathnya
         }
+    }
 
         Service::whereIn('id', $ids)->delete();
 
-        return response()->json(['success' => true, 'message' => 'Layanan berhasil dihapus.']);
+    return response()->json(['success' => true, 'message' => 'Layanan berhasil dihapus.']);
+}
+
+public function bulkDraft(Request $request)
+{
+    $ids = $request->input('ids');
+
+    if ($ids) {
+        Service::whereIn('id', $ids)->update(['status' => 'draft']);
+        return response()->json(['success' => true, 'message' => 'Layanan berhasil diubah ke draft.']);
     }
+
+    return response()->json(['success' => false, 'message' => 'Tidak ada layanan yang dipilih.'], 400);
+}
+
+public function bulkPublish(Request $request)
+{
+    $ids = $request->input('ids');
+
+    if ($ids) {
+        Service::whereIn('id', $ids)->update(['status' => 'publik']);
+        return response()->json(['success' => true, 'message' => 'Layanan berhasil dipublikasikan.']);
+    }
+
+    return response()->json(['success' => false, 'message' => 'Tidak ada layanan yang dipilih.'], 400);
+}
 }

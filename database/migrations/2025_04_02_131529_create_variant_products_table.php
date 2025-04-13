@@ -20,6 +20,7 @@ return new class extends Migration
                 $table->decimal('price', 10, 2)->nullable(); // Harga khusus varian
                 $table->decimal('discount', 5, 2)->nullable()->default(0);
                 $table->integer('stock')->default(0); // Stok varian
+                $table->enum('status', ['draft', 'publish'])->default('draft'); // Status varian
                 $table->timestamps();
         });
     }

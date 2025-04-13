@@ -22,7 +22,8 @@ class TransactionController extends Controller
              'total_price' => 'required|numeric',
              'payment_method' => 'required|string',
              'shipping_address' => 'required|string',
-             'status' => 'in:pending,processing,shipped,completed,cancelled',
+             'status' => 'in:pending,processing,shipped,completed,cancelled,draft,publish',
+
          ]);
  
          $transaction = Transaction::create([
@@ -52,7 +53,8 @@ class TransactionController extends Controller
              'total_price' => 'numeric',
              'payment_method' => 'string',
              'shipping_address' => 'string',
-             'status' => 'in:pending,processing,shipped,completed,cancelled',
+             'status' => 'in:pending,processing,shipped,completed,cancelled,draft,publish',
+
          ]);
  
          $transaction->update($request->all());

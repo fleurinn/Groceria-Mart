@@ -87,7 +87,7 @@ class ProductController extends Controller
 
         try {
             $imageName = $request->file('image')->hashName();
-            $request->file('image')->move(public_path('storage/products'), $imageName);
+            $request->file('image')->storeAs('public/products', $imageName);
 
             $product = Product::create([
                 'name' => $request->name,
@@ -219,21 +219,27 @@ class ProductController extends Controller
     {
         $ids = $request->input('ids');
 
-        if (empty($ids)) {
-            return response()->json(['success' => false, 'message' => 'Tidak ada produk yang dipilih.'], 400);
+        if (empty($ids) || !is_array($ids)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Tidak ada produk yang dipilih atau format ID salah.'
+            ], 400);
         }
 
-        $products = Product::whereIn('id', $ids)->get();
+        $products = Product::with('variants')->whereIn('id', $ids)->get();
 
         foreach ($products as $product) {
             if ($product->image) {
-                Storage::delete('public/products/' . $product->image);
+                Storage::delete('public/products/' . $product->image); //sesuaikan pathnya
             }
         }
 
         Product::whereIn('id', $ids)->delete();
 
-        return response()->json(['success' => true, 'message' => 'Produk berhasil dihapus.']);
+        return response()->json([
+            'success' => true,
+            'message' => 'Produk berhasil dihapus.'
+        ]);
     }
 
     public function bulkDraft(Request $request)
