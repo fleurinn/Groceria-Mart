@@ -48,19 +48,4 @@ class Cart extends Model
         return $this->quantity * $this->price;
     }
 
-    // Validasi sebelum menyimpan data
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::saving(function ($cart) {
-            $validator = Validator::make(['quantity' => $cart->quantity], [
-                'quantity' => 'integer|min:1|max:100'
-            ]);
-
-            if ($validator->fails()) {
-                throw new \Exception('Quantity must be between 1 and 100.');
-            }
-        });
-    }
 }

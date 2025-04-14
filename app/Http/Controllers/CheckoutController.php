@@ -10,7 +10,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class CheckoutController extends Controller
-{
+{   
+
     /**
      * Display a listing of the resource (optional for admin).
      */

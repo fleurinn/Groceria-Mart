@@ -8,6 +8,9 @@
         <div class="flex flex-wrap justify-between items-center mx-auto min-[1600px]:max-w-[1600px] min-[1400px]:max-w-[1320px] min-[1200px]:max-w-[1140px] min-[992px]:max-w-[960px] min-[768px]:max-w-[720px] min-[576px]:max-w-[540px]">
             <div class="flex flex-wrap w-full px-[12px]">
                 <div class="gi-pro-rightside gi-common-rightside w-full">
+                    @php $product = $product ?? null; @endphp
+
+                    @if ($product)    
                     <!-- Single product content Start -->
                     <div class="single-pro-block">
                         <div class="single-pro-inner">
@@ -16,43 +19,29 @@
                                     <div class="single-product-scroll p-[15px] sticky top-[30px] rounded-[5px] border-[1px] border-solid border-[#eee]">
                                         <div class="single-product-cover overflow-hidden cursor-zoom-in rounded-[5px]">
                                             <div class="single-slide zoom-image-hover">
-                                                <img class="img-responsive h-full w-full" src="assets/img/product-images/4_1.jpg" alt="">
+                                                <img class="img-responsive h-full w-full" src="{{ asset('storage/products/' . $product->image) }}" alt="{{ $product->name }}">
                                             </div>
+                                            @foreach ($product->variants ?? [] as $variant)
                                             <div class="single-slide zoom-image-hover">
-                                                <img class="img-responsive h-full w-full" src="assets/img/product-images/2_1.jpg" alt="">
+                                                <img class="img-responsive h-full w-full" src="{{ asset('storage/variants/' . $variant->image) }}" alt="{{ $variant->name }}">
                                             </div>
-                                            <div class="single-slide zoom-image-hover">
-                                                <img class="img-responsive h-full w-full" src="assets/img/product-images/3_1.jpg" alt="">
-                                            </div>
-                                            <div class="single-slide zoom-image-hover">
-                                                <img class="img-responsive h-full w-full" src="assets/img/product-images/1_1.jpg" alt="">
-                                            </div>
-                                            <div class="single-slide zoom-image-hover">
-                                                <img class="img-responsive h-full w-full" src="assets/img/product-images/5_1.jpg" alt="">
-                                            </div>
+                                            @endforeach
                                         </div>
                                         <div class="single-nav-thumb w-full overflow-hidden">
                                             <div class="single-slide px-[11px] pt-[11px]">
-                                                <img class="img-responsive h-full w-full border-[1px] border-solid border-transparent transition-all duration-[0.3s] ease delay-[0s] cursor-pointer rounded-[5px]" src="assets/img/product-images/4_1.jpg" alt="">
+                                                <img class="img-responsive w-[100px] h-[100px] object-cover border-[1px] border-solid border-transparent transition-all duration-[0.3s] ease delay-[0s] cursor-pointer rounded-[5px]" src="{{ asset('storage/products/' . $product->image) }}" alt="{{ $product->name }}">
                                             </div>
+                                            @foreach ($product->variants ?? [] as $variant)
                                             <div class="single-slide px-[11px] pt-[11px]">
-                                                <img class="img-responsive h-full w-full border-[1px] border-solid border-transparent transition-all duration-[0.3s] ease delay-[0s] cursor-pointer rounded-[5px]" src="assets/img/product-images/2_1.jpg" alt="">
+                                                <img class="img-responsive w-[100px] h-[100px] object-cover border-[1px] border-solid border-transparent transition-all duration-[0.3s] ease delay-[0s] cursor-pointer rounded-[5px]" src="{{ asset('storage/variants/' . $variant->image) }}" alt="{{ $variant->name }}">
                                             </div>
-                                            <div class="single-slide px-[11px] pt-[11px]">
-                                                <img class="img-responsive h-full w-full border-[1px] border-solid border-transparent transition-all duration-[0.3s] ease delay-[0s] cursor-pointer rounded-[5px]" src="assets/img/product-images/3_1.jpg" alt="">
-                                            </div>
-                                            <div class="single-slide px-[11px] pt-[11px]">
-                                                <img class="img-responsive h-full w-full border-[1px] border-solid border-transparent transition-all duration-[0.3s] ease delay-[0s] cursor-pointer rounded-[5px]" src="assets/img/product-images/1_1.jpg" alt="">
-                                            </div>
-                                            <div class="single-slide px-[11px] pt-[11px]">
-                                                <img class="img-responsive h-full w-full border-[1px] border-solid border-transparent transition-all duration-[0.3s] ease delay-[0s] cursor-pointer rounded-[5px]" src="assets/img/product-images/5_1.jpg" alt="">
-                                            </div>
+                                            @endforeach
                                         </div>
                                     </div>
                                 </div>
                                 <div class="single-pro-desc single-pro-desc-no-sidebar w-[60%] max-[991px]:w-full relative pl-[12px] max-[991px]:pl-[0] max-[991px]:mt-[30px] max-[991px]:w-full">
                                     <div class="single-pro-content">
-                                        <h5 class="gi-single-title text-[#4b5966] text-[22px] capitalize mb-[20px] block font-Poppins font-medium leading-[35px] tracking-[0.02rem] max-[1199px]:text-[20px] max-[1199px]:leading-[33px] max-[767px]:text-[18px] max-[767px]:text-[18px] max-[767px]:leading-[31px]">Potato Chips 52g, American Cream & Onion Flavour, Crunchy Chips & Snacks.</h5>
+                                        <h5 class="gi-single-title text-[#4b5966] text-[22px] capitalize mb-[20px] block font-oppins font-medium leading-[35px] tracking-[0.02rem] max-[1199px]:text-[20px] max-[1199px]:leading-[33px] max-[767px]:text-[18px] max-[767px]:text-[18px] max-[767px]:leading-[31px]">{{ $product->name }}</h5>
                                         <div class="gi-single-rating-wrap flex mb-[14px] items-center">
                                             <div class="gi-single-rating pr-[15px] leading-[17px]">
                                                 <i class="gicon gi-star fill text-[#f27d0c] float-left text-[14px] mr-[3px]"></i>
@@ -67,10 +56,28 @@
                                         </div>
                                         <div class="gi-single-price-stoke mb-[15px] pt-[15px] pb-[15px] flex justify-between">
                                             <div class="gi-single-price flex flex-col">
-                                                <div class="final-price mb-[15px] text-[#4b5966] font-semibold text-[22px] leading-[32px] font-Poppins tracking-[0] max-[1199px]:text-[20px]">$664.00
-                                                    <span class="price-des ml-[15px] text-[#5caf90] font-medium text-[18px] tracking-[0.02rem]">-78%</span>
+                                                <div class="final-price mb-[15px] text-[#4b5966] font-semibold text-[22px] leading-[32px] font-Poppins tracking-[0] max-[1199px]:text-[20px]">Rp{{ $product->price }}
+                                                    <span class="price-des ml-[15px] text-[#5caf90] font-medium text-[18px] tracking-[0.02rem]">-{{ $product->discount }}%</span>
                                                 </div>
-                                                <div class="mrp text-[#777]">M.R.P. : <span class="text-[#999] line-through">$2,999.00</span></div>
+                                                @php
+                                                    $originalPrice = $product->discount > 0 ? $product->price / (1 - ($product->discount / 100)) : $product->price;
+                                                @endphp
+
+                                                <div class="gi-single-price flex flex-col">
+                                                    <div class="final-price mb-[15px] text-[#4b5966] font-semibold text-[22px] leading-[32px] font-Poppins tracking-[0] max-[1199px]:text-[20px]">
+                                                        Rp{{ number_format($product->price, 0, ',', '.') }}
+                                                        @if($product->discount > 0)
+                                                            <span class="price-des ml-[15px] text-[#5caf90] font-medium text-[18px] tracking-[0.02rem]">
+                                                                -{{ $product->discount }}%
+                                                            </span>
+                                                        @endif
+                                                    </div>
+                                                    @if($product->discount > 0)
+                                                        <div class="mrp text-[#777]">
+                                                            M.R.P. : <span class="text-[#999] line-through">Rp{{ number_format($originalPrice, 0, ',', '.') }}</span>
+                                                        </div>
+                                                    @endif
+                                                </div>
                                             </div>
                                             <div class="gi-single-stoke flex flex-col">
                                                 <span class="gi-single-sku mb-[15px] text-[18px] leading-[32px] text-[#4b5966] font-semibold tracking-[0.02rem]">SKU#: WH12</span>
@@ -414,6 +421,7 @@
                         </div>
                     </div>
                     <!-- product details description area end -->
+                     @endif
                 </div>
             </div>
         </div>

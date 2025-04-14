@@ -29,7 +29,7 @@ Route::controller(LandingPageController::class)->group(function () {
     Route::get('/', 'index')->name('landing-page');
     Route::get('/produk', 'productIndex')->name('produk');
 
-    Route::get('/produk', 'productIndex')->name('produk');
+    Route::get('/produk/{id}', 'productDetail')->name('produk.detail');
 
     Route::get('/keranjang', 'cartIndex')->name('keranjang');
     Route::post('/keranjang/increase', 'increaseQuantity')->name('keranjang.increase');
@@ -44,13 +44,13 @@ Route::get('/about-us', function () {
     return view('landing.pages.about-us.about-us-index');
 })->name('about-us');
 
-Route::get('/service', function () {
-    return view('landing.pages.layanan.service-index');
-})->name('service');
-
 Route::get('/produk-detail', function () {
     return view('landing.pages.produk.product-show');
 })->name('produk-detail');
+
+Route::get('/service', function () {
+    return view('landing.pages.layanan.service-index');
+})->name('service');
 
 
 
@@ -66,8 +66,6 @@ Route::get('/coupons', function () {
 Route::get('/profile', function () {
     return view('landing.pages.profile.profile-index');
 })->name('profile');
-
-
 
 
 
@@ -87,7 +85,6 @@ Route::middleware(['auth'])->prefix('dashboard')->group(function () {
     Route::post('/category-products/bulk-publish', [CategoryProductController::class, 'bulkPublish'])->name('category-products.bulk-publish');
 
     //PRODUCT
-    Route::resource('/products', ProductController::class);
 
     Route::resource('/variants', ProductController::class);
 
