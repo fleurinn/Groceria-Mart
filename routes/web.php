@@ -129,6 +129,8 @@ Route::middleware(['auth'])->prefix('dashboard')->group(function () {
     Route::resource('/checkouts', CheckoutController::class);
     //Tambahkan Bulk for checkout
     Route::post('/checkouts/bulk-delete', [CheckoutController::class, 'bulkDelete'])->name('checkouts.bulk-delete');
+    Route::post('/checkouts/{id}/payment', [CheckoutController::class, 'payment'])->name('checkouts.payment');
+    Route::post('/midtrans/callback', [CheckoutController::class, 'midtransCallback'])->name('midtrans.callback');
 
     Route::resource('/discount-vouchers', DiscountVoucherController::class);
     Route::get('/vouchers/update-expired-status', [DiscountVoucherController::class, 'autoUpdateExpiredVouchers']);

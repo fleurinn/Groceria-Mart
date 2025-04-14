@@ -12,14 +12,21 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('carts', function (Blueprint $table) {
-            $table->integer('quantity')->default(1);
+            if (!Schema::hasColumn('carts', 'quantity')) {
+                $table->integer('quantity')->default(1);
+            }
         });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
         Schema::table('carts', function (Blueprint $table) {
-            $table->dropColumn('quantity');
+            if (Schema::hasColumn('carts', 'quantity')) {
+                $table->dropColumn('quantity');
+            }
         });
     }
 };
