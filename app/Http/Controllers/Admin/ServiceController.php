@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Service;
 use App\Mail\ServiceFormSubmitted;
 use Illuminate\View\View;
@@ -153,7 +154,7 @@ public function bulkPublish(Request $request)
     $ids = $request->input('ids');
 
     if ($ids) {
-        Service::whereIn('id', $ids)->update(['status' => 'publik']);
+        Service::whereIn('id', $ids)->update(['status' => 'publish']);
         return response()->json(['success' => true, 'message' => 'Layanan berhasil dipublikasikan.']);
     }
 

@@ -11,7 +11,8 @@ class CategoryProductController extends Controller
 {
     public function index(Request $request)
     {
-        $query = CategoryProduct::query();
+        $query = CategoryProduct::withCount('products');
+
 
         if ($request->has('search')) {
             $query->where('name', 'like', '%' . $request->search . '%');
@@ -141,7 +142,7 @@ class CategoryProductController extends Controller
 
         foreach ($categories as $category) {
             if ($category->image) {
-                Storage::delete('public/category_products/' . $category->image);
+                Storage::delete('public/categoryproducts/' . $category->image);
             }
         }
 
@@ -167,7 +168,7 @@ class CategoryProductController extends Controller
         $ids = $request->input('ids');
 
         if ($ids) {
-            CategoryProduct::whereIn('id', $ids)->update(['status' => 'publik']);
+            CategoryProduct::whereIn('id', $ids)->update(['status' => 'publish']);
             return response()->json(['success' => true, 'message' => 'Kategori produk berhasil dipublikasikan.']);
         }
 

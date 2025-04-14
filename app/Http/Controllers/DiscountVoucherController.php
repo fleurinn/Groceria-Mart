@@ -6,6 +6,7 @@ use App\Models\DiscountVoucher;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
 class DiscountVoucherController extends Controller
@@ -190,26 +191,51 @@ class DiscountVoucherController extends Controller
         return response()->json(['message' => 'Status voucher diperbarui', 'data' => $voucher]);
     }
 
-    //Bulk
+    /**
+     * Cek dan update status voucher jika sudah kedaluwarsa
+     */
+    public function autoUpdateExpiredVouchers()
+    {
+        $expiredVouchers = DiscountVoucher::expiredButPublished()->get();
+
+        foreach ($expiredVouchers as $voucher) {
+            $voucher->update(['status' => 'draft']);
+        }
+
+        return response()->json([
+            'message' => $expiredVouchers->isEmpty()
+                ? 'Tidak ada voucher yang perlu diubah statusnya.'
+                : count($expiredVouchers) . ' voucher berhasil diubah menjadi draft.'
+        ]);
+    }
+
+
     public function bulkDelete(Request $request)
     {
         $ids = $request->input('ids');
-
+    
         if (empty($ids)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Tidak ada voucher yang dipilih.'
             ], 400);
         }
-
+    
+        $vouchers = DiscountVoucher::whereIn('id', $ids)->get();
+    
+        foreach ($vouchers as $voucher) {
+            if ($voucher->image) { // Jika ada gambar promo voucher
+                Storage::delete('public/discount_vouchers/' . $voucher->image); // Sesuaikan path foldernya
+            }
+        }
+    
         DiscountVoucher::whereIn('id', $ids)->delete();
-
+    
         return response()->json([
             'success' => true,
             'message' => 'Voucher berhasil dihapus secara massal.'
         ]);
     }
-
     public function bulkDraft(Request $request)
     {
         $ids = $request->input('ids');

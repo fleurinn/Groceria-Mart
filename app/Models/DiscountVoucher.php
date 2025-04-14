@@ -17,10 +17,10 @@ class DiscountVoucher extends Model
         'category_product_id', // sesuai dengan migration
         'discount_code',
         'discount_value',
-        'discount_type', // nominal atau percentage
         'start_date',
         'end_date',
         'status',
+        'image',
     ];
 
     protected $casts = [
@@ -41,16 +41,25 @@ class DiscountVoucher extends Model
      */
     public function isValid()
     {
-        return now()->between($this->start_date, $this->end_date);
+        $now = now(); // Ambil waktu sekarang
+        return $this->start_date <= $now       // Tanggal mulai sudah lewat atau sekarang
+            && $this->end_date >= $now         // Tanggal akhir belum lewat
+            && $this->status === 'publish';    // Status voucher harus 'publish'
+    }
+
+    /**
+     * Scope untuk voucher yang sudah kedaluwarsa dan masih publish
+     */
+    public function scopeExpiredButPublished($query)
+    {
+        return $query->where('end_date', '<', now())->where('status', 'publish');
     }
 
     /**
      * Format nilai diskon berdasarkan tipe (nominal atau persentase)
      */
-    public function getFormattedDiscount()
+        public function getFormattedDiscount()
     {
-        return $this->discount_type === 'percentage' 
-            ? $this->discount_value . '%' 
-            : 'Rp ' . number_format($this->discount_value, 0, ',', '.');
+        return 'Rp ' . number_format($this->discount_value, 0, ',', '.');
     }
 }

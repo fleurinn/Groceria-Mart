@@ -72,7 +72,6 @@ class TransactionController extends Controller
      }
 
      //Bulk 
-
      public function bulkDelete(Request $request)
     {
     $ids = $request->input('ids');
@@ -85,6 +84,7 @@ class TransactionController extends Controller
 
     return response()->json(['success' => true, 'message' => 'Transaksi berhasil dihapus.']);
     }
+
 
     public function bulkDraft(Request $request)
     {
