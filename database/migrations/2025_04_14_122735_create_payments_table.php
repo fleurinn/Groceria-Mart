@@ -17,11 +17,13 @@ class CreatePaymentsTable extends Migration
             $table->id(); // Kolom ID
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // ID pengguna yang melakukan pembayaran
             $table->foreignId('cart_id')->constrained('carts')->onDelete('cascade'); // ID keranjang yang terkait
+            $table->string('snap_token')->nullable();
             $table->string('transaction_status'); // Status transaksi (misalnya: 'pending', 'success', 'failed')
             $table->string('transaction_id')->unique(); // ID transaksi dari Midtrans
             $table->decimal('total', 10, 2); // Total harga (Harga total cart + discount voucher + Harga pengantaran)
             $table->timestamps(); // Kolom created_at dan updated_at
         });
+    
     }
 
     /**
@@ -31,6 +33,10 @@ class CreatePaymentsTable extends Migration
      */
     public function down()
     {
+        Schema::table('payments', function (Blueprint $table) {
+            $table->dropColumn('snap_token');
+        });
+        
         Schema::dropIfExists('payments');
     }
 }

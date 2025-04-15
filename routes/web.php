@@ -16,6 +16,7 @@ use App\Http\Controllers\AboutController;
 use App\Http\Controllers\TestimonialController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\WishlistController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\ShippingController;
 use App\Http\Controllers\ProofOfDeliveryController;
 use App\Http\Controllers\TransactionController;
@@ -88,7 +89,7 @@ Route::middleware(['auth'])->prefix('dashboard')->group(function () {
 
     //PRODUCT
 
-    Route::resource('/variants', ProductController::class);
+    // Route::resource('/variants', ProductController::class);
 
     Route::resource('products', ProductController::class)->except(['show']);
 
@@ -125,6 +126,12 @@ Route::middleware(['auth'])->prefix('dashboard')->group(function () {
     //Tambahkan Bulk for Cart
     Route::post('/carts/bulk-delete', [CartController::class, 'bulkDelete'])->name('carts.bulk-delete');
     
+    Route::resource('/checkouts', CheckoutController::class);
+    //Tambahkan Bulk for checkout
+    Route::post('/checkouts/bulk-delete', [CheckoutController::class, 'bulkDelete'])->name('checkouts.bulk-delete');
+    Route::post('/checkouts/{id}/payment', [CheckoutController::class, 'payment'])->name('checkouts.payment');
+    Route::post('/midtrans/callback', [CheckoutController::class, 'midtransCallback'])->name('midtrans.callback');
+
     Route::resource('/discount-vouchers', DiscountVoucherController::class);
     Route::get('/vouchers/update-expired-status', [DiscountVoucherController::class, 'autoUpdateExpiredVouchers']);
 

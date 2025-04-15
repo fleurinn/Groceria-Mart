@@ -11,6 +11,7 @@ use App\Models\City;
 use App\Models\District;
 use App\Models\Village;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -43,9 +44,7 @@ class UserController extends Controller
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:6',
+            'password' => 'required|string|min:6|confirmed',
             'role_id' => 'required|exists:roles,id',
             'image' => 'nullable|image|mimes:jpg,png,jpeg',
             'shipping_addresses.*.no_telp' => 'nullable|string|max:15',
@@ -71,6 +70,7 @@ class UserController extends Controller
                 'last_name' => $request->last_name,
                 'name' => $request->name,
                 'email' => $request->email,
+                'phone_number' => $request->phone_number, // Simpan nomor handphone
                 'password' => Hash::make($request->password),
                 'role_id' => $request->role_id,
                 'image' => $imagePath,
@@ -89,39 +89,10 @@ class UserController extends Controller
                 }
             }
 
-            // Log success message
-            \Log::info('User  berhasil ditambahkan', [
-                'user_id' => $user->id,
-                'email' => $user->email,
-                'shipping_addresses' => $request->shipping_addresses,
-            ]);
-
-            return redirect()->route('profile-pengguna.index')->with('success', 'User  berhasil ditambahkan!');
-        } catch (\Throwable $e) {
-            \Log::channel('daily')->error('Gagal menyimpan user', [
-                'error_message' => $e->getMessage(),
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-                'trace' => $e->getTraceAsString(),
-                'request_data' => $request->all(),
-            ]);
-        
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan user. Silakan cek log.');
+            return redirect()->route('users.index')->with('success', 'User  berhasil ditambahkan!');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal menyimpan user: ' . $e->getMessage());
         }
-    }
-    
-
-    public function getVillages($district_id)
-    {
-        $villages = \App\Models\Village::where('district_id', $district_id)->get();
-        return response()->json($villages);
-    }
-
-    public function getDistricts($city_id)
-    {
-        $districts = District::where('city_id', $city_id)->get();
-
-        return response()->json($districts);
     }
 
     public function edit(User $user)
@@ -137,6 +108,7 @@ class UserController extends Controller
             'first_name' => 'nullable|string|max:255',
             'last_name' => 'nullable|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
+            'phone_number' => 'nullable|string|max:15|unique:users,phone_number,' . $user->id, // Validasi nomor handphone untuk update
             'password' => 'nullable|string|min:6|confirmed',
             'role_id' => 'required|exists:roles,id',
             'image' => 'nullable|image|mimes:jpg,png,jpeg',
@@ -153,6 +125,7 @@ class UserController extends Controller
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
                 'email' => $request->email,
+                'phone_number' => $request->phone_number, // Update nomor handphone
                 'role_id' => $request->role_id,
             ];
 
@@ -200,17 +173,23 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
 
+        // Cegah user menghapus dirinya sendiri
         if (Auth::id() == $user->id) {
             return back()->with('error', 'Anda tidak bisa menghapus akun Anda sendiri.');
         }
 
+        // Hapus gambar jika ada
         if ($user->image && Storage::exists('public/' . $user->image)) {
             Storage::delete('public/' . $user->image);
         }
 
-        $user->shippingAddresses()->delete();
+        // Hapus alamat pengiriman terkait
+        foreach ($user->shippingAddresses as $shippingAddress) {
+            $shippingAddress->delete();
+        }
+
         $user->delete();
 
-        return redirect()->route('users.index')->with('success', 'User berhasil dihapus');
+        return redirect()->route('users.index')->with('success', 'User  berhasil dihapus');
     }
 }
