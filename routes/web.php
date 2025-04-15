@@ -16,7 +16,6 @@ use App\Http\Controllers\AboutController;
 use App\Http\Controllers\TestimonialController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\WishlistController;
-use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\ShippingController;
 use App\Http\Controllers\ProofOfDeliveryController;
 use App\Http\Controllers\TransactionController;
@@ -55,11 +54,6 @@ Route::get('/service', function () {
 
 
 
-
-Route::get('/checkout', function () {
-    return view('landing.pages.checkout.checkout-index');
-})->name('checkout');
-
 Route::get('/coupons', function () {
     return view('landing.pages.coupon.coupon-index');
 })->name('coupons');
@@ -80,6 +74,10 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth'])->prefix('dashboard')->group(function () {
     
     Route::resource('/profile-pengguna', UserController::class);
+    Route::resource('/shipping_addresses', UserController::class);
+    Route::get('/profile-pengguna/create/get-districts/{city_id}', [UserController::class, 'getDistricts']);
+    Route::get('/profile-pengguna/create/get-villages/{village_id}', [UserController::class, 'getVillages']);
+
 
     Route::resource('/category-products', CategoryProductController::class);
 
@@ -127,12 +125,6 @@ Route::middleware(['auth'])->prefix('dashboard')->group(function () {
     //Tambahkan Bulk for Cart
     Route::post('/carts/bulk-delete', [CartController::class, 'bulkDelete'])->name('carts.bulk-delete');
     
-    Route::resource('/checkouts', CheckoutController::class);
-    //Tambahkan Bulk for checkout
-    Route::post('/checkouts/bulk-delete', [CheckoutController::class, 'bulkDelete'])->name('checkouts.bulk-delete');
-    Route::post('/checkouts/{id}/payment', [CheckoutController::class, 'payment'])->name('checkouts.payment');
-    Route::post('/midtrans/callback', [CheckoutController::class, 'midtransCallback'])->name('midtrans.callback');
-
     Route::resource('/discount-vouchers', DiscountVoucherController::class);
     Route::get('/vouchers/update-expired-status', [DiscountVoucherController::class, 'autoUpdateExpiredVouchers']);
 

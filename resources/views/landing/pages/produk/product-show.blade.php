@@ -84,52 +84,29 @@
                                         </div>
                                         <div class="gi-single-desc mb-[12px] pb-[5px] text-[#777] text-[14px] tracking-[0] break-all leading-[26px] font-Poppins">
                                         {{ Str::limit(strip_tags($product->description), 400) }}</div>
-                                        <!-- ini bagian pilihan antara product atau variantnya -->
-                                            <div class="add-more-wrapper flex gap-[15px]">                                            <div class="gi-add-more-slider owl-carousel">
-                                                <div class="add-more-item h-full p-[15px] flex flex-row border-[1px] border-solid border-[#eee] rounded-[5px] bg-[#f8f8fb]">
-                                                    <a href="javascript:void(0)" class="gi-btn-2 py-[5px] px-[10px] absolute top-[5px] right-[5px] opacity-[0] transition-all duration-[0.3s] ease-in-out text-[14px] font-medium bg-[#5caf90] text-[#fff] text-center rounded-[5px] hover:bg-[#4b5966] hover:text-[#fff]">+</a>
-                                                    <div class="add-more-img mr-[15px] relative">
-                                                        <img src="assets/img/product-images/8_1.jpg" alt="product" class="w-[75px] rounded-[5px] border-[1px] border-solid border-[#eee]">
-                                                    </div>
-                                                    <div class="add-more-info flex flex-col">
-                                                        <h5 class="text-[#777] block text-[13px] leading-[20px] font-medium tracking-[0.85px] capitalize font-Poppins mb-[6px]">Honey Spiced Nuts</h5>
-                                                        <span class="gi-pro-rating mb-[5px]">
-                                                            <i class="gicon gi-star fill inline-block text-[12px] text-[#f27d0c] float-left mr-[3px]"></i>
-                                                            <i class="gicon gi-star fill inline-block text-[12px] text-[#f27d0c] float-left mr-[3px]"></i>
-                                                            <i class="gicon gi-star fill inline-block text-[12px] text-[#f27d0c] float-left mr-[3px]"></i>
-                                                            <i class="gicon gi-star inline-block text-[12px] float-left text-[#777] mr-[3px]"></i>
-                                                            <i class="gicon gi-star inline-block text-[12px] float-left text-[#777] mr-[3px]"></i>
-                                                        </span>
-                                                        <span class="gi-price">
-                                                            <span class="new-price text-[15px]">$32.00</span>
-                                                            <span class="old-price ml-[5px] text-[14px] text-[#777] line-through">$45.00</span>
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                <div class="add-more-item h-full p-[15px] flex flex-row border-[1px] border-solid border-[#eee] rounded-[5px] bg-[#f8f8fb]">
-                                                    <a href="javascript:void(0)" class="gi-btn-2 py-[5px] px-[10px] absolute top-[5px] right-[5px] opacity-[0] transition-all duration-[0.3s] ease-in-out text-[14px] font-medium bg-[#5caf90] text-[#fff] text-center rounded-[5px] hover:bg-[#4b5966] hover:text-[#fff]">+</a>
-                                                    <div class="add-more-img mr-[15px] relative">
-                                                        <img src="assets/img/product-images/2_1.jpg" alt="product" class="w-[75px] rounded-[5px] border-[1px] border-solid border-[#eee]">
-                                                    </div>
-                                                    <div class="add-more-info flex flex-col">
-                                                        <h5 class="text-[#777] block text-[13px] leading-[20px] font-medium tracking-[0.85px] capitalize font-Poppins mb-[6px]">Dates Value Pouch</h5>
-                                                        <span class="gi-pro-rating mb-[5px]">
-                                                            <i class="gicon gi-star fill inline-block text-[12px] text-[#f27d0c] float-left mr-[3px]"></i>
-                                                            <i class="gicon gi-star fill inline-block text-[12px] text-[#f27d0c] float-left mr-[3px]"></i>
-                                                            <i class="gicon gi-star fill inline-block text-[12px] text-[#f27d0c] float-left mr-[3px]"></i>
-                                                            <i class="gicon gi-star fill inline-block text-[12px] text-[#f27d0c] float-left mr-[3px]"></i>
-                                                            <i class="gicon gi-star fill inline-block text-[12px] text-[#f27d0c] float-left mr-[3px]"></i>
-                                                        </span>
-                                                        <span class="gi-price">
-                                                            <span class="new-price text-[15px]">$56.00</span>
-                                                            <span class="old-price ml-[5px] text-[14px] text-[#777] line-through">$60.00</span>
-                                                        </span>
-                                                    </div>
-                                                </div>
+                                        <!-- bagian pilihan antara product atau variantnya -->
+                                        <div class="flex flex-col mt-4 space-y-2">
+                                            <div class="text-gray-700">
+                                                Warna
                                             </div>
+                                            <div class="flex space-x-4">
+                                                <button class="border border-gray-300 rounded-lg p-2 flex flex-col items-center">
+                                                    <img alt="Black color option" class="w-8 h-8" src="https://placehold.co/50x50"/>
+                                                    <div class="text-center text-gray-700">
+                                                        Hitam
+                                                    </div>
+                                                </button>
+                                                <button class="border border-gray-300 rounded-lg p-2 flex flex-col items-center">
+                                                    <img alt="Brown color option" class="w-8 h-8" src="https://placehold.co/50x50"/>
+                                                    <div class="text-center text-gray-700">
+                                                        Cokelat
+                                                    </div>
+                                                </button>
+                                            </div>
+                                        </div>
                                         <!-- end -->
                                         <div class="gi-single-qty flex flex-wrap w-full m-[-5px]">
-                                            <form action="{{ route('carts.store') }}" method="POST" class="flex items-center">
+                                        <form action="{{ route('carts.store') }}" method="POST" class="flex items-center">
                                                 @csrf
                                                 <input type="hidden" name="product_id" value="{{ $product->id }}">
                                                 <div class="qty-plus-minus w-[120px] h-[40px] p-[10px] border-[1px] border-solid border-[#eee] overflow-hidden m-[5px] relative flex items-center justify-between rounded-[5px]">
@@ -749,6 +726,5 @@
         </div>
     </section>
     <!-- Related product section End -->
-
 
 @endsection

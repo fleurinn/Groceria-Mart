@@ -12,10 +12,25 @@ use Illuminate\Validation\Rule;
 class DiscountVoucherController extends Controller
 {
     // Ambil semua voucher
-    public function index()
+    public function index(Request $request)
     {
-        $vouchers = DiscountVoucher::with('product')->get();
-        return response()->json($vouchers);
+        $query = DiscountVoucher::withCount('products');
+
+
+        if ($request->has('search')) {
+            $query->where('title', 'like', '%' . $request->search . '%');
+        }
+
+        if ($request->has('search')) {
+            $query->where('discount_code', 'like', '%' . $request->search . '%');
+        }
+
+        if ($request->has('status') && in_array($request->status, ['draft', 'publish'])) {
+            $query->where('status', $request->status);
+        }
+
+        $categoryproducts = $query->paginate(10);
+        return view('admin.pages.products.kategori-produk.index', compact('categoryproducts'));
     }
 
     // Simpan voucher baru dengan kode otomatis

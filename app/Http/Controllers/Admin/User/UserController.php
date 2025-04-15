@@ -7,6 +7,9 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Role;
 use App\Models\ShippingAddress;
+use App\Models\City;
+use App\Models\District;
+use App\Models\Village;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -15,32 +18,45 @@ class UserController extends Controller
 {
     public function index()
     {
+        $city = City::all(); // Ambil semua kota
+        $district = District::all(); // Ambil semua kecamatan
+        $villages = Village::all(); // Ambil semua desa
         $users = User::with('role')->get();
-        return view('admin.pages.users.create', compact('users'));
+        $roles = Role::whereIn('id', [1, 2, 3, 4])->get(); // Tambahkan ini
+
+        return view('admin.pages.users.user-index', compact('users', 'roles', 'city', 'district', 'villages'));
     }
+
 
     public function create()
     {
-        $roles = Role::whereIn('id', [1, 2])->get(); // Hanya Admin dan Seller yang bisa dipilih
-        return view('admin.pages.users.create', compact('roles'));
-    }
+        $city = City::all(); // Ambil semua kota
+        $district = District::all(); // Ambil semua kecamatan
+        $villages = Village::all(); // Ambil semua desa
+        $roles = Role::whereIn('id', [1, 2, 3])->get(); // Hanya Admin, Seller, dan satu lainnya
 
+        return view('admin.pages.users.user-create', compact('roles', 'city', 'district', 'villages'));
+    }
+    
     public function store(Request $request)
     {
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'password' => 'required|string|min:6|confirmed',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|min:6',
             'role_id' => 'required|exists:roles,id',
-            'image' => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
+            'image' => 'nullable|image|mimes:jpg,png,jpeg',
             'shipping_addresses.*.no_telp' => 'nullable|string|max:15',
-            'shipping_addresses.*.city_id' => 'nullable|integer',
-            'shipping_addresses.*.district_id' => 'nullable|integer',
-            'shipping_addresses.*.village_id' => 'nullable|integer',
+            'shipping_addresses.*.city_id' => 'nullable|integer|exists:cities,id',
+            'shipping_addresses.*.district_id' => 'required|integer|exists:districts,id',
+            'shipping_addresses.*.village_id' => 'required|integer|exists:villages,id',
             'shipping_addresses.*.address' => 'nullable|string|max:1000',
         ]);
 
         try {
+            // Handle image upload
             $imagePath = null;
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
@@ -49,17 +65,18 @@ class UserController extends Controller
                 $imagePath = 'users/' . $imageName;
             }
 
-            // Buat user
+            // Create user
             $user = User::create([
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
+                'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
                 'role_id' => $request->role_id,
                 'image' => $imagePath,
             ]);
 
-            // Simpan alamat pengiriman
+            // Handle shipping addresses
             if ($request->has('shipping_addresses')) {
                 foreach ($request->shipping_addresses as $shipping) {
                     $user->shippingAddresses()->create([
@@ -72,10 +89,39 @@ class UserController extends Controller
                 }
             }
 
-            return redirect()->route('users.index')->with('success', 'User  berhasil ditambahkan!');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Gagal menyimpan user: ' . $e->getMessage());
+            // Log success message
+            \Log::info('User  berhasil ditambahkan', [
+                'user_id' => $user->id,
+                'email' => $user->email,
+                'shipping_addresses' => $request->shipping_addresses,
+            ]);
+
+            return redirect()->route('profile-pengguna.index')->with('success', 'User  berhasil ditambahkan!');
+        } catch (\Throwable $e) {
+            \Log::channel('daily')->error('Gagal menyimpan user', [
+                'error_message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+                'request_data' => $request->all(),
+            ]);
+        
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan user. Silakan cek log.');
         }
+    }
+    
+
+    public function getVillages($district_id)
+    {
+        $villages = \App\Models\Village::where('district_id', $district_id)->get();
+        return response()->json($villages);
+    }
+
+    public function getDistricts($city_id)
+    {
+        $districts = District::where('city_id', $city_id)->get();
+
+        return response()->json($districts);
     }
 
     public function edit(User $user)
@@ -93,7 +139,7 @@ class UserController extends Controller
             'email' => 'required|email|unique:users,email,' . $user->id,
             'password' => 'nullable|string|min:6|confirmed',
             'role_id' => 'required|exists:roles,id',
-            'image' => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
+            'image' => 'nullable|image|mimes:jpg,png,jpeg',
             'shipping_addresses.*.id' => 'nullable|integer|exists:shipping_addresses,id',
             'shipping_addresses.*.no_telp' => 'nullable|string|max:15',
             'shipping_addresses.*.city_id' => 'nullable|integer',
@@ -103,17 +149,23 @@ class UserController extends Controller
         ]);
 
         try {
-            // Update user
-            $user->update([
+            $dataToUpdate = [
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
                 'email' => $request->email,
                 'role_id' => $request->role_id,
-                'password' => $request->password ? Hash::make($request->password) : $user->password,
-                'image' => $request->hasFile('image') ? $request->file('image')->store('images', 'public') : $user->image,
-            ]);
+            ];
 
-            // Update atau simpan alamat pengiriman
+            if ($request->filled('password')) {
+                $dataToUpdate['password'] = Hash::make($request->password);
+            }
+
+            if ($request->hasFile('image')) {
+                $dataToUpdate['image'] = $request->file('image')->store('users', 'public');
+            }
+
+            $user->update($dataToUpdate);
+
             if ($request->has('shipping_addresses')) {
                 foreach ($request->shipping_addresses as $shipping) {
                     $data = [
@@ -125,7 +177,6 @@ class UserController extends Controller
                     ];
 
                     if (!empty($shipping['id'])) {
-                        // Update alamat yang sudah ada
                         $shippingAddress = ShippingAddress::where('id', $shipping['id'])
                             ->where('user_id', $user->id)
                             ->first();
@@ -134,13 +185,12 @@ class UserController extends Controller
                             $shippingAddress->update($data);
                         }
                     } else {
-                        // Buat alamat baru
                         $user->shippingAddresses()->create($data);
                     }
                 }
             }
 
-            return redirect()->route('users.index')->with('success', 'User  berhasil diperbarui');
+            return redirect()->route('users.index')->with('success', 'User berhasil diperbarui');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Gagal memperbarui user: ' . $e->getMessage());
         }
@@ -150,23 +200,17 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
 
-        // Cegah user menghapus dirinya sendiri
         if (Auth::id() == $user->id) {
             return back()->with('error', 'Anda tidak bisa menghapus akun Anda sendiri.');
         }
 
-        // Hapus gambar jika ada
         if ($user->image && Storage::exists('public/' . $user->image)) {
             Storage::delete('public/' . $user->image);
         }
 
-        // Hapus alamat pengiriman terkait
-        foreach ($user->shippingAddresses as $shippingAddress) {
-            $shippingAddress->delete();
-        }
-
+        $user->shippingAddresses()->delete();
         $user->delete();
 
-        return redirect()->route('users.index')->with('success', 'User  berhasil dihapus');
+        return redirect()->route('users.index')->with('success', 'User berhasil dihapus');
     }
 }

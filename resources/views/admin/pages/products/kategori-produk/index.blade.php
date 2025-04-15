@@ -94,7 +94,7 @@
               </tr>
             </thead>
             <tbody class="list" id="products-table-body">
-              @foreach ($categoryproducts as $categoryproduct)
+              @forelse ($categoryproducts as $categoryproduct)
               <tr class="position-static">
                 <td class="fs-9 align-middle">
                   <div class="form-check mb-0 fs-8">
@@ -138,7 +138,11 @@
                   </div>
                 </td>
               </tr>
-              @endforeach
+              @empty
+                <tr>
+                    <td colspan="7" class="text-center">Tidak ada data kategori ditemukan.</td>
+                </tr>
+            @endforelse
             </tbody>
           </table>
         </div>
