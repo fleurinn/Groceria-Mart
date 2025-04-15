@@ -111,10 +111,8 @@ class SliderController extends Controller
 
             $slider->delete();
 
-            return redirect()->route('sliders.index')->with('success', 'Slider berhasil dihapus.');
-        } catch (\Exception $e) {
-            return redirect()->route('sliders.index')->with('error', 'Terjadi kesalahan saat menghapus slider: ' . $e->getMessage());
-        }
+            return redirect()->route('sliders.index')->with('success', 'Slider berhasil diperbarui.');
+
     }
 
     public function show(string $id): View

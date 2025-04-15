@@ -127,9 +127,6 @@
                                                         <button type="button" class="qty-btn plus px-2 text-[#4b5966]">+</button>
                                                     </div>
                                                 </td>
-                                                <td data-label="Total" class="gi-cart-pro-subtotal text-[#4b5966] text-[15px] font-medium py-[15px] px-[14px]">
-                                                    Rp{{ number_format($cart->product->price * $cart->quantity, 0, ',', '.') }}
-                                                </td>
                                                 <td data-label="Remove" class="gi-cart-pro-remove text-[#4b5966] text-[16px] py-[15px] px-[14px] text-right">
                                                     <form action="{{ route('carts.destroy', $cart->id) }}" method="POST">
                                                         @csrf
@@ -146,27 +143,17 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <div class="flex flex-wrap">
+                                <div class="flex">
                                     <div class="w-full">
-                                        <div class="pt-6 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mt-6">
-                                            
-                                            <!-- Total Amount -->
-                                            <div class="flex justify-between items-center w-full sm:w-auto">
-                                                <span class="text-[16px] font-medium text-[#4b5966] leading-[24px]">Total Amount:</span>
-                                                <span class="text-[16px] font-bold text-[#4b5966] leading-[24px] ml-4">
-                                                    Rp{{ number_format($total, 0, ',', '.') }}
-                                                </span>
-                                            </div>
-                                            
+                                        <div class="pt-6 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mt-6">                    
                                             <!-- Checkout Button -->
                                             <button type="button"
-                                                class="gi-btn-2 transition-all duration-300 ease-in-out rounded-[5px] py-2 px-4 bg-[#5caf90] text-white text-[14px] font-medium hover:bg-[#4b5966]">
+                                                class="gi-btn-2 ml-auto transition-all duration-300 ease-in-out rounded-[5px] py-2 px-4 bg-[#5caf90] text-white text-[14px] font-medium hover:bg-[#4b5966]">
                                                 Check Out
                                             </button>
                                         </div>
                                     </div>
                                 </div>
-                            </form>
                         </div>
                     </div>
                 </div>

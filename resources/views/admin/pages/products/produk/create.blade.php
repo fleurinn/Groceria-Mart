@@ -210,6 +210,7 @@
             </div>
             <textarea name="variants[${index}][description]" class="form-control mb-2" placeholder="Description"></textarea>
             <input type="number" step="0.01" name="variants[${index}][price]" class="form-control mb-2" placeholder="Price">
+            <input type="number" step="0" name="variants[${index}][discount]" class="form-control mb-2" placeholder="Discount [%]">
             <input type="number" name="variants[${index}][stock]" class="form-control mb-2" placeholder="Stock">
           </div>
         </div>`;

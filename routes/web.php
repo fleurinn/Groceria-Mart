@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Admin\User\UserController;
 use App\Http\Controllers\Admin\CategoryProductController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ServiceController;
@@ -77,6 +78,9 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::middleware(['auth'])->prefix('dashboard')->group(function () {
+    
+    Route::resource('/profile-pengguna', UserController::class);
+
     Route::resource('/category-products', CategoryProductController::class);
 
     //Tambahan: Bulk actions for CategoryProduct
