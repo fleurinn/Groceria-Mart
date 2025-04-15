@@ -11,14 +11,12 @@ class Payment extends Model
     use HasFactory;
 
     protected $fillable = [
-        'payment_id',      // ID unik pembayaran
         'user_id',
+        'cart_id',
+        'snap_token',
+        'transaction_status',
         'transaction_id',
-        'product_id',      // Produk yang dibeli
-        'status',          // Status pembayaran: menunggu, konfirmasi, belum dibayar
-        'total_amount',    // Total nominal pembayaran
-        'invoice_path',    // Path untuk invoice PDF
-        'payment_date',
+        'total', // Menggunakan 'total' sesuai dengan migrasi
     ];
 
     // Relasi ke User
@@ -27,34 +25,28 @@ class Payment extends Model
         return $this->belongsTo(User::class);
     }
 
-    // Relasi ke Transaction
-    public function transaction()
+    // Relasi ke Cart
+    public function cart()
     {
-        return $this->belongsTo(Transaction::class);
-    }
-
-    // Relasi ke Product (jika ada produk dalam transaksi)
-    public function product()
-    {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(Cart::class);
     }
 
     // Scope untuk filter pembayaran berdasarkan tahun
     public function scopeFilterByYear($query, $year)
     {
-        return $query->whereYear('payment_date', $year);
+        return $query->whereYear('created_at', $year); // Menggunakan created_at karena tidak ada payment_date di migrasi
     }
 
     // Scope untuk filter pembayaran berdasarkan bulan
     public function scopeFilterByMonth($query, $year, $month)
     {
-        return $query->whereYear('payment_date', $year)->whereMonth('payment_date', $month);
+        return $query->whereYear('created_at', $year)->whereMonth('created_at', $month);  // Menggunakan created_at
     }
 
     // Scope untuk filter pembayaran berdasarkan minggu
     public function scopeFilterByWeek($query, $year, $week)
     {
-        return $query->whereYear('payment_date', $year)
-                     ->whereRaw('WEEK(payment_date, 1) = ?', [$week]); // Menggunakan mode minggu ISO-8601
+         return $query->whereYear('created_at', $year)
+                      ->whereRaw('WEEK(created_at, 1) = ?', [$week]); // Menggunakan created_at
     }
 }

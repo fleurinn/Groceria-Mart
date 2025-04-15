@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Role;
 use App\Models\ShippingAddress;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -30,6 +31,8 @@ class UserController extends Controller
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users', // Tambahkan validasi email
+            'phone_number' => 'nullable|string|max:15|unique:users', // Validasi nomor handphone
             'password' => 'required|string|min:6|confirmed',
             'role_id' => 'required|exists:roles,id',
             'image' => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
@@ -54,6 +57,7 @@ class UserController extends Controller
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
                 'email' => $request->email,
+                'phone_number' => $request->phone_number, // Simpan nomor handphone
                 'password' => Hash::make($request->password),
                 'role_id' => $request->role_id,
                 'image' => $imagePath,
@@ -72,7 +76,7 @@ class UserController extends Controller
                 }
             }
 
-            return redirect()->route('users.index')->with('success', 'User  berhasil ditambahkan!');
+            return redirect()->route('users.index')->with('success', 'User berhasil ditambahkan!');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Gagal menyimpan user: ' . $e->getMessage());
         }
@@ -91,6 +95,7 @@ class UserController extends Controller
             'first_name' => 'nullable|string|max:255',
             'last_name' => 'nullable|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
+            'phone_number' => 'nullable|string|max:15|unique:users,phone_number,' . $user->id, // Validasi nomor handphone untuk update
             'password' => 'nullable|string|min:6|confirmed',
             'role_id' => 'required|exists:roles,id',
             'image' => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
@@ -108,6 +113,7 @@ class UserController extends Controller
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
                 'email' => $request->email,
+                'phone_number' => $request->phone_number, // Update nomor handphone
                 'role_id' => $request->role_id,
                 'password' => $request->password ? Hash::make($request->password) : $user->password,
                 'image' => $request->hasFile('image') ? $request->file('image')->store('images', 'public') : $user->image,
@@ -140,7 +146,7 @@ class UserController extends Controller
                 }
             }
 
-            return redirect()->route('users.index')->with('success', 'User  berhasil diperbarui');
+            return redirect()->route('users.index')->with('success', 'User berhasil diperbarui');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Gagal memperbarui user: ' . $e->getMessage());
         }
@@ -150,23 +156,32 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
 
-        // Cegah user menghapus dirinya sendiri
-        if (Auth::id() == $user->id) {
-            return back()->with('error', 'Anda tidak bisa menghapus akun Anda sendiri.');
+        // Gunakan Gate untuk otorisasi (seperti pada immersive sebelumnya)
+        if (Gate::allows('delete-user', $user)) {
+            // Cegah user menghapus dirinya sendiri
+            if (Auth::id() == $user->id) {
+                return back()->with('error', 'Anda tidak bisa menghapus akun Anda sendiri.');
+            }
+
+            // Hapus gambar jika ada
+            if ($user->image && Storage::exists('public/' . $user->image)) {
+                Storage::delete('public/' . $user->image);
+            }
+
+            // Hapus alamat pengiriman terkait
+            if ($user->shippingAddresses) { // Tambahkan pengecekan apakah ada shipping address
+                foreach ($user->shippingAddresses as $shippingAddress) {
+                    $shippingAddress->delete();
+                }
+            }
+
+            // Hapus pengguna
+            $user->delete();
+
+            return redirect()->route('users.index')->with('success', 'User berhasil dihapus');
+        } else {
+            return back()->with('error', 'Anda tidak memiliki izin untuk menghapus pengguna ini.');
         }
-
-        // Hapus gambar jika ada
-        if ($user->image && Storage::exists('public/' . $user->image)) {
-            Storage::delete('public/' . $user->image);
-        }
-
-        // Hapus alamat pengiriman terkait
-        foreach ($user->shippingAddresses as $shippingAddress) {
-            $shippingAddress->delete();
-        }
-
-        $user->delete();
-
-        return redirect()->route('users.index')->with('success', 'User  berhasil dihapus');
     }
 }
+

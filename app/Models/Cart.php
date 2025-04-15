@@ -14,11 +14,13 @@ class Cart extends Model
         'user_id',
         'product_id',
         'quantity',
-        'cart_items'
+        'cart_items',
+        'shipping_type', // Tambahkan ini
+        'shipping_cost', // Tambahkan ini
     ];
 
     protected $casts = [
-        'cart_items' => 'array', // Mengubah cart_items menjadi array secara otomatis
+        'cart_items' => 'array',
     ];
 
     // Relasi ke User
@@ -42,10 +44,10 @@ class Cart extends Model
         return 0;
     }
 
-    // Menghitung total harga berdasarkan quantity * harga setelah diskon
+    // Menghitung total harga berdasarkan quantity * harga setelah diskon + ongkir
     public function getTotalPriceAttribute()
     {
-        return $this->quantity * $this->price;
+        return ($this->quantity * $this->price) + $this->shipping_cost; // Tambahkan ongkir
     }
 
     // Validasi sebelum menyimpan data
@@ -54,12 +56,14 @@ class Cart extends Model
         parent::boot();
 
         static::saving(function ($cart) {
-            $validator = Validator::make(['quantity' => $cart->quantity], [
-                'quantity' => 'integer|min:1|max:100'
+            $validator = Validator::make($cart->toArray(), [ // Validasi semua atribut
+                'quantity' => 'integer|min:1|max:100',
+                'shipping_type' => 'nullable|in:reguler,express', // Tambahkan validasi ini
+                'shipping_cost' => 'nullable|numeric|min:0', // Tambahkan validasi ini
             ]);
 
             if ($validator->fails()) {
-                throw new \Exception('Quantity must be between 1 and 100.');
+                throw new \Exception($validator->errors()->first()); // Ambil pesan error pertama
             }
         });
     }
