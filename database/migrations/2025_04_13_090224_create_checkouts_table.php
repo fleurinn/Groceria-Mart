@@ -19,11 +19,11 @@ return new class extends Migration {
             $table->decimal('total_price', 15, 2); // Total harga
             $table->foreignId('shipping_address_id')->constrained('shipping_addresses')->onDelete('cascade'); // Relasi ke alamat pengiriman
             $table->string('payment_method'); // Metode pembayaran
-            $table->enum('status_pembayaran', ['menunggu', 'belum dibayar', 'paid']); // Status pembayaran
+            $table->enum('status_pembayaran', ['menunggu', 'konfirmasi', 'belum dibayar', 'paid'])->default('menunggu'); // Status pembayaran
             $table->enum('status_pengiriman', ['pending', 'processing', 'shipped', 'delivered', 'cancelled'])->default('pending'); // Status pengiriman
             $table->decimal('shipping_rates', 10, 2)->nullable(); // Biaya pengiriman
             $table->string('invoice_path')->nullable(); // Path invoice PDF
-            $table->timestamp('payment_date')->nullable(); // Tanggal pembayaran
+            // $table->timestamp('payment_date')->nullable(); // Tanggal pembayaran
             $table->string('snap_token')->nullable(); // Token untuk midtrans atau pembayaran lain
             $table->timestamps(); // created_at & updated_at otomatis
         });

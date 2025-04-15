@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Admin\User\UserController;
 use App\Http\Controllers\Admin\CategoryProductController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ServiceController;
@@ -29,7 +30,7 @@ Route::controller(LandingPageController::class)->group(function () {
     Route::get('/', 'index')->name('landing-page');
     Route::get('/produk', 'productIndex')->name('produk');
 
-    Route::get('/produk', 'productIndex')->name('produk');
+    Route::get('/produk/{id}', 'productDetail')->name('produk.detail');
 
     Route::get('/keranjang', 'cartIndex')->name('keranjang');
     Route::post('/keranjang/increase', 'increaseQuantity')->name('keranjang.increase');
@@ -44,13 +45,13 @@ Route::get('/about-us', function () {
     return view('landing.pages.about-us.about-us-index');
 })->name('about-us');
 
-Route::get('/service', function () {
-    return view('landing.pages.layanan.service-index');
-})->name('service');
-
 Route::get('/produk-detail', function () {
     return view('landing.pages.produk.product-show');
 })->name('produk-detail');
+
+Route::get('/service', function () {
+    return view('landing.pages.layanan.service-index');
+})->name('service');
 
 
 
@@ -69,8 +70,6 @@ Route::get('/profile', function () {
 
 
 
-
-
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
     Route::get('/admin/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard.admin');
@@ -79,6 +78,9 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::middleware(['auth'])->prefix('dashboard')->group(function () {
+    
+    Route::resource('/profile-pengguna', UserController::class);
+
     Route::resource('/category-products', CategoryProductController::class);
 
     //Tambahan: Bulk actions for CategoryProduct
@@ -87,7 +89,6 @@ Route::middleware(['auth'])->prefix('dashboard')->group(function () {
     Route::post('/category-products/bulk-publish', [CategoryProductController::class, 'bulkPublish'])->name('category-products.bulk-publish');
 
     //PRODUCT
-    // Route::resource('/products', ProductController::class);
 
     // Route::resource('/variants', ProductController::class);
 

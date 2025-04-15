@@ -62,6 +62,14 @@ class LandingPageController extends Controller
         return view('landing.pages.produk.product-index', compact('categoryproducts', 'products', 'sortOptions'));
     }
 
+    public function productDetail($id)
+    {
+        $product = Product::with('variants')->findOrFail($id);
+        return view('landing.pages.produk.product-show', compact('product'));
+    }
+
+    
+
     public function cartIndex(Request $request)
     {   
         // Ambil semua produk dan kategori (jika memang perlu di view)

@@ -8,6 +8,9 @@
         <div class="flex flex-wrap justify-between items-center mx-auto min-[1600px]:max-w-[1600px] min-[1400px]:max-w-[1320px] min-[1200px]:max-w-[1140px] min-[992px]:max-w-[960px] min-[768px]:max-w-[720px] min-[576px]:max-w-[540px]">
             <div class="flex flex-wrap w-full px-[12px]">
                 <div class="gi-pro-rightside gi-common-rightside w-full">
+                    @php $product = $product ?? null; @endphp
+
+                    @if ($product)    
                     <!-- Single product content Start -->
                     <div class="single-pro-block">
                         <div class="single-pro-inner">
@@ -16,43 +19,29 @@
                                     <div class="single-product-scroll p-[15px] sticky top-[30px] rounded-[5px] border-[1px] border-solid border-[#eee]">
                                         <div class="single-product-cover overflow-hidden cursor-zoom-in rounded-[5px]">
                                             <div class="single-slide zoom-image-hover">
-                                                <img class="img-responsive h-full w-full" src="assets/img/product-images/4_1.jpg" alt="">
+                                                <img class="img-responsive h-full w-full" src="{{ asset('storage/products/' . $product->image) }}" alt="{{ $product->name }}">
                                             </div>
+                                            @foreach ($product->variants ?? [] as $variant)
                                             <div class="single-slide zoom-image-hover">
-                                                <img class="img-responsive h-full w-full" src="assets/img/product-images/2_1.jpg" alt="">
+                                                <img class="img-responsive h-full w-full" src="{{ asset('storage/variants/' . $variant->image) }}" alt="{{ $variant->name }}">
                                             </div>
-                                            <div class="single-slide zoom-image-hover">
-                                                <img class="img-responsive h-full w-full" src="assets/img/product-images/3_1.jpg" alt="">
-                                            </div>
-                                            <div class="single-slide zoom-image-hover">
-                                                <img class="img-responsive h-full w-full" src="assets/img/product-images/1_1.jpg" alt="">
-                                            </div>
-                                            <div class="single-slide zoom-image-hover">
-                                                <img class="img-responsive h-full w-full" src="assets/img/product-images/5_1.jpg" alt="">
-                                            </div>
+                                            @endforeach
                                         </div>
                                         <div class="single-nav-thumb w-full overflow-hidden">
                                             <div class="single-slide px-[11px] pt-[11px]">
-                                                <img class="img-responsive h-full w-full border-[1px] border-solid border-transparent transition-all duration-[0.3s] ease delay-[0s] cursor-pointer rounded-[5px]" src="assets/img/product-images/4_1.jpg" alt="">
+                                                <img class="img-responsive h-full w-full object-cover border-[1px] border-solid border-transparent transition-all duration-[0.3s] ease delay-[0s] cursor-pointer rounded-[5px]" src="{{ asset('storage/products/' . $product->image) }}" alt="{{ $product->name }}">
                                             </div>
+                                            @foreach ($product->variants ?? [] as $variant)
                                             <div class="single-slide px-[11px] pt-[11px]">
-                                                <img class="img-responsive h-full w-full border-[1px] border-solid border-transparent transition-all duration-[0.3s] ease delay-[0s] cursor-pointer rounded-[5px]" src="assets/img/product-images/2_1.jpg" alt="">
+                                                <img class="img-responsive h-full w-full object-cover border-[1px] border-solid border-transparent transition-all duration-[0.3s] ease delay-[0s] cursor-pointer rounded-[5px]" src="{{ asset('storage/variants/' . $variant->image) }}" alt="{{ $variant->name }}">
                                             </div>
-                                            <div class="single-slide px-[11px] pt-[11px]">
-                                                <img class="img-responsive h-full w-full border-[1px] border-solid border-transparent transition-all duration-[0.3s] ease delay-[0s] cursor-pointer rounded-[5px]" src="assets/img/product-images/3_1.jpg" alt="">
-                                            </div>
-                                            <div class="single-slide px-[11px] pt-[11px]">
-                                                <img class="img-responsive h-full w-full border-[1px] border-solid border-transparent transition-all duration-[0.3s] ease delay-[0s] cursor-pointer rounded-[5px]" src="assets/img/product-images/1_1.jpg" alt="">
-                                            </div>
-                                            <div class="single-slide px-[11px] pt-[11px]">
-                                                <img class="img-responsive h-full w-full border-[1px] border-solid border-transparent transition-all duration-[0.3s] ease delay-[0s] cursor-pointer rounded-[5px]" src="assets/img/product-images/5_1.jpg" alt="">
-                                            </div>
+                                            @endforeach
                                         </div>
                                     </div>
                                 </div>
                                 <div class="single-pro-desc single-pro-desc-no-sidebar w-[60%] max-[991px]:w-full relative pl-[12px] max-[991px]:pl-[0] max-[991px]:mt-[30px] max-[991px]:w-full">
                                     <div class="single-pro-content">
-                                        <h5 class="gi-single-title text-[#4b5966] text-[22px] capitalize mb-[20px] block font-Poppins font-medium leading-[35px] tracking-[0.02rem] max-[1199px]:text-[20px] max-[1199px]:leading-[33px] max-[767px]:text-[18px] max-[767px]:text-[18px] max-[767px]:leading-[31px]">Potato Chips 52g, American Cream & Onion Flavour, Crunchy Chips & Snacks.</h5>
+                                        <h5 class="gi-single-title text-[#4b5966] text-[22px] capitalize mb-[20px] block font-oppins font-medium leading-[35px] tracking-[0.02rem] max-[1199px]:text-[20px] max-[1199px]:leading-[33px] max-[767px]:text-[18px] max-[767px]:text-[18px] max-[767px]:leading-[31px]">{{ $product->name }}</h5>
                                         <div class="gi-single-rating-wrap flex mb-[14px] items-center">
                                             <div class="gi-single-rating pr-[15px] leading-[17px]">
                                                 <i class="gicon gi-star fill text-[#f27d0c] float-left text-[14px] mr-[3px]"></i>
@@ -67,56 +56,102 @@
                                         </div>
                                         <div class="gi-single-price-stoke mb-[15px] pt-[15px] pb-[15px] flex justify-between">
                                             <div class="gi-single-price flex flex-col">
-                                                <div class="final-price mb-[15px] text-[#4b5966] font-semibold text-[22px] leading-[32px] font-Poppins tracking-[0] max-[1199px]:text-[20px]">$664.00
-                                                    <span class="price-des ml-[15px] text-[#5caf90] font-medium text-[18px] tracking-[0.02rem]">-78%</span>
+                                                @php
+                                                    $originalPrice = $product->discount > 0 ? $product->price / (1 - ($product->discount / 100)) : $product->price;
+                                                @endphp
+
+                                                <div class="gi-single-price flex flex-col">
+                                                    <div class="final-price mb-[15px] text-[#4b5966] font-semibold text-[22px] leading-[32px] font-Poppins tracking-[0] max-[1199px]:text-[20px]">
+                                                        Rp{{ number_format($product->price, 0, ',', '.') }}
+                                                        @if($product->discount > 0)
+                                                            <span class="price-des ml-[15px] text-[#5caf90] font-medium text-[18px] tracking-[0.02rem]">
+                                                                -{{ number_format($product->discount, 0, ',', '.') }}%
+                                                            </span>
+                                                        @endif
+                                                    </div>
+                                                    @if($product->discount > 0)
+                                                        <div class="mrp text-[#777]">
+                                                            M.R.P. : <span class="text-[#999] line-through">Rp{{ number_format($originalPrice, 0, ',', '.') }}</span>
+                                                        </div>
+                                                    @endif
                                                 </div>
-                                                <div class="mrp text-[#777]">M.R.P. : <span class="text-[#999] line-through">$2,999.00</span></div>
                                             </div>
                                             <div class="gi-single-stoke flex flex-col">
-                                                <span class="gi-single-sku mb-[15px] text-[18px] leading-[32px] text-[#4b5966] font-semibold tracking-[0.02rem]">SKU#: WH12</span>
-                                                <span class="gi-single-ps-title leading-[1] text-[16px] text-[#5caf90] tracking-[0]">IN STOCK</span>
+                                                <span class="gi-single-ps-title leading-[1] text-[16px] tracking-[0] {{ $product->stock > 0 ? 'text-[#5caf90]' : 'text-[#e9abab]' }}">
+                                                {{ $product->stock > 0 ? 'Available' : 'Out Of Stock' }}
+                                                </span>
                                             </div>
                                         </div>
-                                        <div class="gi-single-desc mb-[12px] text-[#777] text-[14px] tracking-[0] break-all leading-[26px] font-Poppins">Lorem Ipsum is simply dummy text of the printing and
-                                            typesetting industry. Lorem Ipsum has been the industry's standard dummy
-                                            text ever since the 1990.</div>
-                                        <div class="gi-single-list">
-                                            <ul class="mb-[30px] pl-[18px]">
-                                                <li class="my-[10px] text-[#777] text-[14px] list-circle"><strong class="font-semibold">Closure :</strong> Hook & Loop</li>
-                                                <li class="my-[10px] text-[#777] text-[14px] list-circle"><strong class="font-semibold">Sole :</strong> Polyvinyl Chloride</li>
-                                                <li class="my-[10px] text-[#777] text-[14px] list-circle"><strong class="font-semibold">Width :</strong> Medium</li>
-                                                <li class="my-[10px] text-[#777] text-[14px] list-circle"><strong class="font-semibold">Outer Material :</strong> A-Grade Standard Quality</li>
-                                            </ul>
-                                        </div>
-                                        <div class="gi-pro-variation mb-[20px] pb-[5px]">
-                                            <div class="gi-pro-variation-inner gi-pro-variation-size text-[16px] font-semibold text-[#4b5966] flex-col mb-[15px] flex">
-                                                <span class="mb-[10px] text-[#202020] font-medium text-[15px] leading-[1.1] tracking-[0.04rem] uppercase font-Poppins block">Weight</span>
-                                                <div class="gi-pro-variation-content">
-                                                    <ul>
-                                                        <li class="active h-[22px] font-normal transition-all duration-[0.3s] ease-in-out py-[5px] px-[10px] cursor-pointer flex items-center justify-center text-[12px] leading-[22px] border-[1px] border-solid border-[#eee] float-left rounded-[5px]"><span class="">250g</span></li>
-                                                        <li class="h-[22px] font-normal transition-all duration-[0.3s] ease-in-out ml-[10px] py-[5px] px-[10px] cursor-pointer flex items-center justify-center text-[12px] leading-[22px] border-[1px] border-solid border-[#eee] float-left rounded-[5px]"><span>500g</span></li>
-                                                        <li class="h-[22px] font-normal transition-all duration-[0.3s] ease-in-out ml-[10px] py-[5px] px-[10px] cursor-pointer flex items-center justify-center text-[12px] leading-[22px] border-[1px] border-solid border-[#eee] float-left rounded-[5px]"><span>1kg</span></li>
-                                                        <li class="h-[22px] font-normal transition-all duration-[0.3s] ease-in-out ml-[10px] py-[5px] px-[10px] cursor-pointer flex items-center justify-center text-[12px] leading-[22px] border-[1px] border-solid border-[#eee] float-left rounded-[5px]"><span>2kg</span></li>
-                                                    </ul>
+                                        <div class="gi-single-desc mb-[12px] pb-[5px] text-[#777] text-[14px] tracking-[0] break-all leading-[26px] font-Poppins">
+                                        {{ Str::limit(strip_tags($product->description), 400) }}</div>
+                                        <!-- ini bagian pilihan antara product atau variantnya -->
+                                            <div class="add-more-wrapper flex gap-[15px]">                                            <div class="gi-add-more-slider owl-carousel">
+                                                <div class="add-more-item h-full p-[15px] flex flex-row border-[1px] border-solid border-[#eee] rounded-[5px] bg-[#f8f8fb]">
+                                                    <a href="javascript:void(0)" class="gi-btn-2 py-[5px] px-[10px] absolute top-[5px] right-[5px] opacity-[0] transition-all duration-[0.3s] ease-in-out text-[14px] font-medium bg-[#5caf90] text-[#fff] text-center rounded-[5px] hover:bg-[#4b5966] hover:text-[#fff]">+</a>
+                                                    <div class="add-more-img mr-[15px] relative">
+                                                        <img src="assets/img/product-images/8_1.jpg" alt="product" class="w-[75px] rounded-[5px] border-[1px] border-solid border-[#eee]">
+                                                    </div>
+                                                    <div class="add-more-info flex flex-col">
+                                                        <h5 class="text-[#777] block text-[13px] leading-[20px] font-medium tracking-[0.85px] capitalize font-Poppins mb-[6px]">Honey Spiced Nuts</h5>
+                                                        <span class="gi-pro-rating mb-[5px]">
+                                                            <i class="gicon gi-star fill inline-block text-[12px] text-[#f27d0c] float-left mr-[3px]"></i>
+                                                            <i class="gicon gi-star fill inline-block text-[12px] text-[#f27d0c] float-left mr-[3px]"></i>
+                                                            <i class="gicon gi-star fill inline-block text-[12px] text-[#f27d0c] float-left mr-[3px]"></i>
+                                                            <i class="gicon gi-star inline-block text-[12px] float-left text-[#777] mr-[3px]"></i>
+                                                            <i class="gicon gi-star inline-block text-[12px] float-left text-[#777] mr-[3px]"></i>
+                                                        </span>
+                                                        <span class="gi-price">
+                                                            <span class="new-price text-[15px]">$32.00</span>
+                                                            <span class="old-price ml-[5px] text-[14px] text-[#777] line-through">$45.00</span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="add-more-item h-full p-[15px] flex flex-row border-[1px] border-solid border-[#eee] rounded-[5px] bg-[#f8f8fb]">
+                                                    <a href="javascript:void(0)" class="gi-btn-2 py-[5px] px-[10px] absolute top-[5px] right-[5px] opacity-[0] transition-all duration-[0.3s] ease-in-out text-[14px] font-medium bg-[#5caf90] text-[#fff] text-center rounded-[5px] hover:bg-[#4b5966] hover:text-[#fff]">+</a>
+                                                    <div class="add-more-img mr-[15px] relative">
+                                                        <img src="assets/img/product-images/2_1.jpg" alt="product" class="w-[75px] rounded-[5px] border-[1px] border-solid border-[#eee]">
+                                                    </div>
+                                                    <div class="add-more-info flex flex-col">
+                                                        <h5 class="text-[#777] block text-[13px] leading-[20px] font-medium tracking-[0.85px] capitalize font-Poppins mb-[6px]">Dates Value Pouch</h5>
+                                                        <span class="gi-pro-rating mb-[5px]">
+                                                            <i class="gicon gi-star fill inline-block text-[12px] text-[#f27d0c] float-left mr-[3px]"></i>
+                                                            <i class="gicon gi-star fill inline-block text-[12px] text-[#f27d0c] float-left mr-[3px]"></i>
+                                                            <i class="gicon gi-star fill inline-block text-[12px] text-[#f27d0c] float-left mr-[3px]"></i>
+                                                            <i class="gicon gi-star fill inline-block text-[12px] text-[#f27d0c] float-left mr-[3px]"></i>
+                                                            <i class="gicon gi-star fill inline-block text-[12px] text-[#f27d0c] float-left mr-[3px]"></i>
+                                                        </span>
+                                                        <span class="gi-price">
+                                                            <span class="new-price text-[15px]">$56.00</span>
+                                                            <span class="old-price ml-[5px] text-[14px] text-[#777] line-through">$60.00</span>
+                                                        </span>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        <!-- end -->
                                         <div class="gi-single-qty flex flex-wrap w-full m-[-5px]">
-                                            <div class="qty-plus-minus w-[120px] h-[40px] p-[10px] border-[1px] border-solid border-[#eee] overflow-hidden m-[5px] relative flex items-center justify-between rounded-[5px]">
-                                                <input class="qty-input" type="text" name="ms_qtybtn" value="1">
-                                            </div>
-                                            <div class="gi-single-cart">
-                                                <button type="button" class="btn btn-primary gi-btn-1 flex h-[40px] leading-[50px] text-center text-[14px] m-[5px] py-[10px] px-[15px] uppercase justify-center bg-[#4b5966] text-[#fff] transition-all duration-[0.3s] ease-in-out relative rounded-[5px] items-center min-w-[160px] font-semibold tracking-[0.02rem] border-[0] hover:bg-[#5caf90] hover:text-[#fff]">Add To Cart</button>
-                                            </div>
+                                            <form action="{{ route('carts.store') }}" method="POST" class="flex items-center">
+                                                @csrf
+                                                <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                                <div class="qty-plus-minus w-[120px] h-[40px] p-[10px] border-[1px] border-solid border-[#eee] overflow-hidden m-[5px] relative flex items-center justify-between rounded-[5px]">
+                                                    <input class="qty-input w-full text-center" type="number" name="quantity" value="1" min="1">
+                                                </div>
+
+                                                <div class="gi-single-cart">
+                                                    <button type="submit"
+                                                        class="btn btn-primary gi-btn-1 flex h-[40px] leading-[50px] text-center text-[14px] m-[5px] py-[10px] px-[15px] uppercase justify-center bg-[#4b5966] text-[#fff] transition-all duration-[0.3s] ease-in-out relative rounded-[5px] items-center min-w-[160px] font-semibold tracking-[0.02rem] border-[0] hover:bg-[#5caf90] hover:text-[#fff]">
+                                                        Add To Cart
+                                                    </button>
+                                                </div>
+                                            </form>
                                             <div class="gi-single-wishlist m-[5px]">
-                                                <a class="gi-btn-group wishlist w-[40px] h-[40px] flex items-center justify-center transition-all duration-[0.3s] ease delay-[0s] text-[#17181c] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:text-[#fff] hover:bg-[#5caf90] hover:border-[#5caf90]" title="Wishlist">
+                                            <form action="{{ route('wishlist.store') }}" method="POST" class="gi-single-wishlist m-[5px] inline-block">
+                                                @csrf
+                                                <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                                <button type="submit" title="Add To Wishlist"
+                                                    class="gi-btn-group wishlist w-[40px] h-[40px] flex items-center justify-center transition-all duration-[0.3s] ease-in-out text-[#17181c] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:text-[#fff] hover:bg-[#5caf90] hover:border-[#5caf90]">
                                                     <i class="fi-rr-heart transition-all duration-[0.3s] ease-in-out text-[#4b5966] leading-[0]"></i>
-                                                </a>
-                                            </div>
-                                            <div class="gi-single-quickview m-[5px]">
-                                                <a href="javascript:void(0)" class="gi-btn-group quickview w-[40px] h-[40px] flex items-center justify-center transition-all duration-[0.3s] ease delay-[0s] text-[#17181c] bg-[#fff] border-[1px] border-solid border-[#eee] rounded-[5px] hover:text-[#fff] hover:bg-[#5caf90] hover:border-[#5caf90] modal-toggle">
-                                                    <i class="fi-rr-eye transition-all duration-[0.3s] ease-in-out text-[#4b5966] leading-[0]"></i>
-                                                </a>
+                                                </button>
+                                            </form>
                                             </div>
                                         </div>
                                     </div>
@@ -125,91 +160,6 @@
                         </div>
                     </div>
                     <!--Single product content End -->
-                    <!-- Add More and get discount content Start -->
-                    <div class="single-add-more my-[40px] max-[575px]:my-[30px]">
-                        <div class="gi-add-more-slider owl-carousel">
-                            <div class="add-more-item h-full p-[15px] flex flex-row border-[1px] border-solid border-[#eee] rounded-[5px] bg-[#f8f8fb]">
-                                <a href="javascript:void(0)" class="gi-btn-2 py-[5px] px-[10px] absolute top-[5px] right-[5px] opacity-[0] transition-all duration-[0.3s] ease-in-out text-[14px] font-medium bg-[#5caf90] text-[#fff] text-center rounded-[5px] hover:bg-[#4b5966] hover:text-[#fff]">+</a>
-                                <div class="add-more-img mr-[15px] relative">
-                                    <img src="assets/img/product-images/8_1.jpg" alt="product" class="w-[75px] rounded-[5px] border-[1px] border-solid border-[#eee]">
-                                </div>
-                                <div class="add-more-info flex flex-col">
-                                    <h5 class="text-[#777] block text-[13px] leading-[20px] font-medium tracking-[0.85px] capitalize font-Poppins mb-[6px]">Honey Spiced Nuts</h5>
-                                    <span class="gi-pro-rating mb-[5px]">
-                                        <i class="gicon gi-star fill inline-block text-[12px] text-[#f27d0c] float-left mr-[3px]"></i>
-                                        <i class="gicon gi-star fill inline-block text-[12px] text-[#f27d0c] float-left mr-[3px]"></i>
-                                        <i class="gicon gi-star fill inline-block text-[12px] text-[#f27d0c] float-left mr-[3px]"></i>
-                                        <i class="gicon gi-star inline-block text-[12px] float-left text-[#777] mr-[3px]"></i>
-                                        <i class="gicon gi-star inline-block text-[12px] float-left text-[#777] mr-[3px]"></i>
-                                    </span>
-                                    <span class="gi-price">
-                                        <span class="new-price text-[15px]">$32.00</span>
-                                        <span class="old-price ml-[5px] text-[14px] text-[#777] line-through">$45.00</span>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="add-more-item h-full p-[15px] flex flex-row border-[1px] border-solid border-[#eee] rounded-[5px] bg-[#f8f8fb]">
-                                <a href="javascript:void(0)" class="gi-btn-2 py-[5px] px-[10px] absolute top-[5px] right-[5px] opacity-[0] transition-all duration-[0.3s] ease-in-out text-[14px] font-medium bg-[#5caf90] text-[#fff] text-center rounded-[5px] hover:bg-[#4b5966] hover:text-[#fff]">+</a>
-                                <div class="add-more-img mr-[15px] relative">
-                                    <img src="assets/img/product-images/2_1.jpg" alt="product" class="w-[75px] rounded-[5px] border-[1px] border-solid border-[#eee]">
-                                </div>
-                                <div class="add-more-info flex flex-col">
-                                    <h5 class="text-[#777] block text-[13px] leading-[20px] font-medium tracking-[0.85px] capitalize font-Poppins mb-[6px]">Dates Value Pouch</h5>
-                                    <span class="gi-pro-rating mb-[5px]">
-                                        <i class="gicon gi-star fill inline-block text-[12px] text-[#f27d0c] float-left mr-[3px]"></i>
-                                        <i class="gicon gi-star fill inline-block text-[12px] text-[#f27d0c] float-left mr-[3px]"></i>
-                                        <i class="gicon gi-star fill inline-block text-[12px] text-[#f27d0c] float-left mr-[3px]"></i>
-                                        <i class="gicon gi-star fill inline-block text-[12px] text-[#f27d0c] float-left mr-[3px]"></i>
-                                        <i class="gicon gi-star fill inline-block text-[12px] text-[#f27d0c] float-left mr-[3px]"></i>
-                                    </span>
-                                    <span class="gi-price">
-                                        <span class="new-price text-[15px]">$56.00</span>
-                                        <span class="old-price ml-[5px] text-[14px] text-[#777] line-through">$60.00</span>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="add-more-item h-full p-[15px] flex flex-row border-[1px] border-solid border-[#eee] rounded-[5px] bg-[#f8f8fb]">
-                                <a href="javascript:void(0)" class="gi-btn-2 py-[5px] px-[10px] absolute top-[5px] right-[5px] opacity-[0] transition-all duration-[0.3s] ease-in-out text-[14px] font-medium bg-[#5caf90] text-[#fff] text-center rounded-[5px] hover:bg-[#4b5966] hover:text-[#fff]">+</a>
-                                <div class="add-more-img mr-[15px] relative">
-                                    <img src="assets/img/product-images/5_1.jpg" alt="product" class="w-[75px] rounded-[5px] border-[1px] border-solid border-[#eee]">
-                                </div>
-                                <div class="add-more-info flex flex-col">
-                                    <h5 class="text-[#777] block text-[13px] leading-[20px] font-medium tracking-[0.85px] capitalize font-Poppins mb-[6px]">Graps Mix Snack</h5>
-                                    <span class="gi-pro-rating mb-[5px]">
-                                        <i class="gicon gi-star fill inline-block text-[12px] text-[#f27d0c] float-left mr-[3px]"></i>
-                                        <i class="gicon gi-star fill inline-block text-[12px] text-[#f27d0c] float-left mr-[3px]"></i>
-                                        <i class="gicon gi-star inline-block text-[12px] float-left text-[#777] mr-[3px]"></i>
-                                        <i class="gicon gi-star inline-block text-[12px] float-left text-[#777] mr-[3px]"></i>
-                                        <i class="gicon gi-star inline-block text-[12px] float-left text-[#777] mr-[3px]"></i>
-                                    </span>
-                                    <span class="gi-price">
-                                        <span class="new-price text-[15px]">$28.00</span>
-                                        <span class="old-price ml-[5px] text-[14px] text-[#777] line-through">$35.00</span>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="add-more-item h-full p-[15px] flex flex-row border-[1px] border-solid border-[#eee] rounded-[5px] bg-[#f8f8fb]">
-                                <a href="javascript:void(0)" class="gi-btn-2 py-[5px] px-[10px] absolute top-[5px] right-[5px] opacity-[0] transition-all duration-[0.3s] ease-in-out text-[14px] font-medium bg-[#5caf90] text-[#fff] text-center rounded-[5px] hover:bg-[#4b5966] hover:text-[#fff]">+</a>
-                                <div class="add-more-img mr-[15px] relative">
-                                    <img src="assets/img/product-images/9_1.jpg" alt="product" class="w-[75px] rounded-[5px] border-[1px] border-solid border-[#eee]">
-                                </div>
-                                <div class="add-more-info flex flex-col">
-                                    <h5 class="text-[#777] block text-[13px] leading-[20px] font-medium tracking-[0.85px] capitalize font-Poppins mb-[6px]">Roasted Almonds Pack</h5>
-                                    <span class="gi-pro-rating mb-[5px]">
-                                        <i class="gicon gi-star fill inline-block text-[12px] text-[#f27d0c] float-left mr-[3px]"></i>
-                                        <i class="gicon gi-star fill inline-block text-[12px] text-[#f27d0c] float-left mr-[3px]"></i>
-                                        <i class="gicon gi-star fill inline-block text-[12px] text-[#f27d0c] float-left mr-[3px]"></i>
-                                        <i class="gicon gi-star fill inline-block text-[12px] text-[#f27d0c] float-left mr-[3px]"></i>
-                                        <i class="gicon gi-star fill inline-block text-[12px] text-[#f27d0c] float-left mr-[3px]"></i>
-                                    </span>
-                                    <span class="gi-price">
-                                        <span class="new-price text-[15px]">$16.00</span>
-                                        <span class="old-price ml-[5px] text-[14px] text-[#777] line-through">$23.00</span>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                     <!-- Single product tab start -->
                     <div class="gi-single-pro-tab mt-[40px]">
                         <div class="gi-single-pro-tab-wrapper flex flex-col">
@@ -414,6 +364,7 @@
                         </div>
                     </div>
                     <!-- product details description area end -->
+                     @endif
                 </div>
             </div>
         </div>
@@ -798,5 +749,6 @@
         </div>
     </section>
     <!-- Related product section End -->
+
 
 @endsection

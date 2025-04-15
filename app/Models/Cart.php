@@ -67,4 +67,5 @@ class Cart extends Model
             }
         });
     }
+
 }

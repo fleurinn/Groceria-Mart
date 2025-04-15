@@ -33,65 +33,79 @@
                                             <th scope="col" class="p-[0.5rem] text-left text-[#4b5966]">Actions</th>
                                         </tr>
                                     </thead>
-                                    <tbody class="wish-empt border-t-[3px] border-solid border-[#eee] border-solid border-[#dee2e6]">
-                                    @foreach ($wishlists as $wishlist)
-                                        @php
-                                            $product = $wishlist->product;
-                                        @endphp
-                                        @if ($product)
-                                            <tr class="pro-gl-content">
-                                                <td class="p-[0.5rem] border-b-[1px] border-solid border-[#dee2e6]">
-                                                    <span class="max-[767px]:text-[14px] py-[14px] flex text-[#777] tracking-[0.02rem]">{{ $product->id }}</span>
-                                                </td>
-                                                <td class="p-[0.5rem] border-b-[1px] border-solid border-[#dee2e6]">
-                                                    <img class="prod-img h-[58px] w-[58px]" src="{{ asset('storage/products/' . $product->image) }}" alt="{{ $product->name }}">
-                                                </td>
-                                                <td class="p-[0.5rem] border-b-[1px] border-solid border-[#dee2e6]">
-                                                    <span class="max-[767px]:text-[14px] py-[14px] flex text-[#777] tracking-[0.02rem]">{{ Str::limit($product->name, 30) }}                                                    </span>
-                                                </td>
-                                                <td class="p-[0.5rem] border-b-[1px] border-solid border-[#dee2e6]">
-                                                    <span class="max-[767px]:text-[14px] py-[14px] flex text-[#777] tracking-[0.02rem]">{{ $product->category->name }}                                                    </span>
-                                                </td>
-                                                <td class="p-[0.5rem] border-b-[1px] border-solid border-[#dee2e6]">
-                                                    <span class="max-[767px]:text-[14px] py-[14px] flex text-[#777] tracking-[0.02rem]">Rp{{ $product->price }}</span>
-                                                </td>
-                                                <td class="p-[0.5rem] border-b-[1px] border-solid border-[#dee2e6]">
-                                                    <span class="max-[767px]:text-[14px] py-[14px] flex tracking-[0.02rem] 
-                                                        {{ $product->stock > 0 ? 'text-[#5caf90]' : 'text-[#e9abab]' }}">
-                                                        {{ $product->stock > 0 ? 'Available' : 'Out Of Stock' }}
-                                                    </span>
-                                                </td>
-                                                <td class="p-[0.5rem] border-b-[1px] border-solid border-[#dee2e6]">
-                                                    <span class="tbl-btn py-[14px] flex text-[#777]">
-                                                        <a class="gi-btn-2 add-to-cart w-[30px] h-[30px] inline-flex items-center justify-center transition-all duration-[0.3s] ease-in-out py-[10px] px-[15px] text-[14px] font-medium bg-[#5caf90] text-[#fff] text-center rounded-[5px] hover:bg-[#4b5966] hover:text-[#fff]" href="javascript:void(0)" title="Add To Cart">
-                                                            <i class="fi-rr-shopping-basket leading-[10px]"></i>
-                                                        </a>
-                                                        <a class="gi-btn-1 gi-remove-wish mx-[3px] text-[20px] font-normal btn w-[30px] h-[30px] inline-flex items-center justify-center transition-all duration-[0.3s] ease-in-out py-[10px] px-[15px] text-[14px] font-medium bg-[#4b5966] text-[#fff] text-center rounded-[5px] hover:bg-[#5caf90] hover:text-[#fff]" href="javascript:void(0)" title="Remove From List">
-                                                            ×
-                                                        </a>
-                                                    </span>
-                                                </td>
+                                    <tbody class="wish-empt border-t-[3px] border-[#dee2e6] border-solid">
+                                        @forelse ($wishlists as $wishlist)
+                                            @php
+                                                $product = $wishlist->product;
+                                            @endphp
+
+                                            @if ($product)
+                                                <tr class="pro-gl-content">
+                                                    {{-- ID Produk --}}
+                                                    <td class="p-2 border-b border-[#dee2e6]">
+                                                        <span class="text-[#777] tracking-[0.02rem] max-[767px]:text-[14px] py-3 flex">
+                                                            {{ $product->id }}
+                                                        </span>
+                                                    </td>
+
+                                                    {{-- Gambar Produk --}}
+                                                    <td class="p-2 border-b border-[#dee2e6]">
+                                                        <img class="prod-img w-[58px] h-[58px]" src="{{ asset('storage/products/' . $product->image) }}" alt="{{ $product->name }}">
+                                                    </td>
+
+                                                    {{-- Nama Produk --}}
+                                                    <td class="p-2 border-b border-[#dee2e6]">
+                                                        <span class="text-[#777] tracking-[0.02rem] max-[767px]:text-[14px] py-3 flex">
+                                                            {{ Str::limit($product->name, 30) }}
+                                                        </span>
+                                                    </td>
+
+                                                    {{-- Kategori --}}
+                                                    <td class="p-2 border-b border-[#dee2e6]">
+                                                        <span class="text-[#777] tracking-[0.02rem] max-[767px]:text-[14px] py-3 flex">
+                                                            {{ $product->category->name }}
+                                                        </span>
+                                                    </td>
+
+                                                    {{-- Harga --}}
+                                                    <td class="p-2 border-b border-[#dee2e6]">
+                                                        <span class="text-[#777] tracking-[0.02rem] max-[767px]:text-[14px] py-3 flex">
+                                                            Rp{{ number_format($product->price, 0, ',', '.') }}
+                                                        </span>
+                                                    </td>
+
+                                                    {{-- Stok --}}
+                                                    <td class="p-2 border-b border-[#dee2e6]">
+                                                        <span class="tracking-[0.02rem] max-[767px]:text-[14px] py-3 flex
+                                                            {{ $product->stock > 0 ? 'text-[#5caf90]' : 'text-[#e9abab]' }}">
+                                                            {{ $product->stock > 0 ? 'Available' : 'Out Of Stock' }}
+                                                        </span>
+                                                    </td>
+
+                                                    {{-- Aksi --}}
+                                                    <td class="p-2 border-b border-[#dee2e6]">
+                                                        <div class="flex items-center py-3 space-x-2">
+                                                            {{-- Tombol Add to Cart --}}
+                                                            <a href="javascript:void(0)" title="Add To Cart"
+                                                            class="gi-btn-2 add-to-cart w-[30px] h-[30px] flex items-center justify-center text-[14px] font-medium bg-[#5caf90] text-white rounded-[5px] hover:bg-[#4b5966] transition-all duration-300">
+                                                                <i class="fi-rr-shopping-basket leading-[10px]"></i>
+                                                            </a>
+
+                                                            {{-- Tombol Hapus Wishlist --}}
+                                                            <a href="javascript:void(0)" title="Remove From List"
+                                                            class="gi-btn-1 gi-remove-wish w-[30px] h-[30px] flex items-center justify-center text-[20px] bg-[#4b5966] text-white rounded-[5px] hover:bg-[#5caf90] transition-all duration-300">
+                                                                ×
+                                                            </a>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            @endif
+
+                                        @empty
+                                            <tr>
+                                                <td colspan="7" class="text-center text-gray-500 py-4">Wishlist kamu kosong 😔</td>
                                             </tr>
-                                        @endif
-                                    @endforeach
-                                        <tr class="pro-gl-content">
-                                            <td class="p-[0.5rem] border-b-[1px] border-solid border-[#dee2e6]"><span class="max-[767px]:text-[14px] py-[14px] flex text-[#777] tracking-[0.02rem]">548</span></td>
-                                            <td class="p-[0.5rem] border-b-[1px] border-solid border-[#dee2e6]"><img class="prod-img h-[58px] w-[58px]" src="assets/img/product-images/10_1.jpg" alt="product image"></td>
-                                            <td class="p-[0.5rem] border-b-[1px] border-solid border-[#dee2e6]"><span class="max-[767px]:text-[14px] py-[14px] flex text-[#777] tracking-[0.02rem]">Healthy Nutmix, 200g Pack</span></td>
-                                            <td class="p-[0.5rem] border-b-[1px] border-solid border-[#dee2e6]"><span class="max-[767px]:text-[14px] py-[14px] flex text-[#777] tracking-[0.02rem]">13 Aug 2016</span></td>
-                                            <td class="p-[0.5rem] border-b-[1px] border-solid border-[#dee2e6]"><span class="max-[767px]:text-[14px] py-[14px] flex text-[#777] tracking-[0.02rem]">$68</span></td>
-                                            <td class="p-[0.5rem] border-b-[1px] border-solid border-[#dee2e6]"><span class="max-[767px]:text-[14px] py-[14px] flex text-[#e9abab] tracking-[0.02rem]">Out Of Stock</span></td>
-                                            <td class="p-[0.5rem] border-b-[1px] border-solid border-[#dee2e6]">
-                                                <span class="tbl-btn py-[14px] flex text-[#777]">
-                                                    <a class="gi-btn-2 add-to-cart w-[30px] h-[30px] inline-flex items-center justify-center transition-all duration-[0.3s] ease-in-out py-[10px] px-[15px] text-[14px] font-medium bg-[#5caf90] text-[#fff] text-center rounded-[5px] hover:bg-[#4b5966] hover:text-[#fff]" href="javascript:void(0)" title="Add To Cart">
-                                                        <i class="fi-rr-shopping-basket leading-[10px]"></i>
-                                                    </a>
-                                                    <a class="gi-btn-1 gi-remove-wish mx-[3px] text-[20px] font-normal btn w-[30px] h-[30px] inline-flex items-center justify-center transition-all duration-[0.3s] ease-in-out py-[10px] px-[15px] text-[14px] font-medium bg-[#4b5966] text-[#fff] text-center rounded-[5px] hover:bg-[#5caf90] hover:text-[#fff]" href="javascript:void(0)" title="Remove From List">
-                                                        ×
-                                                    </a>
-                                                </span>
-                                            </td>
-                                        </tr>
+                                        @endforelse
                                     </tbody>
                                 </table>
                             </div>

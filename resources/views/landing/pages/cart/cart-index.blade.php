@@ -8,7 +8,85 @@
     <h2 class="hidden">Cart Page</h2>
     <div class="flex flex-wrap justify-between items-center mx-auto min-[1600px]:max-w-[1600px] min-[1400px]:max-w-[1320px] min-[1200px]:max-w-[1140px] min-[992px]:max-w-[960px] min-[768px]:max-w-[720px] min-[576px]:max-w-[540px] relative">
         <div class="flex flex-wrap w-full">
-            <div class="gi-cart-leftside min-[992px]:w-[100%] w-full px-[12px] max-[991px]:mt-[30px]">
+<!-- Sidebar Area Start -->
+<div class="gi-cart-rightside min-[992px]:w-[33.33%] w-full px-[12px]">
+                    <div class="gi-sidebar-wrap p-[15px] rounded-[5px] border-[1px] border-solid border-[#eee] mb-[0]">
+                        <!-- Sidebar Summary Block -->
+                        <div class="gi-sidebar-block">
+                            <div class="gi-sb-title">
+                                <h3 class="gi-sidebar-title text-[20px] font-semibold tracking-[0] mb-[0] leading-[1.2] relative text-[#4b5966] max-[1199px]:text-[18px]">Summary</h3>
+                            </div>
+                            <div class="gi-sb-block-content mb-[0] border-b-[0] mt-[15px]">
+                                <h4 class="gi-ship-title mb-[0] text-[17px] font-bold tracking-[0] leading-[1.2] border-b-[1px] border-solid border-[#eee] text-[#777] pb-[15px] relative flex items-center justify-between">Estimate Shipping</h4>
+                                <div class="gi-cart-form pt-[19px]">
+                                    <p class="text-[#777] text-[14px] mb-[10px] tracking-[0] leading-[28px] font-light">Enter your destination to get a shipping estimate</p>
+                                    <form action="#" method="post">
+                                        <span class="gi-cart-wrap">
+                                            <label class="mb-[9px] text-[#4b5966] text-[14px] font-medium tracking-[0] leading-[1] inline-block">Country *</label>
+                                            <span class="gi-cart-select-inner relative flex w-full h-[50px] border-[1px] border-solid border-[#eee] text-[14px] p-[0] mb-[28px] rounded-[5px]">
+                                                <select name="gi_cart_country" id="gi-cart-select-country" class="gi-cart-select">
+                                                    <option selected="" disabled="">United States</option>
+                                                    <option value="1">Country 1</option>
+                                                    <option value="2">Country 2</option>
+                                                    <option value="3">Country 3</option>
+                                                    <option value="4">Country 4</option>
+                                                    <option value="5">Country 5</option>
+                                                </select>
+                                            </span>
+                                        </span>
+                                        <span class="gi-cart-wrap">
+                                            <label class="mb-[9px] text-[#4b5966] text-[14px] font-medium tracking-[0] leading-[1] inline-block">State/Province</label>
+                                            <span class="gi-cart-select-inner relative flex w-full h-[50px] border-[1px] border-solid border-[#eee] text-[14px] p-[0] mb-[28px] rounded-[5px]">
+                                                <select name="gi_cart_state" id="gi-cart-select-state" class="gi-cart-select">
+                                                    <option selected="" disabled="">Please Select a region, state</option>
+                                                    <option value="1">Region/State 1</option>
+                                                    <option value="2">Region/State 2</option>
+                                                    <option value="3">Region/State 3</option>
+                                                    <option value="4">Region/State 4</option>
+                                                    <option value="5">Region/State 5</option>
+                                                </select>
+                                            </span>
+                                        </span>
+                                        <span class="gi-cart-wrap">
+                                            <label class="mb-[9px] text-[#4b5966] text-[14px] font-medium tracking-[0] leading-[1] inline-block">Zip/Postal Code</label>
+                                            <input type="text" name="postalcode" placeholder="Zip/Postal Code" class="h-[50px] bg-transparent border-[1px] border-solid border-[#eee] text-[#4b5966] text-[14px] mb-[26px] px-[15px] w-full outline-[0] rounded-[5px]">
+                                        </span>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="gi-sb-block-content mb-[0] border-b-[0] mt-[15px]">
+                                <div class="gi-cart-summary-bottom">
+                                    <div class="gi-cart-summary">
+                                        <div class="flex justify-between items-center mb-[10px]">
+                                            <span class="text-left text-[#4b5966] text-[14px] leading-[24px] tracking-[0]">Sub-Total</span>
+                                            <span class="text-right text-[#4b5966] text-[14px] leading-[24px] font-medium">$80.00</span>
+                                        </div>
+                                        <div class="flex justify-between items-center mb-[10px]">
+                                            <span class="text-left text-[#4b5966] text-[14px] leading-[24px] tracking-[0]">Delivery Charges</span>
+                                            <span class="text-right text-[#4b5966] text-[14px] leading-[24px] font-medium">$80.00</span>
+                                        </div>
+                                        <div class="flex justify-between items-center mb-[10px]">
+                                            <span class="text-left text-[#4b5966] text-[14px] leading-[24px] tracking-[0]">Coupan Discount</span>
+                                            <span class="text-right text-[#5caf90] text-[14px] leading-[24px] font-medium"><a class="gi-cart-coupan">Apply Coupan</a></span>
+                                        </div>
+                                        <div class="gi-cart-coupan-content mb-[0] hidden">
+                                            <form class="gi-cart-coupan-form flex border-[1px] border-solid border-[#eee] p-[5px] rounded-[5px]" name="gi-cart-coupan-form" method="post" action="#">
+                                                <input class="gi-coupan inline-block align-top leading-[35px] h-[40px] text-[#777] text-[14px] w-[80%] border-[0] bg-transparent text-left px-[10px] tracking-[0.5px] outline-[0] rounded-[5px]" type="text" required="" placeholder="Enter Your Coupan Code" name="gi-coupan" value="">
+                                                <button type="submit" class="gi-btn-2 transition-all duration-[0.3s] ease-in-out overflow-hidden text-center relative rounded-[5px] py-[10px] max-[767px]:py-[6px] px-[15px] max-[767px]:px-[10px] bg-[#5caf90] text-[#fff] border-[0] text-[14px] max-[767px]:text-[13px] tracking-[0] font-medium inline-flex items-center hover:bg-[#4b5966] hover:text-[#fff]" name="subscribe" value="">Apply</button>
+                                            </form>
+                                        </div>
+                                        <div class="gi-cart-summary-total border-t-[1px] border-solid border-[#eee] pt-[19px] mb-[0] mt-[16px] flex justify-between items-center">
+                                            <span class="text-left text-[16px] font-medium text-[#4b5966] leading-[24px] tracking-[0]">Total Amount</span>
+                                            <span class="text-right text-[16px] font-medium text-[#4b5966] leading-[24px] tracking-[0]">$80.00</span>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <div class="gi-cart-leftside min-[992px]:w-[66.66%] w-full px-[12px] max-[991px]:mt-[30px]">
                 <!-- cart content Start -->
                 <div class="gi-cart-content">
                     <div class="gi-cart-inner">
@@ -49,9 +127,6 @@
                                                         <button type="button" class="qty-btn plus px-2 text-[#4b5966]">+</button>
                                                     </div>
                                                 </td>
-                                                <td data-label="Total" class="gi-cart-pro-subtotal text-[#4b5966] text-[15px] font-medium py-[15px] px-[14px]">
-                                                    Rp{{ number_format($cart->product->price * $cart->quantity, 0, ',', '.') }}
-                                                </td>
                                                 <td data-label="Remove" class="gi-cart-pro-remove text-[#4b5966] text-[16px] py-[15px] px-[14px] text-right">
                                                     <form action="{{ route('carts.destroy', $cart->id) }}" method="POST">
                                                         @csrf
@@ -68,27 +143,17 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <div class="flex flex-wrap">
+                                <div class="flex">
                                     <div class="w-full">
-                                        <div class="pt-6 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mt-6">
-                                            
-                                            <!-- Total Amount -->
-                                            <div class="flex justify-between items-center w-full sm:w-auto">
-                                                <span class="text-[16px] font-medium text-[#4b5966] leading-[24px]">Total Amount:</span>
-                                                <span class="text-[16px] font-bold text-[#4b5966] leading-[24px] ml-4">
-                                                    Rp{{ number_format($total, 0, ',', '.') }}
-                                                </span>
-                                            </div>
-                                            
+                                        <div class="pt-6 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mt-6">                    
                                             <!-- Checkout Button -->
                                             <button type="button"
-                                                class="gi-btn-2 transition-all duration-300 ease-in-out rounded-[5px] py-2 px-4 bg-[#5caf90] text-white text-[14px] font-medium hover:bg-[#4b5966]">
+                                                class="gi-btn-2 ml-auto transition-all duration-300 ease-in-out rounded-[5px] py-2 px-4 bg-[#5caf90] text-white text-[14px] font-medium hover:bg-[#4b5966]">
                                                 Check Out
                                             </button>
                                         </div>
                                     </div>
                                 </div>
-                            </form>
                         </div>
                     </div>
                 </div>

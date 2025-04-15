@@ -23,7 +23,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/plugins/nouislider.css') }}">
 
     <!-- Tailwindcss -->
-    <script src="assets/js/plugins/tailwindcss3.4.1"></script>
+    <script src="{{ asset('assets/js/plugins/tailwindcss3.4.1') }}"></script>
 
     <!-- Main Style -->
     <link rel="stylesheet" id="main_style" href="{{ asset('assets/css/demo-1.css') }}">

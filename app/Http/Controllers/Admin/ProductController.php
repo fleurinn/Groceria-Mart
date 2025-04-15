@@ -19,7 +19,6 @@ class ProductController extends Controller
         $sort = $request->input('sort');
         $tag = $request->input('tag');
 
-        // Ambil semua tag dari produk, explode lalu ambil yang unik
         $allTags = Product::pluck('tags')
             ->flatMap(function ($tagString) {
                 return collect(explode(',', $tagString));
@@ -28,33 +27,32 @@ class ProductController extends Controller
                 return trim($tag);
             })
             ->unique()
-            ->filter() // hilangkan null/kosong
+            ->filter()
             ->values();
 
         $products = Product::with('category', 'variants')
             ->when($search, function ($query) use ($search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('name', 'like', "%$search%")
-                    ->orWhere('tags', 'like', "%$search%");
+                      ->orWhere('tags', 'like', "%$search%");
                 });
             })
             ->when($category, fn ($q) => $q->where('category_product_id', $category))
             ->when($status, fn ($q) => $q->where('status', $status))
-            ->when($tag, function ($q) use ($tag) {
-                $q->where('tags', 'like', "%$tag%");
-            })
+            ->when($tag, fn ($q) => $q->where('tags', 'like', "%$tag%"))
             ->when($sort, function ($query) use ($sort) {
-                switch ($sort) {
-                    case '3': $query->orderBy('name', 'asc'); break;
-                    case '4': $query->orderBy('name', 'desc'); break;
-                    case '5': $query->orderBy('price', 'asc'); break;
-                    case '6': $query->orderBy('price', 'desc'); break;
-                }
-            })->paginate(10);
+                match ($sort) {
+                    '3' => $query->orderBy('name', 'asc'),
+                    '4' => $query->orderBy('name', 'desc'),
+                    '5' => $query->orderBy('price', 'asc'),
+                    '6' => $query->orderBy('price', 'desc'),
+                    default => null
+                };
+            })
+            ->paginate(10);
 
         return view('admin.pages.products.produk.index', compact('products', 'search', 'category', 'status', 'sort', 'tag', 'allTags'));
     }
-
 
     public function create()
     {
@@ -86,8 +84,13 @@ class ProductController extends Controller
         ]);
 
         try {
+            // Simpan gambar utama dengan move()
             $imageName = $request->file('image')->hashName();
-            $request->file('image')->storeAs('public/products', $imageName);
+            $request->file('image')->move(public_path('storage/products'), $imageName);
+
+            $originalPrice = $request->price;
+            $discountPercent = $request->discount ?? 0;
+            $discountedPrice = $originalPrice - ($originalPrice * ($discountPercent / 100));
 
             $product = Product::create([
                 'name' => $request->name,
@@ -97,11 +100,11 @@ class ProductController extends Controller
                 'description' => $request->description,
                 'category_product_id' => $request->category_product_id,
                 'image' => $imageName,
-                'price' => $request->price,
+                'price' => $discountedPrice,
                 'stock' => $request->stock,
                 'status' => $request->status,
                 'tags' => $request->tags,
-                'discount' => $request->discount,
+                'discount' => $discountPercent,
             ]);
 
             if ($request->has('variants')) {
@@ -113,11 +116,15 @@ class ProductController extends Controller
                         $variant['image']->move(public_path('storage/variants'), $variantImage);
                     }
 
+                    $variantPrice = $variant['price'] ?? 0;
+                    $variantDiscount = $variant['discount'] ?? 0;
+                    $discountedVariantPrice = $variantPrice - ($variantPrice * ($variantDiscount / 100));
+
                     $product->variants()->create([
                         'name' => $variant['name'] ?? null,
                         'description' => $variant['description'] ?? null,
-                        'price' => $variant['price'] ?? null,
-                        'discount' => $variant['discount'] ?? null,
+                        'price' => $discountedVariantPrice,
+                        'discount' => $variantDiscount,
                         'stock' => $variant['stock'] ?? null,
                         'image' => $variantImage,
                     ]);
@@ -129,6 +136,7 @@ class ProductController extends Controller
             return redirect()->back()->with('error', 'Gagal menyimpan produk: ' . $e->getMessage());
         }
     }
+
 
     public function edit(Product $product)
     {
@@ -169,17 +177,37 @@ class ProductController extends Controller
                 $product->image = $imageName;
             }
 
-            $product->update($request->except(['image', 'variants']));
+            $originalPrice = $request->price;
+            $discountPercent = $request->discount ?? 0;
+            $discountedPrice = $originalPrice - ($originalPrice * ($discountPercent / 100));
+
+            $product->update([
+                'name' => $request->name,
+                'weight' => $request->weight,
+                'dimension' => $request->dimension,
+                'color' => $request->color,
+                'description' => $request->description,
+                'category_product_id' => $request->category_product_id,
+                'image' => $product->image,
+                'price' => $discountedPrice,
+                'stock' => $request->stock,
+                'status' => $request->status,
+                'tags' => $request->tags,
+                'discount' => $discountPercent,
+            ]);
 
             if ($request->has('variants')) {
                 foreach ($request->variants as $variant) {
                     $data = [
                         'name' => $variant['name'] ?? null,
                         'description' => $variant['description'] ?? null,
-                        'price' => $variant['price'] ?? null,
-                        'discount' => $variant['discount'] ?? null,
                         'stock' => $variant['stock'] ?? null,
+                        'discount' => $variant['discount'] ?? 0,
                     ];
+
+                    $variantPrice = $variant['price'] ?? 0;
+                    $variantDiscount = $variant['discount'] ?? 0;
+                    $data['price'] = $variantPrice - ($variantPrice * ($variantDiscount / 100));
 
                     if (isset($variant['image'])) {
                         $existing = $product->variants()->find($variant['id'] ?? null);
@@ -230,7 +258,7 @@ class ProductController extends Controller
 
         foreach ($products as $product) {
             if ($product->image) {
-                Storage::delete('public/products/' . $product->image); //sesuaikan pathnya
+                Storage::delete('public/products/' . $product->image);
             }
         }
 
@@ -248,7 +276,7 @@ class ProductController extends Controller
 
         if ($ids) {
             Product::whereIn('id', $ids)->update(['status' => 'draft']);
-            return response()->json(['success' => true, 'message' => 'Produk berhasil diubah ke draft.']);
+            return response()->json(['success' => true, 'message' => 'Produk berhasil didrafkan.']);
         }
 
         return response()->json(['success' => false, 'message' => 'Tidak ada produk yang dipilih.'], 400);
@@ -265,4 +293,7 @@ class ProductController extends Controller
 
         return response()->json(['success' => false, 'message' => 'Tidak ada produk yang dipilih.'], 400);
     }
+
+    
+
 }

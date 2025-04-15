@@ -157,6 +157,18 @@
                           <div class="d-flex align-items-center"><span class="nav-link-text">Banner</span></div>
                         </a><!-- more inner pages-->
                       </li>
+                      <li class="nav-item"><a class="nav-link" href="{{ route('abouts.index') }}">
+                          <div class="d-flex align-items-center"><span class="nav-link-text">About</span></div>
+                        </a><!-- more inner pages-->
+                      </li>
+                      <li class="nav-item"><a class="nav-link" href="{{ route('testimonials.index') }}">
+                          <div class="d-flex align-items-center"><span class="nav-link-text">Testimonial</span></div>
+                        </a><!-- more inner pages-->
+                      </li>
+                      <li class="nav-item"><a class="nav-link" href="{{ route('teams.index') }}">
+                          <div class="d-flex align-items-center"><span class="nav-link-text">Team</span></div>
+                        </a><!-- more inner pages-->
+                      </li>
                     </ul>
                   </div>
                 </div><!-- parent pages-->
