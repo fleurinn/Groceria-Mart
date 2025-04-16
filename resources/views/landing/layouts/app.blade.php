@@ -9,7 +9,7 @@
     <title>@yield('page_title', 'Groceria | Shop & Happy')</title>
 
     <!-- site Favicon -->
-    <link rel="icon" href="{{ asset('assets/img/favicon/favicon.png') }}" sizes="32x32">
+    <link rel="icon" href="{{ asset('assets/img/favicon/favicongroceria.png') }}" sizes="32x32">
 
     <!-- css Icon Font -->
     <link rel="stylesheet" href="{{ asset('assets/css/vendor/gicons.css') }}">

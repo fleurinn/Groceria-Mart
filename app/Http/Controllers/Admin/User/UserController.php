@@ -38,7 +38,7 @@ class UserController extends Controller
 
         return view('admin.pages.users.user-create', compact('roles', 'city', 'districts', 'villages'));
     }
-    
+
     public function store(Request $request)
     {
         $request->validate([
@@ -144,8 +144,8 @@ class UserController extends Controller
 
         if ($request->hasFile('image')) {
             // Hapus gambar lama jika ada
-            if ($user->image && \Storage::disk('public')->exists($user->image)) {
-                \Storage::disk('public')->delete($user->image);
+            if ($user->image && Storage::disk('public')->exists($user->image)) {
+                Storage::disk('public')->delete($user->image);
             }
             $imagePath = $request->file('image')->store('profile_images', 'public');
             $user->image = $imagePath;
@@ -194,3 +194,4 @@ class UserController extends Controller
         return redirect()->route('users.index')->with('success', 'User  berhasil dihapus');
     }
 }
+

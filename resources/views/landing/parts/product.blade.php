@@ -5,8 +5,8 @@
                 <div class="gi-main-title">
                     <div class="section-title mb-[20px] pb-[20px] flex flex-start">
                         <div class="section-detail">
-                            <h2 class="gi-title mb-[0] text-[25px] max-[991px]:text-[24px] max-[767px]:text-[22px] max-[575px]:text-[20px] font-semibold text-[#4b5966] relative inline p-[0] capitalize leading-[1] font-manrope tracking-[0.01rem]">New <span class="text-[#5caf90]">Arrivals</span></h2>
-                            <p class="max-w-[400px] mt-[10px] text-[14px] text-[#777] leading-[18px] font-light">Shop online for new arrivals and get free shipping!</p>
+                            <h2 class="gi-title mb-[0] text-[25px] max-[991px]:text-[24px] max-[767px]:text-[22px] max-[575px]:text-[20px] font-semibold text-[#4b5966] relative inline p-[0] capitalize leading-[1] font-manrope tracking-[0.01rem]">Produk<span class="text-[#5caf90]"> Terlaris</span></h2>
+                            <p class="max-w-[400px] mt-[10px] text-[14px] text-[#777] leading-[18px] font-light">Produk terlaris lebih menarik dan ekonomis!</p>
                         </div>
                     </div>
                 </div>
@@ -14,7 +14,7 @@
                 <div class="gi-pro-tab mt-[40px] max-[991px]:mt-[-20px] max-[991px]:mb-[30px]">
                     <ul class="nav-tabs flex flex-wrap max-[991px]:justify-start" id="myproTab">
                         <li class="active inline-block align-top text-[14px] text-[#777] uppercase p-[0] cursor-pointer font-medium transition-all duration-[0.3s] ease delay-[0s] leading-[20px] tracking-[0.7px] mr-[50px] max-[991px]:mr-[30px] max-[480px]:mr-[20px]">
-                            <a class="nav-link relative font-medium p-[0] max-[480px]:text-[13px] max-[480px]:leading-[28px]" href="#all">All</a>
+                            <a class="nav-link relative font-medium p-[0] max-[480px]:text-[13px] max-[480px]:leading-[28px]" href="#all">Semua</a>
                         </li>
                         @foreach($categoryproducts->take(3) as $category)
                         <li class="inline-block align-top text-[14px] text-[#777] uppercase p-[0] cursor-pointer font-medium transition-all duration-[0.3s] ease delay-[0s] leading-[20px] tracking-[0.7px] mr-[50px] max-[991px]:mr-[30px] max-[480px]:mr-[20px]">
