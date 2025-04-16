@@ -13,10 +13,10 @@ class DiscountVoucher extends Model
     protected $fillable = [
         'title',
         'description',
-        'type', // global atau specific_product
         'category_product_id', // sesuai dengan migration
         'discount_code',
         'discount_value',
+        'discount_type',
         'start_date',
         'end_date',
         'status',
@@ -28,6 +28,7 @@ class DiscountVoucher extends Model
         'end_date' => 'datetime',
     ];
 
+
     /**
      * Relasi ke kategori produk (jika ada)
      */
@@ -35,6 +36,7 @@ class DiscountVoucher extends Model
     {
         return $this->belongsTo(CategoryProduct::class);
     }
+    
 
     /**
      * Cek apakah diskon masih valid

@@ -1,6 +1,6 @@
 @extends('admin.layouts.admin-layouts')
 
-@section('page_title', 'Banner | Groceria')
+@section('page_title', 'Voucher Diskon | Groceria')
 @section('content')
 
 <!-- MAIN CONTENT -->
@@ -27,20 +27,20 @@
   <div class="mb-9">
     <div class="row g-3 mb-4">
       <div class="col-auto">
-        <h2 class="mb-0">Banners</h2>
+        <h2 class="mb-0">Voucher Diskon</h2>
       </div>
     </div>
-    <div id="sliders" data-list='{"valueNames":["image","title","description","category_product_id","status"],"page":10,"pagination":true}'>
+    <div id="vouchers" data-list='{"valueNames":["image","title","description","category_product_id","status"],"page":10,"pagination":true}'>
       <div class="mb-4">
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
           <div style="display: flex; align-items: center; gap: 10px;">
             <div class="search-box">
-              <form class="position-relative" method="GET" action="{{ route('slider.index') }}">
+              <form class="position-relative" method="GET" action="{{ route('discount-vouchers.index') }}">
                 <input 
                   class="form-control search-input search" 
                   type="search" 
                   name="search" 
-                  placeholder="Search banner" 
+                  placeholder="Search Voucher Diskon" 
                   aria-label="Search" 
                   value="{{ request('search') }}" 
                 />
@@ -49,7 +49,7 @@
             </div>
             <button type="button"
               style="font-family: 'Arial', sans-serif; font-size: 14px; padding: 5px 10px; color: #333; background: none; border: none; cursor: pointer; display: flex; align-items: center; gap: 6px;"
-              onclick="window.location='{{ route('slider.index') }}'">
+              onclick="window.location='{{ route('discount-vouchers.index') }}'">
               <i class="fas fa-arrows-rotate" style="margin-right: 5px;"></i>
             </button>
           </div>
@@ -64,7 +64,7 @@
             <button class="btn btn-danger rounded-1">
               <span class="fas fa-trash me-2"></span>Delete
             </button>
-            <button class="btn btn-primary rounded-1" data-bs-toggle="modal" data-bs-target="#createSliderModal">
+            <button class="btn btn-primary rounded-1" data-bs-toggle="modal" data-bs-target="#createvoucherModal">
               <span class="fas fa-plus me-2"></span>Add
             </button>
             <button class="btn btn-link text-body px-2" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
@@ -84,7 +84,7 @@
               <tr>
                 <th class="white-space-nowrap fs-9 align-middle ps-0 text-start" style="max-width:20px; width:18px;">
                   <div class="form-check mb-0 fs-8">
-                    <input class="form-check-input" id="selectAll" type="checkbox" data-bulk-select='{"body":"slider-table-body"}' />
+                    <input class="form-check-input" id="selectAll" type="checkbox" data-bulk-select='{"body":"voucher-table-body"}' />
                   </div>
                 </th>
                 <th class="align-middle ps-2 text-center">GAMBAR</th>
@@ -95,31 +95,31 @@
                 <th class="align-middle ps-2 text-center">AKSI</th>
               </tr>
             </thead>
-            <tbody class="list" id="slider-table-body">
-            @forelse ($sliders as $slider)
+            <tbody class="list" id="voucher-table-body">
+            @forelse ($vouchers as $voucher)
               <tr class="position-static">
                 <td class="fs-9 align-middle">
                   <div class="form-check mb-0 fs-8">
-                    <input class="form-check-input" type="checkbox" value="{{ $slider->id }}"></div>
+                    <input class="form-check-input" type="checkbox" value="{{ $voucher->id }}"></div>
                 </td>
                 <td class="align-middle white-space-nowrap py-0">
                   <a class="d-block border border-translucent rounded-2">
-                    <img src="{{ asset('storage/sliders/' . $slider->image) }}" alt="" width="53" /></a>
+                    <img src="{{ asset('storage/vouchers/' . $voucher->image) }}" alt="" width="53" /></a>
                 </td>
                 <td class="align-middle ps-4">
                   <a class="fw-semibold line-clamp-3 mb-0">
-                    {{ Str::limit($slider->title, 80) }}
+                    {{ Str::limit($voucher->title, 80) }}
                   </a>
                 </td>
                 <td class="category align-middle text-center white-space-nowrap text-body-quaternary fs-9 ps-4 fw-semibold">
-                    {{ Str::limit($slider->description, 80) }}
+                    {{ Str::limit($voucher->description, 80) }}
                 </td>
                 <td class="category align-middle text-center white-space-nowrap text-body-quaternary fs-9 ps-4 fw-semibold">
-                {{ $slider->categoryproduct->name ?? '-' }}
+                {{ $voucher->categoryproduct->name ?? '-' }}
                 </td>
                 <td class="align-middle text-center">
-                  <span class="btn btn-outline-{{ $slider->status == 'Publish' ? 'success' : 'warning' }} rounded-1">
-                    {{ ucfirst($slider->status) }}
+                  <span class="btn btn-outline-{{ $voucher->status == 'Publish' ? 'success' : 'warning' }} rounded-1">
+                    {{ ucfirst($voucher->status) }}
                   </span>
                 </td>
                 <td class="align-middle white-space-nowrap text-end pe-0 ps-4 btn-reveal-trigger">
@@ -129,20 +129,14 @@
                     </button>
                     <div class="dropdown-menu dropdown-menu-end py-2">
                       <a class="dropdown-item" >View</a>
-                      <a class="dropdown-item edit-slider" 
-                        data-id="{{ $slider->id }}" 
-                        data-image="{{ $slider->image }}"
-                        data-title="{{ $slider->title }}" 
-                        data-description="{{ $slider->description }}"
-                        data-categoryproducts="{{ $slider->category_product_id }}" 
-                        data-status="{{ $slider->status }}">
+                      <a class="dropdown-item">
                         Edit
                       </a>
                       <div class="dropdown-divider"></div>
-                      <form action="{{ route('slider.destroy', $slider->id) }}" method="POST" class="d-inline">
+                      <form action="{{ route('discount-vouchers.destroy', $voucher->id) }}" method="POST" class="d-inline">
                           @csrf
                           @method('DELETE')
-                          <button type="submit" class="dropdown-item text-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus banner ini?');">Remove</button>
+                          <button type="submit" class="dropdown-item text-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus Voucher Diskon ini?');">Remove</button>
                       </form>                   
                     </div>
                   </div>
@@ -150,7 +144,7 @@
               </tr>
               @empty
                 <tr>
-                    <td colspan="7" class="text-center">Tidak ada data banner ditemukan.</td>
+                    <td colspan="7" class="text-center">Tidak ada data Voucher Diskon ditemukan.</td>
                 </tr>
             @endforelse
             </tbody>
@@ -159,30 +153,30 @@
         <div class="row align-items-center justify-content-between py-2 pe-0 fs-9">
           <div class="col-auto d-flex">
               <p class="mb-0 d-none d-sm-block me-3 fw-semibold text-body">
-                  Menampilkan {{ $sliders->firstItem() }} - {{ $sliders->lastItem() }} dari {{ $sliders->total() }} data
+                  Menampilkan {{ $vouchers->firstItem() }} - {{ $vouchers->lastItem() }} dari {{ $vouchers->total() }} data
               </p>
           </div>
 
           <div class="col-auto d-flex">
               <!-- Tombol Prev -->
-              <a class="page-link {{ $sliders->onFirstPage() ? 'disabled' : '' }}" 
-                href="{{ $sliders->previousPageUrl() }}" 
+              <a class="page-link {{ $vouchers->onFirstPage() ? 'disabled' : '' }}" 
+                href="{{ $vouchers->previousPageUrl() }}" 
                 aria-label="Previous">
                   <span class="fas fa-chevron-left"></span>
               </a>
 
               <!-- Pagination Number -->
               <ul class="mb-0 pagination">
-                  @for ($i = 1; $i <= $sliders->lastPage(); $i++)
-                      <li class="page-item {{ $sliders->currentPage() == $i ? 'active' : '' }}">
-                          <a class="page-link" href="{{ $sliders->url($i) }}">{{ $i }}</a>
+                  @for ($i = 1; $i <= $vouchers->lastPage(); $i++)
+                      <li class="page-item {{ $vouchers->currentPage() == $i ? 'active' : '' }}">
+                          <a class="page-link" href="{{ $vouchers->url($i) }}">{{ $i }}</a>
                       </li>
                   @endfor
               </ul>
 
               <!-- Tombol Next -->
-              <a class="page-link {{ $sliders->hasMorePages() ? '' : 'disabled' }}" 
-                href="{{ $sliders->nextPageUrl() }}" 
+              <a class="page-link {{ $vouchers->hasMorePages() ? '' : 'disabled' }}" 
+                href="{{ $vouchers->nextPageUrl() }}" 
                 aria-label="Next">
                   <span class="fas fa-chevron-right"></span>
               </a>
@@ -191,140 +185,6 @@
       </div>
     </div>
   </div>
-
-<!-- Modal untuk Create Category -->
-<div class="modal fade" id="createSliderModal" tabindex="-1" aria-labelledby="createSliderModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="createSliderModalLabel">Add New Banner</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <form action="{{ route('slider.store') }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="sliderTitle" class="form-label">Judul</label>
-                        <input type="text" class="form-control" id="sliderTitle" name="title" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="sliderImage" class="form-label">Image</label>
-                        <input type="file" class="form-control" id="sliderImage" name="image" accept="image/*">
-                    </div>
-                    <div class="mb-3">
-                        <label for="sliderDescription" class="form-label">Description</label>
-                        <textarea class="form-control" id="sliderDescription" name="description" rows="3"></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="sliderCategoryproducts" class="form-label">Kategori</label>
-                        <select class="form-select" id="sliderCategoryproducts" name="category_product_id" required>
-                        @foreach($categoryproducts as $categoryproduct)
-                            <option value="{{ $categoryproduct->id }}">{{ $categoryproduct->name }}</option>
-                        @endforeach
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="sliderStatus" class="form-label">Status</label>
-                        <select class="form-select" id="sliderStatus" name="status" required>
-                            <option value="publish">Publish</option>
-                            <option value="draft">Draft</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Tambah Banner</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<!-- Modal untuk Edit Slider -->
-<div class="modal fade" id="editSliderModal" tabindex="-1" aria-labelledby="editSliderModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <form method="POST" id="editSliderForm" enctype="multipart/form-data">
-      @csrf
-      @method('PUT')
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="editSliderModalLabel">Edit Banner</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <input type="hidden" id="editSliderId" name="slider_id">
-          <div class="mb-3">
-            <label for="editSliderTitle" class="form-label">Judul</label>
-            <input type="text" class="form-control" id="editSliderTitle" name="title" required>
-          </div>
-          <div class="mb-3">
-            <label for="editSliderImage" class="form-label">Image</label>
-            <input type="file" class="form-control" id="editSliderImage" name="image" accept="image/*">
-            <img id="currentSliderImage" src="" class="mt-2" style="max-height: 100px;">
-          </div>
-          <div class="mb-3">
-            <label for="editSliderDescription" class="form-label">Description</label>
-            <textarea class="form-control" id="editSliderDescription" name="description" rows="3"></textarea>
-          </div>
-          <div class="mb-3">
-              <label for="editSliderCategoryproducts" class="form-label">Kategori</label>
-              <select class="form-select" id="editSliderCategoryproducts" name="category_product_id" required>
-              @foreach($categoryproducts as $categoryproduct)
-                  <option value="{{ $categoryproduct->id }}">{{ $categoryproduct->name }}</option>
-              @endforeach
-              </select>
-          </div>
-          <div class="mb-3">
-              <label for="editSliderStatus" class="form-label">Status</label>
-              <select class="form-select" id="editSliderStatus" name="status" required>
-                  <option value="Publish">Publish</option>
-                  <option value="Draft">Draft</option>
-              </select>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary">Update</button>
-        </div>
-      </div>
-    </form>
-  </div>
-</div>
-
-
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const editButtons = document.querySelectorAll('.edit-slider');
-    const editForm = document.getElementById('editSliderForm');
-
-    editButtons.forEach(button => {
-      button.addEventListener('click', function () {
-        const id = this.getAttribute('data-id');
-        const title = this.getAttribute('data-title');
-        const description = this.getAttribute('data-description');
-        const image = this.getAttribute('data-image');
-        const category_product_id = this.getAttribute('data-category_product_id');
-        const status = this.getAttribute('data-status');
-
-        // Set form action
-        editForm.action = `/dashboard/slider/${id}`;
-
-        // Set form values
-        document.getElementById('editSliderId').value = id;
-        document.getElementById('editSliderTitle').value = title;
-        document.getElementById('editSliderDescription').value = description;
-        document.getElementById('editSliderCategoryproducts').value = category_product_id;
-        document.getElementById('editSliderStatus').value = status;
-        document.getElementById('currentSliderImage').src = `/storage/sliders/${image}`;
-
-        // Show modal
-        const modal = new bootstrap.Modal(document.getElementById('editSliderModal'));
-        modal.show();
-      });
-    });
-  });
-</script>
-
 
 <script>
     setTimeout(() => {
@@ -336,36 +196,34 @@
     }, 3000); // 3 detik
 </script>
 
-  <script>
-    // Menghandle checkbox
-    document.getElementById('selectAll').onclick = function() {
-      const checkboxes = document.querySelectorAll('.form-check-input');
-      checkboxes.forEach((checkbox) => {
-        checkbox.checked = this.checked;
-      });
-    };
-
-    function getSelectedServices() {
-      return Array.from(document.querySelectorAll('.form-check-input:checked')).map(cb => cb.value);
-    }
-
-    function performAction(url, ids) {
-      // Kirim request AJAX ke server
-      fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-TOKEN': '{{ csrf_token() }}'
-        },
-        body: JSON.stringify({ ids: ids })
-      }).then(response => {
-        if (response.ok) {
-          location.reload(); // Refresh klien setelah berhasil
-        } else {
-          alert('Terjadi kesalahan. Silakan coba lagi.');
-        }
-      });
-    }
-  </script>
+<script>
+  // Menghandle checkbox
+  document.getElementById('selectAll').onclick = function() {
+    const checkboxes = document.querySelectorAll('.form-check-input');
+    checkboxes.forEach((checkbox) => {
+      checkbox.checked = this.checked;
+    });
+  };
+  function getSelectedServices() {
+    return Array.from(document.querySelectorAll('.form-check-input:checked')).map(cb => cb.value);
+  }
+  function performAction(url, ids) {
+    // Kirim request AJAX ke server
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+      },
+      body: JSON.stringify({ ids: ids })
+    }).then(response => {
+      if (response.ok) {
+        location.reload(); // Refresh klien setelah berhasil
+      } else {
+        alert('Terjadi kesalahan. Silakan coba lagi.');
+      }
+    });
+  }
+</script>
 
 @endsection

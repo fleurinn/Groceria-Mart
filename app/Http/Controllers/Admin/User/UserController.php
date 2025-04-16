@@ -32,142 +32,143 @@ class UserController extends Controller
     public function create()
     {
         $city = City::all(); // Ambil semua kota
-        $district = District::all(); // Ambil semua kecamatan
+        $districts = District::all(); // Ambil semua kecamatan
         $villages = Village::all(); // Ambil semua desa
         $roles = Role::whereIn('id', [1, 2, 3])->get(); // Hanya Admin, Seller, dan satu lainnya
 
-        return view('admin.pages.users.user-create', compact('roles', 'city', 'district', 'villages'));
+        return view('admin.pages.users.user-create', compact('roles', 'city', 'districts', 'villages'));
     }
     
     public function store(Request $request)
     {
         $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'password' => 'required|string|min:6|confirmed',
+            'name' => 'required|string|max:255',
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|min:8',
             'role_id' => 'required|exists:roles,id',
-            'image' => 'nullable|image|mimes:jpg,png,jpeg',
-            'shipping_addresses.*.no_telp' => 'nullable|string|max:15',
-            'shipping_addresses.*.city_id' => 'nullable|integer|exists:cities,id',
-            'shipping_addresses.*.district_id' => 'required|integer|exists:districts,id',
-            'shipping_addresses.*.village_id' => 'required|integer|exists:villages,id',
-            'shipping_addresses.*.address' => 'nullable|string|max:1000',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+
+            // shipping address
+            'shipping_addresses.0.city_id' => 'required|exists:cities,id',
+            'shipping_addresses.0.district_id' => 'required|exists:districts,id',
+            'shipping_addresses.0.village_id' => 'required|exists:villages,id',
+            'shipping_addresses.0.address' => 'required|string',
+            'shipping_addresses.0.no_telp' => 'required|string',
         ]);
 
-        try {
-            // Handle image upload
-            $imagePath = null;
-            if ($request->hasFile('image')) {
-                $image = $request->file('image');
-                $imageName = $image->hashName();
-                $image->move(public_path('storage/users'), $imageName);
-                $imagePath = 'users/' . $imageName;
-            }
+        // Simpan user
+        $user = new User();
+        $user->name = $request->name;
+        $user->first_name = $request->first_name;
+        $user->last_name = $request->last_name;
+        $user->email = $request->email;
+        $user->password = bcrypt($request->password);
+        $user->role_id = $request->role_id;
 
-            // Create user
-            $user = User::create([
-                'first_name' => $request->first_name,
-                'last_name' => $request->last_name,
-                'name' => $request->name,
-                'email' => $request->email,
-                'phone_number' => $request->phone_number, // Simpan nomor handphone
-                'password' => Hash::make($request->password),
-                'role_id' => $request->role_id,
-                'image' => $imagePath,
-            ]);
-
-            // Handle shipping addresses
-            if ($request->has('shipping_addresses')) {
-                foreach ($request->shipping_addresses as $shipping) {
-                    $user->shippingAddresses()->create([
-                        'no_telp' => $shipping['no_telp'] ?? null,
-                        'city_id' => $shipping['city_id'] ?? null,
-                        'district_id' => $shipping['district_id'] ?? null,
-                        'village_id' => $shipping['village_id'] ?? null,
-                        'address' => $shipping['address'] ?? null,
-                    ]);
-                }
-            }
-
-            return redirect()->route('users.index')->with('success', 'User  berhasil ditambahkan!');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Gagal menyimpan user: ' . $e->getMessage());
+        // Simpan foto jika ada
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('profile_images', 'public');
+            $user->image = $imagePath;
         }
+
+        $user->save();
+
+        // Simpan alamat
+        $address = new ShippingAddress();
+        $address->user_id = $user->id;
+        $address->city_id = $request->shipping_addresses[0]['city_id'];
+        $address->district_id = $request->shipping_addresses[0]['district_id'];
+        $address->village_id = $request->shipping_addresses[0]['village_id'];
+        $address->address = $request->shipping_addresses[0]['address'];
+        $address->no_telp = $request->shipping_addresses[0]['no_telp'];
+        $address->save();
+
+        return redirect()->route('profile-pengguna.index')->with('success', 'User berhasil ditambahkan!');
     }
 
-    public function edit(User $user)
+
+    public function getVillages($district_id)
     {
-        $shippingAddresses = $user->shippingAddresses;
-        $roles = Role::all();
-        return view('admin.pages.users.edit', compact('user', 'shippingAddresses', 'roles'));
+        $villages = \App\Models\Village::where('district_id', $district_id)->get();
+        return response()->json($villages);
     }
 
-    public function update(Request $request, User $user)
+    public function getDistricts($city_id)
+    {
+        $districts = District::where('city_id', $city_id)->get();
+
+        return response()->json($districts);
+    }
+
+    public function edit($id)
+    {
+        $user = User::with('shippingAddresses')->findOrFail($id);
+        $city = City::all();
+        $districts = District::all();
+        $villages = Village::all();
+        $roles = Role::whereIn('id', [1, 2, 3])->get();
+
+        return view('admin.pages.users.user-edit', compact('user', 'roles', 'city', 'districts', 'villages'));
+    }
+
+    public function update(Request $request, $id)
     {
         $request->validate([
-            'first_name' => 'nullable|string|max:255',
-            'last_name' => 'nullable|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $user->id,
-            'phone_number' => 'nullable|string|max:15|unique:users,phone_number,' . $user->id, // Validasi nomor handphone untuk update
-            'password' => 'nullable|string|min:6|confirmed',
+            'name' => 'required|string|max:255',
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'email' => 'required|email|unique:users,email,' . $id,
+            'password' => 'nullable|string|min:8',
             'role_id' => 'required|exists:roles,id',
-            'image' => 'nullable|image|mimes:jpg,png,jpeg',
-            'shipping_addresses.*.id' => 'nullable|integer|exists:shipping_addresses,id',
-            'shipping_addresses.*.no_telp' => 'nullable|string|max:15',
-            'shipping_addresses.*.city_id' => 'nullable|integer',
-            'shipping_addresses.*.district_id' => 'nullable|integer',
-            'shipping_addresses.*.village_id' => 'nullable|integer',
-            'shipping_addresses.*.address' => 'nullable|string|max:1000',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+
+            'shipping_addresses.0.city_id' => 'required|exists:cities,id',
+            'shipping_addresses.0.district_id' => 'required|exists:districts,id',
+            'shipping_addresses.0.village_id' => 'required|exists:villages,id',
+            'shipping_addresses.0.address' => 'required|string',
+            'shipping_addresses.0.no_telp' => 'required|string',
         ]);
 
-        try {
-            $dataToUpdate = [
-                'first_name' => $request->first_name,
-                'last_name' => $request->last_name,
-                'email' => $request->email,
-                'phone_number' => $request->phone_number, // Update nomor handphone
-                'role_id' => $request->role_id,
-            ];
+        $user = User::findOrFail($id);
+        $user->name = $request->name;
+        $user->first_name = $request->first_name;
+        $user->last_name = $request->last_name;
+        $user->email = $request->email;
+        $user->role_id = $request->role_id;
 
-            if ($request->filled('password')) {
-                $dataToUpdate['password'] = Hash::make($request->password);
-            }
-
-            if ($request->hasFile('image')) {
-                $dataToUpdate['image'] = $request->file('image')->store('users', 'public');
-            }
-
-            $user->update($dataToUpdate);
-
-            if ($request->has('shipping_addresses')) {
-                foreach ($request->shipping_addresses as $shipping) {
-                    $data = [
-                        'no_telp' => $shipping['no_telp'] ?? null,
-                        'city_id' => $shipping['city_id'] ?? null,
-                        'district_id' => $shipping['district_id'] ?? null,
-                        'village_id' => $shipping['village_id'] ?? null,
-                        'address' => $shipping['address'] ?? null,
-                    ];
-
-                    if (!empty($shipping['id'])) {
-                        $shippingAddress = ShippingAddress::where('id', $shipping['id'])
-                            ->where('user_id', $user->id)
-                            ->first();
-
-                        if ($shippingAddress) {
-                            $shippingAddress->update($data);
-                        }
-                    } else {
-                        $user->shippingAddresses()->create($data);
-                    }
-                }
-            }
-
-            return redirect()->route('users.index')->with('success', 'User berhasil diperbarui');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Gagal memperbarui user: ' . $e->getMessage());
+        if ($request->filled('password')) {
+            $user->password = bcrypt($request->password);
         }
+
+        if ($request->hasFile('image')) {
+            // Hapus gambar lama jika ada
+            if ($user->image && \Storage::disk('public')->exists($user->image)) {
+                \Storage::disk('public')->delete($user->image);
+            }
+            $imagePath = $request->file('image')->store('profile_images', 'public');
+            $user->image = $imagePath;
+        }
+
+        $user->save();
+
+        $addressData = $request->shipping_addresses[0];
+        $address = $user->shippingAddresses()->first();
+        if (!$address) {
+            $address = new ShippingAddress();
+            $address->user_id = $user->id;
+        }
+        $address->city_id = $addressData['city_id'];
+        $address->district_id = $addressData['district_id'];
+        $address->village_id = $addressData['village_id'];
+        $address->address = $addressData['address'];
+        $address->no_telp = $addressData['no_telp'];
+        $address->save();
+
+        return redirect()->route('profile-pengguna.index')->with('success', 'User berhasil diperbarui!');
     }
+
 
     public function destroy($id)
     {

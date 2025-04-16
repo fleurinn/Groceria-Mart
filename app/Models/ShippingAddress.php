@@ -51,7 +51,7 @@ class ShippingAddress extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function district(): BelongsTo
+    public function districts(): BelongsTo
     {
         return $this->belongsTo(District::class);
     }
