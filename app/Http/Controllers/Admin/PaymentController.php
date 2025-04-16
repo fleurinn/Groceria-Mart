@@ -65,6 +65,7 @@ class PaymentController extends Controller
             'payment_date' => 'nullable|date',
             'amount' => 'required|numeric|min:0', // Menambahkan jumlah pembayaran
         ]);
+        
         // Generate payment ID unik seperti nomor orderan
         $paymentId = 'PAY-' . strtoupper(uniqid());
         Payment::create([

@@ -12,6 +12,7 @@ return new class extends Migration {
             $table->string('title'); // Nama diskon
             $table->text('description')->nullable(); // Deskripsi diskon (boleh kosong)
             $table->foreignId('category_product_id')->nullable()->constrained('category_products')->onDelete('cascade'); // Relasi ke produk (jika ada)
+            $table->enum('discount_type', ['global', 'spesific_product'])->default('global'); // Status diskon
             $table->string('discount_code')->unique(); // Kode unik diskon
             $table->decimal('discount_value', 10, 2); // Besaran diskon (misalnya 10.50% atau 50000)
             $table->date('start_date'); // Tanggal mulai diskon

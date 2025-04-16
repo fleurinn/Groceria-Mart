@@ -24,14 +24,7 @@
                 <textarea class="tinymce" name="description" data-tinymce='{"height":"15rem","placeholder":"Write a description here..."}'></textarea>
               </div>
               <h4 class="mb-3">Gambar Cover</h4>
-              <div class="dropzone dropzone-multiple p-0 mb-5" id="my-awesome-dropzone" data-dropzone="data-dropzone">
-                <div class="fallback"><input name="image" type="file" multiple="multiple" /></div>
-                <div class="dz-preview d-flex flex-wrap">
-                  <div class="border border-translucent bg-body-emphasis rounded-3 d-flex flex-center position-relative me-2 mb-2" style="height:80px;width:80px;">
-                    <img class="dz-image" alt="..." data-dz-thumbnail="data-dz-thumbnail" /><a class="dz-remove text-body-quaternary" href="#!" data-dz-remove="data-dz-remove"><span data-feather="x"></span></a></div>
-                </div>
-                <div class="dz-message text-body-tertiary text-opacity-85" data-dz-message="data-dz-message">Drag your photo here<span class="text-body-secondary px-1">or</span><button class="btn btn-link p-0" type="button">Browse from device</button><br /><img class="mt-3 me-2" src="../../../assets/img/icons/image-icon.png" width="40" alt="" /></div>
-              </div>
+              <input type="file" name="image" class="form-control mb-5" />
               <h4 class="mb-3">Inventory</h4>
                 <div class="row g-0 border-top border-bottom">
                 <div class="col-sm-4">
@@ -92,7 +85,7 @@
                         <div class="col-12 col-sm-6 col-xl-12">
                           <div class="mb-4">
                             <div class="d-flex flex-wrap mb-2">
-                              <h5 class="mb-0 text-body-highlight me-2">Category</h5><a class="fw-bold fs-9" href="#!">Add new category</a>
+                              <h5 class="mb-0 text-body-highlight me-2">Status</h5>
                             </div>
                             <select class="form-select" name="status" id="status" required>
                             <option selected disabled>Select Status</option>
@@ -104,19 +97,19 @@
                         <div class="col-12 col-sm-6 col-xl-12" >
                           <div class="mb-4">
                             <div class="d-flex flex-wrap mb-2">
-                              <h5 class="mb-0 text-body-highlight me-2">Vendor</h5><a class="fw-bold fs-9" href="#!">Add new vendor</a>
+                              <h5 class="mb-0 text-body-highlight me-2">Tipe Diskon</h5><a class="fw-bold fs-9" href="#!">Add new vendor</a>
                             </div>
                             <select name="discount_type" id="voucherType" class="form-select mb-3" required>
                                 <option disabled selected value="">Pilih jenis</option>
                                 <option value="global" {{ old('discount_type') == 'global' ? 'selected' : '' }}>Global</option>
-                                <option value="specific_product" {{ old('discount_type') == 'specific_product' ? 'selected' : '' }}>Specific Product</option>
+                                <option value="spesific_product" {{ old('discount_type') == 'spesific_product' ? 'selected' : '' }}>Specific Product</option>
                             </select>
                           </div>
                         </div>
                         <div class="col-12 col-sm-6 col-xl-12" id="categorySelect" style="display: none;">
                           <div class="mb-4">
                             <div class="d-flex flex-wrap mb-2">
-                              <h5 class="mb-0 text-body-highlight me-2">Vendor</h5><a class="fw-bold fs-9" href="#!">Add new vendor</a>
+                              <h5 class="mb-0 text-body-highlight me-2">Kategori Produk</h5><a class="fw-bold fs-9" href="#!">Add new vendor</a>
                             </div>
                             <select name="category_product_id" class="form-select mb-3">
                                 <option disabled selected value="">Pilih Kategori</option>
@@ -149,7 +142,7 @@
     const categorySelect = document.getElementById('categorySelect');
 
     function toggleCategory() {
-        if (voucherType.value === 'specific_product') {
+        if (voucherType.value === 'spesific_product') {
             categorySelect.style.display = 'block';
         } else {
             categorySelect.style.display = 'none';

@@ -22,46 +22,46 @@ class DiscountVoucherController extends Controller
     // Tampilkan form untuk membuat voucher
     public function create()
     {
-        $categoryProduct = CategoryProduct::all();
+        $categoryProduct = \App\Models\CategoryProduct::all(); // Ambil semua kategori produk, jika diperlukan untuk filter
+
         return view('admin.pages.voucher-discount.voucher-create', compact('categoryProduct'));
     }
 
-    // Simpan voucher baru
     public function store(Request $request)
     {
         $request->validate([
             'title' => 'required|string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg',
             'description' => 'nullable|string',
-            'discount_type' => 'required|in:global,specific_product',
-            'category_product_id' => [
-                'nullable',
-                Rule::exists('category_products', 'id')->when($request->discount_type === 'specific_product', function ($query) {
-                    return $query->whereNotNull('id');
-                }),
-            ],
+            'category_product_id' => 'nullable|exists:category_products,id',
+            'discount_type' => 'required|in:global,spesific_product',
+            'discount_code' => 'required|string|max:50|unique:discount_vouchers,discount_code',
             'discount_value' => 'required|numeric|min:0',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
             'status' => 'required|in:draft,publish,expired',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        $voucherData = $request->except('image');
+        $voucher = new \App\Models\DiscountVoucher();
+        $voucher->title = $request->title;
+        $voucher->description = $request->description;
+        $voucher->category_product_id = $request->category_product_id;
+        $voucher->discount_type = $request->discount_type;
+        $voucher->discount_code = $request->discount_code;
+        $voucher->discount_value = $request->discount_value;
+        $voucher->start_date = $request->start_date;
+        $voucher->end_date = $request->end_date;
+        $voucher->status = $request->status;
 
         if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imageName = $image->hashName();
-            $image->move(public_path('storage/voucher_images'), $imageName);
-            $voucherData['image'] = 'voucher_images/' . $imageName;
+            $imageName = $request->file('image')->hashName();
+            $request->file('image')->move(public_path('storage/voucher_images'), $imageName);
+            $voucher->image = $imageName;
         }
 
-        do {
-            $voucherCode = strtoupper(Str::random(8));
-        } while (DiscountVoucher::where('discount_code', $voucherCode)->exists());
+        $voucher->save();
 
-        $voucher = DiscountVoucher::create(array_merge($voucherData, ['discount_code' => $voucherCode]));
-
-        return redirect()->route('discount-vouchers.index')->with('success', 'Voucher berhasil dibuat.');
+        return redirect()->route('discount-vouchers.index')->with('success', 'Voucher berhasil ditambahkan!');
     }
 
 

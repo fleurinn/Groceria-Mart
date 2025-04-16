@@ -104,7 +104,7 @@
                 </td>
                 <td class="align-middle white-space-nowrap py-0">
                   <a class="d-block border border-translucent rounded-2">
-                    <img src="{{ asset('storage/vouchers/' . $voucher->image) }}" alt="" width="53" /></a>
+                    <img src="{{ asset('storage/voucher_images/' . $voucher->image) }}" alt="" width="53" /></a>
                 </td>
                 <td class="align-middle ps-4">
                   <a class="fw-semibold line-clamp-3 mb-0">

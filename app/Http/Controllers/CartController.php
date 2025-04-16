@@ -29,9 +29,42 @@ class CartController extends Controller
             'total' => $total
         ]);
     }
-
-    // Tambah produk ke keranjang dengan validasi tambahan
     public function store(Request $request)
+    {
+        $request->validate([
+            'product_id' => 'required|exists:products,id',
+            'quantity' => 'required|integer|min:1|max:100',
+            'cart_items' => 'nullable|json',
+        ]);
+    
+        $product = Product::find($request->product_id);
+        $cart = Cart::where('user_id', Auth::id())
+                    ->where('product_id', $request->product_id)
+                    ->first();
+    
+        if ($cart) {
+            $newQuantity = $cart->quantity + $request->quantity;
+            if ($newQuantity > 100) {
+                return response()->json(['error' => 'Maksimum 100 item per produk diizinkan dalam keranjang.'], 422);
+            }
+            $cart->update([
+                'quantity' => $newQuantity,
+                'cart_items' => json_encode(['product_name' => $product->name]),
+            ]);
+        } else {
+            Cart::create([
+                'user_id' => Auth::id(),
+                'product_id' => $request->product_id,
+                'quantity' => $request->quantity,
+                'cart_items' => json_encode(['product_name' => $product->name]),
+            ]);
+        }
+    
+        return redirect()->back()->withInput()->with('success', 'Produk berhasil dimasukkan ke keranjang.');
+    }
+    
+    // Tambah produk ke keranjang dengan validasi tambahan
+    public function createCart(Request $request)
     {
         $request->validate([
             'product_id' => 'required|exists:products,id',
