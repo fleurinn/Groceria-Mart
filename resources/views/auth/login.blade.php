@@ -88,8 +88,8 @@
                     </div>
 
                     <div class="mt-4 text-center text-sm text-gray-600">
-                        Belum punya akun?
-                        <a href="{{ url('/register') }}" class="text-blue-500 hover:underline">
+                        Belum punya akun? 
+                        <a href="{{ url('/register') }}" class="text-blue-600 hover:underline">
                             Daftar di sini
                         </a>.
                     </div>

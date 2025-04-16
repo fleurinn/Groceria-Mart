@@ -18,9 +18,9 @@ class CreatePaymentsTable extends Migration
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // ID pengguna yang melakukan pembayaran
             $table->foreignId('cart_id')->constrained('carts')->onDelete('cascade'); // ID keranjang yang terkait
             $table->foreignId('discount_voucher_id')->constrained('discount_vouchers')->onDelete('cascade'); // ID keranjang yang terkait
+            $table->enum('shipping_cost', ['5000', '10000'])->default('5000'); // Status diskon
             $table->string('snap_token')->nullable();
-            $table->decimal('shipping_cost', 10, 2)->nullable();
-            $table->string('transaction_status'); // Status transaksi (misalnya: 'pending', 'success', 'failed')
+            $table->enum('transaction_status', ['pending', 'success', 'failed'])->default('pending'); // Status transaksi (misalnya: 'pending', 'success', 'failed')
             $table->string('transaction_id')->unique(); // ID transaksi dari Midtrans
             $table->decimal('total', 10, 2); // Total harga (Harga total cart + discount voucher + Harga pengantaran)
             $table->timestamps(); // Kolom created_at dan updated_at
