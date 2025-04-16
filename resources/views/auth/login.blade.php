@@ -5,53 +5,60 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Masuk</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="//unpkg.com/alpinejs" defer></script>  
+    <script src="//unpkg.com/alpinejs" defer></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+        }
+        .btn-masuk {
+            transition: background-color 0.3s ease;
+        }
+        .btn-masuk:hover {
+            background-color: #38a169; /* Darker shade of green */
+        }
+    </style>
 </head>
-<body>
-    <div class="flex min-h-screen bg-gray-100">
-        <!-- Bagian Kiri (Form Login) -->
-        <div class="w-full md:w-1/2 flex items-center justify-center p-6 bg-white shadow-md">
-            <div class="w-full max-w-md">
-                <a href="{{ route('landing-page') }}" class="text-sm text-gray-500">&larr; Kembali ke beranda</a>
-                
-                <h2 class="text-3xl font-bold text-gray-800 mt-4">{{ __('Masuk') }}</h2>
-                <p class="text-gray-500">Masukan e-mail and kata sandi untuk masuk!</p>
+<body class="bg-gradient-to-br from-green-400 to-green-600">
+    <div class="flex min-h-screen">
+        <div class="w-full md:w-1/2 flex items-center justify-center p-6">
+            <div class="w-full max-w-md shadow-md rounded-lg p-8 bg-white">
+                <a href="{{ route('landing-page') }}" class="text-sm text-gray-600">&larr; Kembali ke beranda</a>
 
-
-                <!-- Garis pemisah -->
-                <div class="flex items-center my-6">
-                    <hr class="flex-grow border-gray-300">
-                    <hr class="flex-grow border-gray-300">
+                <div class="flex justify-center mb-6">
+                    <img src="{{ asset('assets/img/logo/logogroceria.png') }}" alt="Logo Groceria" class="h-10">
                 </div>
 
-                <!-- Form Login -->
-                <form method="POST" action="{{ route('login') }}">
+                <h2 class="text-3xl font-bold text-gray-800 mt-4">{{ __('Masuk') }}</h2>
+                <p class="text-gray-600 mt-1">Masukan e-mail dan kata sandi untuk masuk!</p>
+
+                <form method="POST" action="{{ route('login') }}" class="mt-8">
                     @csrf
 
-                    <!-- Email -->
-                    <div>
+                    <div class="mb-4">
                         <label for="email" class="block text-sm font-medium text-gray-700">Email<span class="text-red-500">*</span></label>
-                        <input id="email" type="email" name="email" placeholder="info@gmail.com" value="{{ old('email') }}" required autofocus class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-none focus:ring focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800">
-                        <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                        <input id="email" type="email" name="email" placeholder="Email Anda" value="{{ old('email') }}" required autofocus class="h-11 w-full rounded-md border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-800 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                        <x-input-error :messages="$errors->get('email')" class="mt-2 text-red-500" />
                     </div>
 
-                    <!-- Password -->
-                    <div class="mt-4" x-data="{ show: false }">
+                    <div class="mb-6" x-data="{ show: false }">
                         <label for="password" class="block text-sm font-medium text-gray-700">
-                            Password<span class="text-red-500">*</span>
+                            Kata Sandi<span class="text-red-500">*</span>
                         </label>
                         <div class="relative">
-                            <input 
-                                :type="show ? 'text' : 'password'" 
-                                id="password" 
-                                placeholder="Masukan kata sandi" 
-                                name="password" 
-                                required 
-                                class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-none focus:ring focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
+                            <input
+                                :type="show ? 'text' : 'password'"
+                                id="password"
+                                placeholder="Kata Sandi Anda"
+                                name="password"
+                                required
+                                class="h-11 w-full rounded-md border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-800 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                             >
-                            <button 
-                                type="button" 
-                                @click="show = !show" 
+                            <button
+                                type="button"
+                                @click="show = !show"
                                 class="absolute inset-y-0 right-3 flex items-center text-gray-500 focus:outline-none"
                             >
                                 <svg x-show="!show" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -63,12 +70,10 @@
                                 </svg>
                             </button>
                         </div>
-                        <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                        <x-input-error :messages="$errors->get('password')" class="mt-2 text-red-500" />
                     </div>
 
-
-                    <!-- Remember Me & Forgot Password -->
-                    <div class="flex justify-end mt-4">
+                    <div class="flex justify-end mb-4">
                         @if (Route::has('password.request'))
                             <a class="text-sm text-indigo-600 hover:underline" href="{{ route('password.request') }}">
                                 Lupa kata sandi?
@@ -76,30 +81,24 @@
                         @endif
                     </div>
 
-                    <!-- Submit -->
                     <div class="mt-6">
-                        <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-lg shadow-md">
+                        <button type="submit" class="w-full bg-green-500 hover:bg-green-700 text-white font-bold py-3 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 btn-masuk">
                             Masuk
                         </button>
                     </div>
 
                     <div class="mt-4 text-center text-sm text-gray-600">
-                        Belum punya akun? 
-                        <a href="{{ url('/register') }}" class="text-blue-600 hover:underline">
-                            Register di sini
+                        Belum punya akun?
+                        <a href="{{ url('/register') }}" class="text-blue-500 hover:underline">
+                            Daftar di sini
                         </a>.
                     </div>
                 </form>
             </div>
         </div>
 
-        <!-- Bagian Kanan (Gambar) -->
-        <div class="hidden md:flex w-1/2 bg-indigo-900 text-white items-center justify-center">
-            <div class="text-center">
-                <img src="{{ asset('images/logo.svg') }}" class="w-12 h-12 mx-auto mb-4" alt="Logo">
-                <h2 class="text-2xl font-bold">TailAdmin</h2>
-                <p class="text-gray-300">Free and Open-Source Tailwind CSS Admin Dashboard Template</p>
-            </div>
+        <div class="hidden md:flex w-1/2 relative bg-white">
+            <img src="{{ asset('assets/img/logo/login-side.jpg') }}" alt="Gambar Hiasan Login" class="object-cover w-full h-full">
         </div>
     </div>
 </body>
