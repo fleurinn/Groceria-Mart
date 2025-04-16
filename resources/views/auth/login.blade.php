@@ -86,7 +86,7 @@
                     <div class="mt-4 text-center text-sm text-gray-600">
                         Belum punya akun? 
                         <a href="{{ url('/register') }}" class="text-blue-600 hover:underline">
-                            Register di sini
+                            Daftar di sini
                         </a>.
                     </div>
                 </form>
