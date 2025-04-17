@@ -123,7 +123,7 @@
 
                     <div class="mt-4 text-center text-sm text-gray-600">
                         Sudah punya akun?
-                        <a href="{{ url('/login') }}" class="text-blue-500 hover:underline">
+                        <a href="{{ url('/login2') }}" class="text-blue-500 hover:underline">
                             Login di sini
                         </a>.
                     </div>

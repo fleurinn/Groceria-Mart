@@ -18,12 +18,12 @@
     <!--    Favicons-->
     <!-- ===============================================-->
     <!-- Favicon -->
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('assets/img/favicons/apple-touch-icon.png') }}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('assets/img/favicons/favicon-32x32.png') }}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('assets/img/favicons/favicon-16x16.png') }}">
-    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/img/favicons/favicon.ico') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('assets/img/favicons/favicongroceria.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('assets/img/favicons/favicongroceria.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('assets/img/favicons/favicongroceria.png') }}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/img/favicons/favicongroceria.png') }}">
     <link rel="manifest" href="{{ asset('assets/img/favicons/manifest.json') }}">
-    <meta name="msapplication-TileImage" content="{{ asset('assets/img/favicons/mstile-150x150.png') }}">
+    <meta name="msapplication-TileImage" content="{{ asset('assets/img/favicons/favicongroceria.png') }}">
     <meta name="theme-color" content="#ffffff">
 
     <!-- Scripts -->
@@ -210,8 +210,8 @@
           <button class="btn navbar-toggler navbar-toggler-humburger-icon hover-bg-transparent" type="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalCollapse" aria-controls="navbarVerticalCollapse" aria-expanded="false" aria-label="Toggle Navigation"><span class="navbar-toggle-icon"><span class="toggle-line"></span></span></button>
           <a class="navbar-brand me-1 me-sm-3" href="../../../index.html">
             <div class="d-flex align-items-center">
-              <div class="d-flex align-items-center"><img src="../../../assets/img/icons/logo.png" alt="phoenix" width="27" />
-                <h5 class="logo-text ms-2 d-none d-sm-block">phoenix</h5>
+              <div class="d-flex align-items-center"><img src="../../../assets/img/icons/favicongroceria.png" alt="groceria" width="27" />
+                <h5 class="logo-text ms-2 d-none d-sm-block">Groceria</h5>
               </div>
             </div>
           </a>

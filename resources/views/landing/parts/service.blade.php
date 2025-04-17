@@ -8,8 +8,9 @@
                         <i class="fi fi-ts-truck-moving text-[40px] text-[#5caf90] leading-[0]"></i>
                     </div>
                     <div class="gi-service-desc">
-                        <h3 class="font-Poppins text-[18px] font-medium text-[#4b5966] leading-[1.2] tracking-[0.6px] mb-[10px] max-[575px]:text-[16px]">Free Shipping</h3>
-                        <p class="m-[0] text-[14px] text-[#777] leading-[1.5] tracking-[0.5px]">Free shipping on all US order or order above $200</p>
+                        <h3 class="font-Poppins text-[18px] font-medium text-[#4b5966] leading-[1.2] tracking-[0.6px] mb-[10px] max-[575px]:text-[16px]">Pengiriman Cepat
+                        </h3>
+                        <p class="m-[0] text-[14px] text-[#777] leading-[1.5] tracking-[0.5px]">Pengiriman cepat untuk daerah ciampea dan sekitarnya</p>
                     </div>
                 </div>
             </div>
@@ -19,8 +20,8 @@
                         <i class="fi fi-ts-hand-holding-seeding text-[40px] text-[#5caf90] leading-[0]"></i>
                     </div>
                     <div class="gi-service-desc">
-                        <h3 class="font-Poppins text-[18px] font-medium text-[#4b5966] leading-[1.2] tracking-[0.6px] mb-[10px] max-[575px]:text-[16px]">24X7 Support</h3>
-                        <p class="m-[0] text-[14px] text-[#777] leading-[1.5] tracking-[0.5px]">Contact us 24 hours a day, 7 days a week</p>
+                        <h3 class="font-Poppins text-[18px] font-medium text-[#4b5966] leading-[1.2] tracking-[0.6px] mb-[10px] max-[575px]:text-[16px]">24/7 Respons</h3>
+                        <p class="m-[0] text-[14px] text-[#777] leading-[1.5] tracking-[0.5px]">Layanan terbaik dengan respon yang cepat dan akurat</p>
                     </div>
                 </div>
             </div>
@@ -30,8 +31,9 @@
                         <i class="fi fi-ts-badge-percent text-[40px] text-[#5caf90] leading-[0]"></i>
                     </div>
                     <div class="gi-service-desc">
-                        <h3 class="font-Poppins text-[18px] font-medium text-[#4b5966] leading-[1.2] tracking-[0.6px] mb-[10px] max-[575px]:text-[16px]">30 Days Return</h3>
-                        <p class="m-[0] text-[14px] text-[#777] leading-[1.5] tracking-[0.5px]">Simply return it within 30 days for an exchange</p>
+                        <h3 class="font-Poppins text-[18px] font-medium text-[#4b5966] leading-[1.2] tracking-[0.6px] mb-[10px] max-[575px]:text-[16px]">Pembayaran Terpercaya</h3>
+                        <p class="m-[0] text-[14px] text-[#777] leading-[1.5] tracking-[0.5px]">Pembayaran menggunakan Bank /
+                             E- Money yang dilindungi</p>
                     </div>
                 </div>
             </div>
@@ -41,8 +43,8 @@
                         <i class="fi fi-ts-donate text-[40px] text-[#5caf90] leading-[0]"></i>
                     </div>
                     <div class="gi-service-desc">
-                        <h3 class="font-Poppins text-[18px] font-medium text-[#4b5966] leading-[1.2] tracking-[0.6px] mb-[10px] max-[575px]:text-[16px]">Payment Secure</h3>
-                        <p class="m-[0] text-[14px] text-[#777] leading-[1.5] tracking-[0.5px]">Contact us 24 hours a day, 7 days a week</p>
+                        <h3 class="font-Poppins text-[18px] font-medium text-[#4b5966] leading-[1.2] tracking-[0.6px] mb-[10px] max-[575px]:text-[16px]">Barang Berkualitas</h3>
+                        <p class="m-[0] text-[14px] text-[#777] leading-[1.5] tracking-[0.5px]">Solusi tepat untuk kebutuhan berkualitas anda</p>
                     </div>
                 </div>
             </div>
@@ -54,31 +56,31 @@
 <section class="gi-contact py-[40px] max-[767px]:py-[30px]">
     <div class="flex flex-wrap justify-between items-center mx-auto min-[1600px]:max-w-[1600px] min-[1400px]:max-w-[1320px] min-[1200px]:max-w-[1140px] min-[992px]:max-w-[960px] min-[768px]:max-w-[720px] min-[576px]:max-w-[540px] relative">
         <div class="section-title-2 w-full mb-[20px] pb-[20px] flex flex-col justify-center items-center">
-            <h2 class="gi-title mb-[0] font-manrope text-[26px] font-semibold text-[#4b5966] relative inline p-[0] capitalize leading-[1]">Get in <span class="text-[#5caf90]">Touch</span></h2>
-            <p class="max-w-[400px] mt-[15px] text-[14px] text-[#777] text-center leading-[23px]">Please select a topic below related to you inquiry. If you don't fint what you need, fill out our
-                contact form.</p>   
+            <h2 class="gi-title mb-[0] font-manrope text-[26px] font-semibold text-[#4b5966] relative inline p-[0] capitalize leading-[1]">Hubungi <span class="text-[#5caf90]">Kami</span></h2>
+            <p class="max-w-[400px] mt-[15px] text-[14px] text-[#777] text-center leading-[23px]">Silakan pilih topik di bawah ini yang terkait dengan pertanyaan Anda. Jika Anda tidak menemukan apa yang Anda butuhkan, isi formulir kontak kami.</p>   
         </div>
         <div class="w-full flex flex-wrap max-[576px]:pt-[60px]">
             <div class="min-[768px]:w-[50%] w-full px-[12px]">
-                <iframe src="http://maps.google.com/maps?q=-12.942227,-38.480291&amp;z=15&amp;output=embed" class="h-full w-full mb-[-7px] border-[1px] border-solid border-[#eee] rounded-[5px] max-[767px]:h-[300px]" allowfullscreen=""></iframe>
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d990.9337952300166!2d106.6969589374882!3d-6.555078289152673!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69db672c8c64cd%3A0x3d0be929a987d5c6!2sKantor%20Kecamatan%20Ciampea!5e0!3m2!1sid!2sid!4v1744789466747!5m2!1sid!2sid" class="h-[450px] w-full border-[1px] border-solid border-[#eee] rounded-[5px]"allowfullscreen=""loading="lazy"referrerpolicy="no-referrer-when-downgrade"></iframe>
+
             </div>
             <div class="min-[768px]:w-[50%] w-full px-[12px]">
             <form id="contact-form" method="POST"
             class="contact-form max-[767px]:mt-[50px]">
             {{ csrf_field() }}
                     <div class="form-group mb-[30px]">
-                        <input type="text" class="form-control py-[10px] px-[15px] border-[1px] border-solid border-[#eee] rounded-[5px] text-[15px] text-[#777] block w-full font-normal leading-[1.5]" name="fullname" placeholder="Full Name">
+                        <input type="text" class="form-control py-[10px] px-[15px] border-[1px] border-solid border-[#eee] rounded-[5px] text-[15px] text-[#777] block w-full font-normal leading-[1.5]" name="namalengkap" placeholder="Nama Lengkap">
                     </div>
                     <div class="form-group mb-[30px]">
                         <input type="email" class="form-control py-[10px] px-[15px] border-[1px] border-solid border-[#eee] rounded-[5px] text-[15px] text-[#777] block w-full font-normal leading-[1.5]" name="email" placeholder="Email">
                     </div>
                     <div class="form-group mb-[30px]">
-                        <input type="text" class="form-control py-[10px] px-[15px] border-[1px] border-solid border-[#eee] rounded-[5px] text-[15px] text-[#777] block w-full font-normal leading-[1.5]" name="phone" placeholder="Phone">
+                        <input type="text" class="form-control py-[10px] px-[15px] border-[1px] border-solid border-[#eee] rounded-[5px] text-[15px] text-[#777] block w-full font-normal leading-[1.5]" name="nomortelephone" placeholder="Nomor Handhone">
                     </div>
                     <div class="form-group mb-[30px]">
-                        <textarea class="form-control py-[10px] px-[15px] border-[1px] border-solid border-[#eee] rounded-[5px] text-[15px] text-[#777] block w-full font-normal leading-[1.5]" name="message" rows="3" placeholder="Message"></textarea>
+                        <textarea class="form-control py-[10px] px-[15px] border-[1px] border-solid border-[#eee] rounded-[5px] text-[15px] text-[#777] block w-full font-normal leading-[1.5]" name="pesan" rows="3" placeholder="Pesan"></textarea>
                     </div>
-                    <button type="submit" value="submit" name="submit" class="gi-btn-2 transition-all duration-[0.3s] ease-in-out py-[10px] px-[15px] text-[14px] font-medium bg-[#5caf90] text-[#fff] text-center rounded-[5px] hover:bg-[#4b5966] hover:text-[#fff]">Submit</button>
+                    <button type="submit" value="submit" name="submit" class="gi-btn-2 transition-all duration-[0.3s] ease-in-out py-[10px] px-[15px] text-[14px] font-medium bg-[#5caf90] text-[#fff] text-center rounded-[5px] hover:bg-[#4b5966] hover:text-[#fff]">Kirim</button>
                 </form>
             </div>
         </div>

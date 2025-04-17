@@ -7,14 +7,14 @@
 <section class="gi-faq py-[40px] max-[767px]:py-[30px] gi-wishlist">
         <div class="flex flex-wrap justify-between items-center mx-auto min-[1600px]:max-w-[1600px] min-[1400px]:max-w-[1320px] min-[1200px]:max-w-[1140px] min-[992px]:max-w-[960px] min-[768px]:max-w-[720px] min-[576px]:max-w-[540px]">
             <div class="section-title-2 w-full mb-[20px] pb-[20px] flex flex-col justify-center items-center">
-                <h2 class="gi-title mb-[0] font-manrope text-[26px] font-semibold text-[#4b5966] relative inline p-[0] capitalize leading-[1]">Product <span class="text-[#5caf90]">Wishlist</span></h2>
+                <h2 class="gi-title mb-[0] font-manrope text-[26px] font-semibold text-[#4b5966] relative inline p-[0] capitalize leading-[1]">Produk <span class="text-[#5caf90]">Favorit</span></h2>
                 <p class="max-w-[400px] mt-[15px] text-[14px] text-[#777] text-center leading-[23px]">Your product wish is our first priority.</p>
             </div>
             <div class="flex flex-wrap w-full">
                 <div class="w-full px-[12px]">
                     <div class="gi-vendor-dashboard-card border-[1px] border-solid border-[#eee] rounded-[5px] overflow-y-auto">
                         <div class="gi-vendor-card-header min-w-[700px] p-[30px] border-b-[1px] border-solid border-[#eee] flex justify-between items-center">
-                            <h5 class="m-[0] text-[18px] uppercase font-bold text-[#777] tracking-[0.01rem] leading-[1.2]">Wishlist</h5>
+                            <h5 class="m-[0] text-[18px] uppercase font-bold text-[#777] tracking-[0.01rem] leading-[1.2]">Favorit</h5>
                             <div class="gi-header-btn">
                                 <a class="gi-btn-2 transition-all duration-[0.3s] ease-in-out py-[10px] px-[15px] text-[14px] font-medium bg-[#5caf90] text-[#fff] text-center rounded-[5px] hover:bg-[#4b5966] hover:text-[#fff]" href="#">Shop Now</a>
                             </div>
@@ -103,7 +103,7 @@
 
                                         @empty
                                             <tr>
-                                                <td colspan="7" class="text-center text-gray-500 py-4">Wishlist kamu kosong 😔</td>
+                                                <td colspan="7" class="text-center text-gray-500 py-4">Favorit kamu kosong 😔</td>
                                             </tr>
                                         @endforelse
                                     </tbody>

@@ -74,7 +74,7 @@
                             <div class="gi-header-bottons flex justify-end">
                                 <!-- Header User Start -->
                                 <div class="gi-acc-drop relative">
-                                    <a href="javascript:void(0)" class="gi-header-btn gi-header-user dropdown-toggle gi-user-toggle mr-[30px] transition-all duration-[0.3s] ease-in-out relative flex text-[#4b5966] w-[auto] items-center whitespace-nowrap" title="Account">
+                                    <a href="javascript:void(0)" class="gi-header-btn gi-header-user dropdown-toggle gi-user-toggle mr-[30px] transition-all duration-[0.3s] ease-in-out relative flex text-[#4b5966] w-[auto] items-center whitespace-nowrap" title="Akun">
                                         <div class="header-icon relative flex">
                                             <i class="fi-rr-user text-[24px] leading-[17px]"></i>
                                         </div>
@@ -170,7 +170,7 @@
                                             </li>
 
                                             <li class="non-drop mx-[20px] transition-all duration-[0.3s] ease-in-out max-[1199px]:mx-[15px]">
-                                                <a href="{{ route('about-us') }}" class="transition-all duration-[0.3s] ease-in-out text-[15px] leading-[60px] capitalize text-[#4b5966] flex items-center font-medium">
+                                                <a href="{{ route('service') }}" class="transition-all duration-[0.3s] ease-in-out text-[15px] leading-[60px] capitalize text-[#4b5966] flex items-center font-medium">
                                                     <i class=" transition-all duration-[0.3s] ease-in-out mr-[5px] text-[18px] text-[#4b5966] flex"></i>Kritik & Saran
                                                 </a>
                                             </li>

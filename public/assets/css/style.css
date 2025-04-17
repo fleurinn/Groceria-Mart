@@ -1,52 +1,5 @@
 @charset "UTF-8";
-/*--------------------------------------------------------------------------------- 
-Item Name: Grabit - Multipurpose eCommerce HTML Template.
-Author: Maraviya Infotech
-Version: 2.1.0
-Copyright 2023
------------------------------------------------------------------------------------
 
-/*---------------------------------------------------------------------------------
-    Included CSS INDEX
------------------------------------------------------------------------------------
-
-01. Typography
-02. Components
-    - Common
-    - Breadcrumb
-    - Cart-sidebar
-    - Quickview
-    - Tools Sidebar
-
-03. Layout 
-    - Header Section
-    - Footer section
-    - Category Section
-    - New product
-    - Blog
-    - Banner Section
-    - Shop Sidebar
-
-04. Pages
-    - About us Page
-    - Contact us Page
-    - Cart Page
-    - Checkout Page 
-    - Compare Page
-    - Faq Page
-    - Register Page
-    - Track Order Page 
-    - Term Page
-    - Shop Page    
-    - Single Product Page
-    - Wishlist
-
------------------------------------------------------------------------------------*/
-/* Typography ( Import Typography ) */
-/*-------------------------------------------------
-  Fonts Family & Style CSS
----------------------------------------------------*/
-/*--  Manrope font  --*/
 @font-face {
   font-family: "Manrope", sans-serif;
   src: url("../fonts/manrope/Manrope-ExtraLight.ttf") format("truetype");
