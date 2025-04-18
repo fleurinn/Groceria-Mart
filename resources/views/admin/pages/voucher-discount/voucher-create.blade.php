@@ -114,7 +114,9 @@
                             <select name="category_product_id" class="form-select mb-3">
                                 <option disabled selected value="">Pilih Kategori</option>
                                 @foreach ($categoryProduct as $category)
+                                  @if($category->status !== 'draft')
                                     <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                  @endif    
                                 @endforeach
                             </select>
                           </div>

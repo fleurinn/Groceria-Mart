@@ -137,7 +137,9 @@
                     <select class="form-select" name="category_product_id" required>
                       <option disabled>Select category product</option>
                       @foreach($categories as $category)
+                        @if($category->status !== 'draft')
                         <option value="{{ $category->id }}" {{ $product->category_product_id == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                        @endif
                       @endforeach
                     </select>
                   </div>

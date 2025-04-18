@@ -14,7 +14,7 @@
                 <div class="gi-pro-tab mt-[40px] max-[991px]:mt-[-20px] max-[991px]:mb-[30px]">
                     <ul class="nav-tabs flex flex-wrap max-[991px]:justify-start" id="myproTab">
                         <li class="active inline-block align-top text-[14px] text-[#777] uppercase p-[0] cursor-pointer font-medium transition-all duration-[0.3s] ease delay-[0s] leading-[20px] tracking-[0.7px] mr-[50px] max-[991px]:mr-[30px] max-[480px]:mr-[20px]">
-                            <a class="nav-link relative font-medium p-[0] max-[480px]:text-[13px] max-[480px]:leading-[28px]" href="#all">Semua</a>
+                            <a class="nav-link relative font-medium p-[0] max-[480px]:text-[13px] max-[480px]:leading-[28px] active" data-bs-toggle="tab" href="#all">Semua</a>
                         </li>
                         @foreach($categoryproducts->take(3) as $category)
                         <li class="inline-block align-top text-[14px] text-[#777] uppercase p-[0] cursor-pointer font-medium transition-all duration-[0.3s] ease delay-[0s] leading-[20px] tracking-[0.7px] mr-[50px] max-[991px]:mr-[30px] max-[480px]:mr-[20px]">
@@ -30,7 +30,7 @@
                 <div class="col">
                     <div class="tab-content" id="myproTabContent">
                         <!-- 1st Product tab start -->
-                        <div class="tab-pro-pane" id="all">
+                        <div class="tab-pro-pane show active" id="all">
                             <div class="w-full flex flex-wrap">
                             @forelse($products as $product)
                                 <div class="min-[1200px]:w-[20%] min-[768px]:w-[33.33%] min-[576px]:w-[50%] max-[575px]:w-[50%] max-[420px]:w-full px-[12px]">
@@ -169,4 +169,6 @@
             </div>
         </div>
     </section>
+
+
     <!-- Product tab Area End -->

@@ -22,4 +22,9 @@ class CategoryProduct extends Model
     {
         return $this->hasMany(Slider::class);
     }
+
+    public function vouchers()
+{
+    return $this->hasMany(DiscountVoucher::class);
+}
 }

@@ -100,17 +100,28 @@
                   <div class="form-check mb-0 fs-8">
                     <input class="form-check-input" type="checkbox" value="{{ $categoryproduct->id }}"></div>
                 </td>
-                <td class="align-middle white-space-nowrap py-0">
-                  <a class="d-block border border-translucent rounded-2" href="../landing/product-details.html">
-                    <img src="{{ asset('storage/categoryproducts/' . $categoryproduct->image) }}" alt="" width="53" /></a>
+                <td class="align-middle text-center pt-2 pb-1" style="vertical-align: middle;">
+                  <a 
+                    href="../landing/product-details.html"
+                    class="d-inline-block border border-translucent rounded-2 overflow-hidden"
+                    style="width: 60px; height: 60px;"
+                  >
+                    <img 
+                      src="{{ asset('storage/categoryproducts/' . $categoryproduct->image) }}" 
+                      alt="" 
+                      class="w-100 h-100" 
+                      style="object-fit: cover;" 
+                    />
+                  </a>
                 </td>
+
                 <td class="categoryproduct align-middle ps-4">
                   <a class="fw-semibold line-clamp-3 mb-0" href="../landing/product-details.html">
                     {{ Str::limit($categoryproduct->name, 80) }}
                   </a>
                 </td>
                 <td class="align-middle text-center">
-                  <span class="btn btn-outline-{{ $categoryproduct->status == 'Aktif' ? 'success' : 'warning' }} rounded-1">
+                  <span class="btn btn-outline-{{ $categoryproduct->status == 'publish' ? 'success' : 'warning' }} rounded-1">
                     {{ ucfirst($categoryproduct->status) }}
                   </span>
                 </td>

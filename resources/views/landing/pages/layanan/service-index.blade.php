@@ -3,7 +3,6 @@
 @section('page_title', 'Kategori Produk | Groceria')
 @section('content')
 
-<!-- Contact us section -->
 <!-- Service Section -->
 <section class="gi-service-section py-[40px] max-[767px]:py-[30px]">
     <div class="flex flex-wrap justify-between items-center mx-auto min-[1600px]:max-w-[1600px] min-[1400px]:max-w-[1320px] min-[1200px]:max-w-[1140px] min-[992px]:max-w-[960px] min-[768px]:max-w-[720px] min-[576px]:max-w-[540px]">
@@ -75,16 +74,16 @@
             class="contact-form max-[767px]:mt-[50px]">
             {{ csrf_field() }}
                     <div class="form-group mb-[30px]">
-                        <input type="text" class="form-control py-[10px] px-[15px] border-[1px] border-solid border-[#eee] rounded-[5px] text-[15px] text-[#777] block w-full font-normal leading-[1.5]" name="namalengkap" placeholder="Nama Lengkap">
+                        <input type="text" class="form-control py-[10px] px-[15px] border-[1px] border-solid border-[#eee] rounded-[5px] text-[15px] text-[#777] block w-full font-normal leading-[1.5]" name="fullname" placeholder="Nama Lengkap">
                     </div>
                     <div class="form-group mb-[30px]">
                         <input type="email" class="form-control py-[10px] px-[15px] border-[1px] border-solid border-[#eee] rounded-[5px] text-[15px] text-[#777] block w-full font-normal leading-[1.5]" name="email" placeholder="Email">
                     </div>
                     <div class="form-group mb-[30px]">
-                        <input type="text" class="form-control py-[10px] px-[15px] border-[1px] border-solid border-[#eee] rounded-[5px] text-[15px] text-[#777] block w-full font-normal leading-[1.5]" name="nomortelephone" placeholder="Nomor Handphone">
+                        <input type="text" class="form-control py-[10px] px-[15px] border-[1px] border-solid border-[#eee] rounded-[5px] text-[15px] text-[#777] block w-full font-normal leading-[1.5]" name="phone" placeholder="Nomor Handhone">
                     </div>
                     <div class="form-group mb-[30px]">
-                        <textarea class="form-control py-[10px] px-[15px] border-[1px] border-solid border-[#eee] rounded-[5px] text-[15px] text-[#777] block w-full font-normal leading-[1.5]" name="pesan" rows="3" placeholder="Pesan"></textarea>
+                        <textarea class="form-control py-[10px] px-[15px] border-[1px] border-solid border-[#eee] rounded-[5px] text-[15px] text-[#777] block w-full font-normal leading-[1.5]" name="message" rows="3" placeholder="Pesan"></textarea>
                     </div>
                     <button type="submit" value="submit" name="submit" class="gi-btn-2 transition-all duration-[0.3s] ease-in-out py-[10px] px-[15px] text-[14px] font-medium bg-[#5caf90] text-[#fff] text-center rounded-[5px] hover:bg-[#4b5966] hover:text-[#fff]">Kirim</button>
                 </form>
@@ -127,8 +126,5 @@
     });
 </script>
 <!-- Contact us section End -->
-        
-    
-    </section>
 
 @endsection    

@@ -133,7 +133,9 @@
                     <select class="form-select" name="category_product_id" required>
                       <option selected disabled>Select category product</option>
                       @foreach($categories as $category)
-                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                        @if($category->status !== 'draft')
+                          <option value="{{ $category->id }}">{{ $category->name }}</option>
+                        @endif
                       @endforeach
                     </select>
                   </div>

@@ -68,13 +68,13 @@
                   <input class="form-check-input" id="selectAll" type="checkbox" data-bulk-select='{"body":"products-table-body"}' />
                 </div>
               </th>
-              <th class="align-middle ps-2 text-center">IMAGE</th>
-              <th class="align-middle ps-2 text-center" style="width:300px;">PRODUCT NAME</th>
-              <th class="align-middle ps-2 text-center">PRICE</th>
-              <th class="align-middle ps-2 text-center">CATEGORY</th>
+              <th class="align-middle ps-2 text-center">GAMBAR</th>
+              <th class="align-middle ps-2 text-center" style="width:300px;"> NAMA</th>
+              <th class="align-middle ps-2 text-center">HARGA</th>
+              <th class="align-middle ps-2 text-center">KATEGORI</th>
               <th class="align-middle ps-2 text-center">STATUS</th>
-              <th class="align-middle ps-2 text-center">TAGS</th>
-              <th class="align-middle ps-2 text-center">ACTION</th>
+              <th class="align-middle ps-2 text-center">TAG</th>
+              <th class="align-middle ps-2 text-center">AKSI</th>
             </tr>
           </thead>
             <tbody class="list" id="products-table-body">
@@ -85,9 +85,19 @@
                     <input class="form-check-input" type="checkbox" value="{{ $product->id }}"></div>
                   </div>
                 </td>
-                <td class="align-middle white-space-nowrap py-0">
-                  <a class="d-block border border-translucent rounded-2" href="../landing/product-details.html">
-                    <img src="{{ asset('storage/products/' . $product->image) }}" alt="" width="53" /></a>
+                <td class="align-middle text-center pt-2 pb-1" style="vertical-align: middle;">
+                  <a 
+                    href="../landing/product-details.html"
+                    class="d-inline-block border border-translucent rounded-2 overflow-hidden"
+                    style="width: 60px; height: 60px;"
+                  >
+                    <img 
+                      src="{{ asset('storage/products/' . $product->image) }}" 
+                      alt="" 
+                      class="w-100 h-100" 
+                      style="object-fit: cover;" 
+                    />
+                  </a>
                 </td>
                 <td class="product align-middle ps-4">
                   <a class="fw-semibold line-clamp-3 mb-0" href="../landing/product-details.html">

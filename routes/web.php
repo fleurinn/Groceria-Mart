@@ -35,6 +35,11 @@ Route::controller(LandingPageController::class)->group(function () {
     Route::post('/keranjang/increase', 'increaseQuantity')->name('keranjang.increase');
     Route::post('/keranjang/decrease', 'decreaseQuantity')->name('keranjang.decrease');
 
+    Route::get('/coupons', 'indexVoucher')->name('coupons');
+ 
+    Route::get('/profile', 'indexUser')->name('profile');
+    Route::post('/profile/{id}', 'updateCust')->name('profile.edit');
+
 });
 
 Route::resource('/wishlist', WishlistController::class);
@@ -54,13 +59,6 @@ Route::get('/service', function () {
 
 
 
-Route::get('/coupons', function () {
-    return view('landing.pages.coupon.coupon-index');
-})->name('coupons');
-
-Route::get('/profile', function () {
-    return view('landing.pages.profile.profile-index');
-})->name('profile');
 
 
 
