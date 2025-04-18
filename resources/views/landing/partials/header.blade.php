@@ -80,13 +80,39 @@
                                         </div>
                                         <div class="gi-btn-desc flex flex-col uppercase ml-[10px]">
                                             <span class="gi-btn-title transition-all duration-[0.3s] ease-in-out text-[12px] leading-[1] text-[#777] mb-[6px] tracking-[0.6px] capitalize font-medium">Akun</span>
-                                            <span class="gi-btn-stitle transition-all duration-[0.3s] ease-in-out text-[13px] font-medium text-[#4b5966] leading-[14px] max-[1199px]:text-[11px] max-[1199px]:min-w-[48px]">Masuk</span>
+
+                                            @guest
+                                                <span class="gi-btn-stitle transition-all duration-[0.3s] ease-in-out text-[13px] font-medium text-[#4b5966] leading-[14px] max-[1199px]:text-[11px] max-[1199px]:min-w-[48px]">Masuk</span>
+                                            @endguest
+
+                                            @auth
+                                                <span class="gi-btn-stitle transition-all duration-[0.3s] ease-in-out text-[13px] font-medium text-[#4b5966] leading-[14px] max-[1199px]:text-[11px] max-[1199px]:min-w-[48px]">
+                                                    {{ Auth::user()->first_name }}
+                                                </span>
+                                            @endauth
                                         </div>
                                     </a>
                                     <ul class="gi-dropdown-menu min-w-[150px] py-[5px] transition-all duration-[0.3s] ease-in-out mt-[25px] absolute z-[16] text-left bg-[#fff] block opacity-0 invisible left-[0] right-[auto] border-[1px] border-solid border-[#eee] rounded-[5px]">
-                                        <li><a href="{{ route('register') }}" class="dropdown-item py-[10px] px-[20px] block w-full font-normal text-[13px] text-[#777] hover:bg-transparent hover:text-[#5caf90]">Daftar</a></li>
-                                        <li><a href="{{ route('login') }}" class="dropdown-item py-[10px] px-[20px] block w-full font-normal text-[13px] text-[#777] hover:bg-transparent hover:text-[#5caf90]">Masuk</a></li>
-                                    </ul>
+
+                                    @guest
+                                        <li>
+                                            <a href="{{ route('register') }}" class="dropdown-item py-[10px] px-[20px] block w-full font-normal text-[13px] text-[#777] hover:bg-transparent hover:text-[#5caf90]">Daftar</a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ route('login') }}" class="dropdown-item py-[10px] px-[20px] block w-full font-normal text-[13px] text-[#777] hover:bg-transparent hover:text-[#5caf90]">Masuk</a>
+                                        </li>
+                                    @endguest
+
+                                    @auth
+                                        <form method="POST" action="{{ route('logout') }}" class="w-full">
+                                            @csrf
+                                            <button type="submit" class="dropdown-item py-[10px] px-[20px] block w-full text-left font-normal text-[13px] text-[#777] hover:bg-transparent hover:text-[#5caf90]" style="background: none; border: none; cursor: pointer;">
+                                                <span class="me-2" data-feather="log-out"></span>Keluar
+                                            </button>
+                                        </form>
+                                    @endauth
+
+                                </ul>
                                 </div>
                                 <!-- Header User End -->
                                 <!-- Header wishlist Start -->
