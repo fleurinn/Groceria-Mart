@@ -23,6 +23,7 @@ class WishlistController extends Controller
             ->filter(function ($wishlist) {
                 return $wishlist->product !== null;
             });
+            
 
         return view('landing.pages.wishlist.wishlist-index', compact('wishlists'));
     }

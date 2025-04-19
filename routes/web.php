@@ -21,6 +21,7 @@ use App\Http\Controllers\ProofOfDeliveryController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\VariantProductController;
 use App\Http\Controllers\LandingPageController;
+use App\Http\Controllers\ProfileCustController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [LandingPageController::class, 'index'])->name('landing-page');
@@ -38,7 +39,11 @@ Route::controller(LandingPageController::class)->group(function () {
     Route::get('/coupons', 'indexVoucher')->name('coupons');
  
     Route::get('/profile', 'indexUser')->name('profile');
-    Route::post('/profile/{id}', 'updateCust')->name('profile.edit');
+
+    // Route::get('/profile/edit/{id}', 'editUser')->name('profile.edit');
+    // Route::post('/profile/{id}', 'updateCust')->name('profile.update');
+    Route::get('/profile/get-villages/{district_id}', 'getVillages')->name('profile.get-villages');
+    Route::get('/profile/get-districts/{city_id}','getDistricts')->name('profile.get-districts');
 
 });
 
@@ -62,11 +67,20 @@ Route::get('/service', function () {
 
 
 
+
+
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
     Route::get('/admin/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard.admin');
     Route::get('/seller/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard.seller');
     Route::get('/kurir/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard.kurir');
+
+
+    Route::resource('/profile', ProfileCustController::class);
+    Route::get('/profile/get-districts/{city_id}', [ProfileCustController::class, 'getDistricts']);
+    Route::get('/profile/get-villages/{village_id}', [ProfileCustController::class, 'getVillages']);
+
+
 });
 
 Route::middleware(['auth'])->prefix('dashboard')->group(function () {

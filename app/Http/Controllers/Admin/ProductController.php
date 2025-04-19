@@ -67,7 +67,7 @@ class ProductController extends Controller
             'weight' => 'nullable|string|max:50',
             'dimension' => 'nullable|string|max:100',
             'color' => 'nullable|string|max:50',
-            'description' => 'required|string|max:1000',
+            'description' => 'nullable|string|max:500',
             'category_product_id' => 'required|exists:category_products,id',
             'image' => 'required|image|mimes:jpeg,jpg,png',
             'price' => 'required|numeric|min:0',
@@ -81,7 +81,24 @@ class ProductController extends Controller
             'variants.*.price' => 'nullable|numeric|min:0',
             'variants.*.discount' => 'nullable|numeric|min:0|max:100',
             'variants.*.stock' => 'nullable|integer|min:0',
+        ],
+    
+        [
+            'name.required' => 'Kolom nama wajib diisi.', // Pesan khusus untuk validasi name
+            'status.required' => 'Kolom status wajib diisi.', // Contoh untuk field lain
+            'image' => 'Kolom gambar wajib diisi.', // Contoh untuk field lain
+            'price' => 'Kolom harga wajib diisi.', // Contoh untuk field lain
+            'stock' => 'Kolom stok wajib diisi.', // Contoh untuk field lain
+            'category_product_id' => 'Kolom kategori wajib diisi.', // Contoh untuk field lain
+
         ]);
+
+        $cekNama = Product::where('name', $request->name)->exists();
+        if ($cekNama) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Nama ini sudah digunakan, silakan gunakan nama lain.');
+        };
 
         try {
             // Simpan gambar utama dengan move()
@@ -167,7 +184,24 @@ class ProductController extends Controller
             'variants.*.price' => 'nullable|numeric|min:0',
             'variants.*.discount' => 'nullable|numeric|min:0|max:100',
             'variants.*.stock' => 'nullable|integer|min:0',
+        ],
+    
+        [
+            'name.required' => 'Kolom nama wajib diisi.', // Pesan khusus untuk validasi name
+            'status.required' => 'Kolom status wajib diisi.', // Contoh untuk field lain
+            'image' => 'Kolom gambar wajib diisi.', // Contoh untuk field lain
+            'price' => 'Kolom harga wajib diisi.', // Contoh untuk field lain
+            'stock' => 'Kolom stok wajib diisi.', // Contoh untuk field lain
+            'category_product_id' => 'Kolom kategori wajib diisi.', // Contoh untuk field lain
+
         ]);
+
+        $cekNama = Product::where('name', $request->name)->exists();
+        if ($cekNama) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Nama ini sudah digunakan, silakan gunakan nama lain.');
+        };
 
         try {
             if ($request->hasFile('image')) {

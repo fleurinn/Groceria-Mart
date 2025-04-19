@@ -15,6 +15,7 @@ use App\Models\District;
 use App\Models\Village;
 use App\Models\DiscountVoucher;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LandingPageController extends Controller
 {
@@ -146,63 +147,69 @@ class LandingPageController extends Controller
         return view('landing.pages.coupon.coupon-index', compact('vouchers', 'categoryProduct'));
     }
 
+
+
+
     public function indexUser()
     {
         $users = User::with('role')->get();
         $roles = Role::whereIn('id', [1, 2, 3, 4])->get();
         $user = auth()->user();
+        $city = City::all();
+        $districts = District::where('city_id', $user->shippingAddress->city_id ?? null)->get();
+        $villages = Village::where('district_id', $user->shippingAddress->district_id ?? null)->get();
         $shippingAddress = $user->shippingAddress;
 
-        return view('landing.pages.profile.profile-index', compact('users', 'roles', 'shippingAddress'));
-        }
+        return view('landing.pages.profile.profile-index', compact('users', 'city', 'districts', 'villages', 'roles', 'shippingAddress'));
+    }
     
+    public function getVillages($district_id)
+    {
+        $villages = \App\Models\Village::where('district_id', $district_id)->get();
+        return response()->json($villages);
+    }
 
-    public function updateCust(Request $request, $id)
+    public function getDistricts($city_id)
+    {
+        $districts = District::where('city_id', $city_id)->get();
+
+        return response()->json($districts);
+    }
+
+
+    public function create()
+    {
+        $city = City::all(); // Ambil semua kota
+        $districts = District::all(); // Ambil semua kecamatan
+        $villages = Village::all(); // Ambil semua desa
+        $roles = Role::whereIn('id', [1, 2, 3])->get(); // Hanya Admin, Seller, dan satu lainnya
+
+        return view('admin.pages.users.user-create', compact('roles', 'city', 'districts', 'villages'));
+    }
+    
+        public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'email' => 'required|email|unique:users,email,' . $id,
-            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-
-            'shipping_addresses.0.city_id' => 'nullable|exists:cities,id',
-            'shipping_addresses.0.district_id' => 'nullable|exists:districts,id',
-            'shipping_addresses.0.village_id' => 'nullable|exists:villages,id',
-            'shipping_addresses.0.address' => 'nullable|string',
-            'shipping_addresses.0.no_telp' => 'nullable|string',
+            'no_telp' => 'required|string|max:20',
+            'city_id' => 'required|exists:cities,id',
+            'district_id' => 'required|exists:districts,id',
+            'village_id' => 'required|exists:villages,id',
+            'address' => 'required|string|max:255',
         ]);
 
-        $user = User::findOrFail($id);
-        $user->name = $request->name;
-        $user->first_name = $request->first_name;
-        $user->last_name = $request->last_name;
-        $user->email = $request->email;
+        $alamat = Alamat::create([
+            'user_id' => Auth::id(), // Otomatis ambil ID user yang login
+            'no_telp' => $request->no_telp,
+            'city_id' => $request->city_id,
+            'district_id' => $request->district_id,
+            'village_id' => $request->village_id,
+            'address' => $request->address,
+        ]);
 
-        if ($request->hasFile('image')) {
-            // Hapus gambar lama jika ada
-            if ($user->image && Storage::disk('public')->exists($user->image)) {
-                Storage::disk('public')->delete($user->image);
-            }
-            $imagePath = $request->file('image')->store('profile_images', 'public');
-            $user->image = $imagePath;
-        }
-
-        $user->save();
-
-        $addressData = $request->shipping_addresses[0];
-        $address = $user->shippingAddresses()->first();
-        if (!$address) {
-            $address = new ShippingAddress();
-            $address->user_id = $user->id;
-        }
-        $address->city_id = $addressData['city_id'];
-        $address->district_id = $addressData['district_id'];
-        $address->village_id = $addressData['village_id'];
-        $address->address = $addressData['address'];
-        $address->no_telp = $addressData['no_telp'];
-        $address->save();
-
-        return redirect()->route('profile-pengguna.update')->with('success', 'User berhasil diperbarui!');
+        return response()->json([
+            'message' => 'Alamat berhasil disimpan.',
+            'data' => $alamat
+        ], 201);
     }
+
 }

@@ -116,6 +116,15 @@
                                 </div>
                                 <!-- Header User End -->
                                 <!-- Header wishlist Start -->
+                                @php
+                                    use Illuminate\Support\Facades\Auth;
+                                    use App\Models\Wishlist;
+
+                                    $wishlistCount = 0;
+                                    if (Auth::check()) {
+                                        $wishlistCount = Wishlist::where('user_id', Auth::id())->count();
+                                    }
+                                @endphp
                                 <a href="{{ route('wishlist.index') }}" class="gi-header-btn gi-wish-toggle mr-[30px] transition-all duration-[0.3s] ease-in-out relative flex text-[#4b5966] w-[auto] items-center whitespace-nowrap" title="Wishlist">
                                     <div class="header-icon relative flex">
                                         <i class="fi-rr-heart text-[24px] leading-[17px]"></i>
@@ -202,7 +211,7 @@
                                             </li>
 
                                             <li class="non-drop mx-[20px] transition-all duration-[0.3s] ease-in-out max-[1199px]:mx-[15px]">
-                                                <a href="{{ route('profile') }}" class="transition-all duration-[0.3s] ease-in-out text-[15px] leading-[60px] capitalize text-[#4b5966] flex items-center font-medium">
+                                                <a href="{{ route('profile.index') }}" class="transition-all duration-[0.3s] ease-in-out text-[15px] leading-[60px] capitalize text-[#4b5966] flex items-center font-medium">
                                                     <i class="transition-all duration-[0.3s] ease-in-out mr-[5px] text-[18px] text-[#4b5966] flex"></i>Profil
                                                 </a>
                                             </li>
