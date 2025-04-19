@@ -3,27 +3,21 @@
 @section('page_title', 'Category Products | Groceria')
 @section('content')
 
+
+@if(session('success'))
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        Swal.fire({
+            title: 'Berhasil!',
+            text: '{{ session('success') }}',
+            icon: 'success',
+            confirmButtonText: 'OK'
+        });
+    });
+</script>
+@endif
 <!-- MAIN CONTENT -->
 <div class="content">
-@if(session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
-    </div>
-@endif
-
-@if(session('error'))
-    <div class="alert alert-danger">
-        {{ session('error') }}
-    </div>
-@endif
-
-@if(session('info'))
-    <div class="alert alert-info">
-        {{ session('info') }}
-    </div>
-@endif
-
-
   <div class="mb-9">
     <div class="row g-3 mb-4">
       <div class="col-auto">
@@ -55,13 +49,13 @@
           </div>
           
           <div class="flex flex-wrap items-center gap-1">
-            <button class="btn btn-success rounded-1">
+            <button id="publikButton" class="btn btn-success rounded-1">
               <span class="fas fa-arrow-right-from-bracket me-2"></span>Publish
             </button>
-            <button class="btn btn-warning rounded-1">
+            <button id="draftButton" class="btn btn-warning rounded-1">
               <span class="fas fa-arrow-right-to-bracket me-2"></span>Draft
             </button>
-            <button class="btn btn-danger rounded-1">
+            <button id="deleteButton" class="btn btn-danger rounded-1">
               <span class="fas fa-trash me-2"></span>Delete
             </button>
             <button class="btn btn-primary rounded-1" data-bs-toggle="modal" data-bs-target="#createCategoryModal">
@@ -140,10 +134,10 @@
                         Edit
                       </a>
                       <div class="dropdown-divider"></div>
-                      <form action="{{ route('category-products.destroy', $categoryproduct->id) }}" method="POST" class="d-inline">
+                      <form id="delete-form-{{ $categoryproduct->id }}" action="{{ route('category-products.destroy', $categoryproduct->id) }}" method="POST" class="d-inline">
                           @csrf
                           @method('DELETE')
-                          <button type="submit" class="dropdown-item text-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus kategori ini?');">Remove</button>
+                          <button type="button" class="dropdown-item text-danger" onclick="deleteRecord({{ $categoryproduct->id }})">Remove</button>
                       </form>                   
                     </div>
                   </div>
@@ -206,11 +200,21 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="categoryName" class="form-label">Category Name</label>
-                        <input type="text" class="form-control" id="categoryName" name="name" required>
+                        <input type="text" class="form-control @error('name') is-invalid @enderror" id="categoryName" name="name">
+                        @error('name')
+                          <span class="invalid-feedback" role="alert"  style="color: red;">
+                              {{ $message }}
+                          </span>
+                        @enderror  
                     </div>
                     <div class="mb-3">
                         <label for="categoryImage" class="form-label">Image</label>
-                        <input type="file" class="form-control" id="categoryImage" name="image" accept="image/*">
+                        <input type="file" class="form-control @error('image') is-invalid @enderror" id="categoryImage" name="image" accept="image/*">
+                        @error('image')
+                          <span class="invalid-feedback" role="alert"  style="color: red;">
+                              {{ $message }}
+                          </span>
+                        @enderror
                     </div>
                     <div class="mb-3">
                         <label for="categoryDescription" class="form-label">Description</label>
@@ -218,10 +222,15 @@
                     </div>
                     <div class="mb-3">
                         <label for="categoryStatus" class="form-label">Status</label>
-                        <select class="form-select" id="categoryStatus" name="status" required>
+                        <select class="form-select  @error('status') is-invalid @enderror" id="categoryStatus" name="status">
                             <option value="publish">Publish</option>
                             <option value="draft">Draft</option>
                         </select>
+                        @error('status')
+                          <span class="invalid-feedback" role="alert"  style="color: red;">
+                              {{ $message }}
+                          </span>
+                        @enderror
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -248,12 +257,22 @@
                     <input type="hidden" id="editCategoryId" name="id">
                     <div class="mb-3">
                         <label for="editCategoryName" class="form-label">Category Name</label>
-                        <input type="text" class="form-control" id="editCategoryName" name="name" required>
+                        <input type="text" class="form-control @error('name') is-invalid @enderror" id="editCategoryName" name="name">
+                        @error('name')
+                          <span class="invalid-feedback" role="alert"  style="color: red;">
+                              {{ $message }}
+                          </span>
+                        @enderror
                     </div>
                     <div class="mb-3">
                         <label for="editCategoryImage" class="form-label">Image</label>
-                        <input type="file" class="form-control" id="editCategoryImage" name="image" accept="image/*">
+                        <input type="file" class="form-control @error('image') is-invalid @enderror" id="editCategoryImage" name="image" accept="image/*">
                         <small class="form-text text-muted">Leave blank if you don't want to change the image.</small>
+                        @error('image')
+                          <span class="invalid-feedback" role="alert"  style="color: red;">
+                              {{ $message }}
+                          </span>
+                        @enderror
                     </div>
                     <div class="mb-3">
                         <label for="editCategoryDescription" class="form-label">Description</label>
@@ -261,10 +280,15 @@
                     </div>
                     <div class="mb-3">
                         <label for="editCategoryStatus" class="form-label">Status</label>
-                        <select class="form-select" id="editCategoryStatus" name="status" required>
+                        <select class="form-select @error('status') is-invalid @enderror" id="editCategoryStatus" name="status">
                             <option value="publish">Publish</option>
                             <option value="draft">Draft</option>
                         </select>
+                        @error('status')
+                          <span class="invalid-feedback" role="alert"  style="color: red;">
+                              {{ $message }}
+                          </span>
+                        @enderror
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -276,6 +300,7 @@
     </div>
 </div>
 
+<!-- Script modal edit -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         document.querySelectorAll(".edit-category").forEach(button => {
@@ -303,46 +328,186 @@
     });
 </script>
 
-<script>
-    setTimeout(() => {
-        const alerts = document.querySelectorAll('.alert');
-        alerts.forEach(alert => {
-            const bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
-            bsAlert.close();
-        });
-    }, 3000); // 3 detik
-</script>
 
+<!-- alert delete -->
   <script>
-    // Menghandle checkbox
-    document.getElementById('selectAll').onclick = function() {
-      const checkboxes = document.querySelectorAll('.form-check-input');
-      checkboxes.forEach((checkbox) => {
-        checkbox.checked = this.checked;
-      });
-    };
-
-    function getSelectedServices() {
-      return Array.from(document.querySelectorAll('.form-check-input:checked')).map(cb => cb.value);
-    }
-
-    function performAction(url, ids) {
-      // Kirim request AJAX ke server
-      fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-TOKEN': '{{ csrf_token() }}'
-        },
-        body: JSON.stringify({ ids: ids })
-      }).then(response => {
-        if (response.ok) {
-          location.reload(); // Refresh klien setelah berhasil
-        } else {
-          alert('Terjadi kesalahan. Silakan coba lagi.');
-        }
-      });
+    function deleteRecord(productId) {
+        Swal.fire({
+            title: 'Apakah anda yakin?',
+            text: 'Anda tidak akan dapat mengembalikannya!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, Hapus!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Submit form DELETE
+                document.getElementById('delete-form-' + productId).submit();
+            }
+        });
     }
   </script>
+
+<!-- alert checkbox delete -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("deleteButton").addEventListener("click", function () {
+            deleteSelectedRecords();
+        });
+
+        // Tampilkan alert sukses setelah reload
+        const successType = localStorage.getItem('bulkActionSuccess');
+        if (successType) {
+            let messages = {
+                delete: { title: 'Dihapus!', text: 'Data berhasil dihapus.', icon: 'success' },
+                publish: { title: 'Dipublish!', text: 'Data berhasil dipublish.', icon: 'success' },
+                draft: { title: 'Didraft!', text: 'Data berhasil didraft.', icon: 'success' }
+            };
+            Swal.fire({
+                title: messages[successType].title,
+                text: messages[successType].text,
+                icon: messages[successType].icon,
+                confirmButtonText: 'OK'
+            });
+            localStorage.removeItem('bulkActionSuccess');
+        }
+    });
+
+    function deleteSelectedRecords() {
+        let ids = getSelectedServices();
+        if (ids.length === 0) {
+            Swal.fire({
+                title: 'Pilih data terlebih dahulu!',
+                text: 'Silakan pilih klien untuk dihapus.',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+            });
+            return;
+        }
+
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: 'Data yang dipilih akan dihapus!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, Hapus!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                performAction('/dashboard/category-products/bulk-delete', ids);
+                localStorage.setItem('bulkActionSuccess', 'delete');
+                location.reload();
+            }
+        });
+    }
+</script>
+
+<!-- alert checkbox publish -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("publikButton").addEventListener("click", function () {
+            publishSelectedRecords();
+        });
+    });
+
+    function publishSelectedRecords() {
+        let ids = getSelectedServices();
+        if (ids.length === 0) {
+            Swal.fire({
+                title: 'Pilih data terlebih dahulu!',
+                text: 'Silakan pilih klien untuk dipublish.',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+            });
+            return;
+        }
+
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: 'Data yang dipilih akan dipublish!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#B8D576',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, Publish!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                performAction('/dashboard/category-products/bulk-publish', ids);
+                localStorage.setItem('bulkActionSuccess', 'publish');
+                location.reload();
+            }
+        });
+    }
+</script>
+
+<!-- alert checkbox draft -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("draftButton").addEventListener("click", function () {
+            draftSelectedRecords();
+        });
+    });
+
+    function draftSelectedRecords() {
+        let ids = getSelectedServices();
+        if (ids.length === 0) {
+            Swal.fire({
+                title: 'Pilih data terlebih dahulu!',
+                text: 'Silakan pilih klien untuk didraft.',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+            });
+            return;
+        }
+
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: 'Data yang dipilih akan didraft!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#FBA518',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, Draft!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                performAction('/dashboard/category-products/bulk-draft', ids);
+                localStorage.setItem('bulkActionSuccess', 'draft');
+                location.reload();
+            }
+        });
+    }
+</script>
+
+<script>
+  // Menghandle checkbox
+  document.getElementById('selectAll').onclick = function() {
+    const checkboxes = document.querySelectorAll('.form-check-input');
+    checkboxes.forEach((checkbox) => {
+      checkbox.checked = this.checked;
+    });
+  };
+  function getSelectedServices() {
+    return Array.from(document.querySelectorAll('.form-check-input:checked')).map(cb => cb.value);
+  }
+  function performAction(url, ids) {
+    // Kirim request AJAX ke server
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+      },
+      body: JSON.stringify({ ids: ids })
+    }).then(response => {
+      if (response.ok) {
+        location.reload(); // Refresh klien setelah berhasil
+      } else {
+        alert('Terjadi kesalahan. Silakan coba lagi.');
+      }
+    });
+  }
+</script>
 
 @endsection
