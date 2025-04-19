@@ -17,26 +17,44 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $city = City::all(); // Ambil semua kota
         $district = District::all(); // Ambil semua kecamatan
         $villages = Village::all(); // Ambil semua desa
         $users = User::with('role')->get();
         $roles = Role::whereIn('id', [1, 2, 3, 4])->get(); // Tambahkan ini
+        $shippingAddress = ShippingAddress::all(); // Ambil semua desa
+        $search = $request->input('search');
 
-        return view('admin.pages.users.user-index', compact('users', 'roles', 'city', 'district', 'villages'));
+        $users = User::with('shippingAddress')
+            ->when($search, function ($query, $search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%")
+                      ->orWhere('email', 'like', "%{$search}%")
+                      ->orWhere('role', 'like', "%{$search}%")
+                      ->orWhereHas('shippingAddress', function ($q2) use ($search) {
+                          $q2->where('city', 'like', "%{$search}%")
+                             ->orWhere('district', 'like', "%{$search}%")
+                             ->orWhere('village', 'like', "%{$search}%")
+                             ->orWhere('no_telp', 'like', "%{$search}%")
+                             ->orWhere('address', 'like', "%{$search}%");
+                      });
+                });
+            })
+            ->paginate(10); // Atau sesuai kebutuhan
+        return view('admin.pages.users.user-index', compact('users', 'shippingAddress', 'roles', 'city', 'district', 'villages'));
     }
 
 
     public function create()
     {
         $city = City::all(); // Ambil semua kota
-        $districts = District::all(); // Ambil semua kecamatan
+        $district = District::all(); // Ambil semua kecamatan
         $villages = Village::all(); // Ambil semua desa
         $roles = Role::whereIn('id', [1, 2, 3])->get(); // Hanya Admin, Seller, dan satu lainnya
 
-        return view('admin.pages.users.user-create', compact('roles', 'city', 'districts', 'villages'));
+        return view('admin.pages.users.user-create', compact('roles', 'city', 'district', 'villages'));
     }
 
     public function store(Request $request)
@@ -97,20 +115,20 @@ class UserController extends Controller
 
     public function getDistricts($city_id)
     {
-        $districts = District::where('city_id', $city_id)->get();
+        $district = District::where('city_id', $city_id)->get();
 
-        return response()->json($districts);
+        return response()->json($district);
     }
 
     public function edit($id)
     {
         $user = User::with('shippingAddresses')->findOrFail($id);
         $city = City::all();
-        $districts = District::all();
+        $district = District::all();
         $villages = Village::all();
         $roles = Role::whereIn('id', [1, 2, 3])->get();
 
-        return view('admin.pages.users.user-edit', compact('user', 'roles', 'city', 'districts', 'villages'));
+        return view('admin.pages.users.user-edit', compact('user', 'roles', 'city', 'district', 'villages'));
     }
 
     public function update(Request $request, $id)
@@ -180,18 +198,60 @@ class UserController extends Controller
         }
 
         // Hapus gambar jika ada
-        if ($user->image && Storage::exists('public/' . $user->image)) {
-            Storage::delete('public/' . $user->image);
+        if ($user->image && Storage::exists('public/profile_images/' . $user->image)) {
+            Storage::delete('public/profile_images/' . $user->image);
         }
 
         // Hapus alamat pengiriman terkait
-        foreach ($user->shippingAddresses as $shippingAddress) {
+        foreach ($user->shippingAddresses ?? [] as $shippingAddress) {
             $shippingAddress->delete();
         }
-
+        
         $user->delete();
 
-        return redirect()->route('users.index')->with('success', 'User  berhasil dihapus');
+        return redirect()->route('profile-pengguna.index')->with('success', 'User  berhasil dihapus');
     }
+
+    public function show($id)
+    {
+        $user = User::with(['role', 'shippingAddresses.city', 'shippingAddresses.district', 'shippingAddresses.village'])->findOrFail($id);
+        
+        return view('admin.pages.users.user-show', compact('user'));
+    }
+
+    public function bulkDelete(Request $request)
+    {
+        $ids = $request->input('ids');
+    
+        if (empty($ids) || !is_array($ids)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Tidak ada user yang dipilih atau format ID salah.'
+            ], 400);
+        }
+    
+        $users = User::with('shippingAddress')->whereIn('id', $ids)->get();
+    
+        foreach ($users as $user) {
+            // Hapus gambar profil jika ada
+            if ($user->image) {
+                Storage::delete('public/profile_images/' . $user->image);
+            }
+    
+            // Hapus shipping address jika ada
+            foreach ($user->shippingAddresses ?? [] as $shippingAddress) {
+                $shippingAddress->delete();
+            }
+    
+            // Hapus user
+            $user->delete();
+        }
+    
+        return response()->json([
+            'success' => true,
+            'message' => 'User dan alamat pengiriman berhasil dihapus.'
+        ]);
+    }
+    
 }
 

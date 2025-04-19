@@ -85,6 +85,7 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth'])->prefix('dashboard')->group(function () {
     
     Route::resource('/profile-pengguna', UserController::class);
+    Route::post('/profile-pengguna/bulk-delete', [UserController::class, 'bulkDelete'])->name('users.bulk-delete');
     Route::resource('/shipping_addresses', UserController::class);
     Route::get('/profile-pengguna/create/get-districts/{city_id}', [UserController::class, 'getDistricts']);
     Route::get('/profile-pengguna/create/get-villages/{village_id}', [UserController::class, 'getVillages']);

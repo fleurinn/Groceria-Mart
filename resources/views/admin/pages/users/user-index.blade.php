@@ -1,6 +1,6 @@
 @extends('admin.layouts.admin-layouts')
 
-@section('page_title', 'Profile Pengguna | Groceria')
+@section('page_title', 'List Profile Pengguna | Groceria')
 @section('content')
 
 <!-- MAIN CONTENT -->
@@ -21,7 +21,7 @@
                               class="form-control search-input search" 
                               type="search" 
                               name="search" 
-                              placeholder="Search products" 
+                              placeholder="Search pengguna" 
                               aria-label="Search" 
                               value="{{ request('search') }}" 
                           />
@@ -36,17 +36,8 @@
                   </div>
                   
                   <div class="flex flex-wrap items-center gap-1">
-                      <button class="btn btn-success rounded-1">
-                          <span class="fas fa-arrow-right-from-bracket me-2"></span>Publish
-                      </button>
-                      <button class="btn btn-warning rounded-1">
-                          <span class="fas fa-arrow-right-to-bracket me-2"></span>Draft
-                      </button>
-                      <button class="btn btn-danger rounded-1">
-                          <span class="fas fa-trash me-2"></span>Delete
-                      </button>
                       <button class="btn btn-primary rounded-1" onclick="window.location='{{ route('profile-pengguna.create') }}'">
-                          <span class="fas fa-plus me-2"></span>Add
+                          <span class="fas fa-plus me-2"></span>Tambah
                       </button>
                       <button class="btn btn-link text-body px-2" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                           <span class="fas fa-ellipsis-v"></span> 
@@ -62,34 +53,46 @@
                 <table class="table table-sm fs-9 mb-0">
                   <thead>
                     <tr>
-                      <th class="white-space-nowrap fs-9 align-middle ps-0">
-                        <div class="form-check mb-0 fs-8"><input class="form-check-input" id="checkbox-bulk-customers-select" type="checkbox" data-bulk-select='{"body":"customers-table-body"}' /></div>
-                      </th>
                       <th class="sort align-middle pe-5" scope="col" data-sort="customer" style="width:10%;">NAMA PENGGUNA</th>
                       <th class="sort align-middle pe-5" scope="col" data-sort="email" style="width:20%;">E-MAIL</th>
-                      <th class="sort align-middle text-end" scope="col" data-sort="total-orders" style="width:10%">ROLE</th>
-                      <th class="sort align-middle text-end ps-3" scope="col" data-sort="total-spent" style="width:10%">KOTA</th>
-                      <th class="sort align-middle ps-7" scope="col" data-sort="city" style="width:25%;">KECAMATAN</th>
-                      <th class="sort align-middle text-end" scope="col" data-sort="last-seen" style="width:15%;">DESA</th>
-                      <th class="sort align-middle text-end pe-0" scope="col" data-sort="last-order" style="width:10%;min-width: 150px;">AKSI</th>
+                      <th class="sort align-middle text-center" scope="col" data-sort="total-spent" style="width:15%">NO. HANDPHONE</th>
+                      <th class="sort align-middle text-center" scope="col" data-sort="total-orders" style="width:15%">POSISI</th>
+                      <th class="sort align-middle text-center" scope="col" data-sort="last-seen" style="width:20%;">ALAMAT</th>
+                      <th class="sort align-middle text-end pe-0" scope="col" data-sort="last-order" style="width:5%;">AKSI</th>
                     </tr>
                   </thead>
                   <tbody class="list" id="customers-table-body">
                   @forelse ( $users as $user)
                     <tr class="hover-actions-trigger btn-reveal-trigger position-static">
-                      <td class="fs-9 align-middle ps-0 py-3">
-                        <div class="form-check mb-0 fs-8"><input class="form-check-input" type="checkbox" data-bulk-select-row='{"customer":{"avatar":"/team/32.webp","name":"Carry Anna"},"email":"annac34@gmail.com","city":"Budapest","totalOrders":89,"totalSpent":23987,"lastSeen":"34 min ago","lastOrder":"Dec 12, 12:56 PM"}' /></div>
-                      </td>
                       <td class="customer align-middle white-space-nowrap pe-5"><a class="d-flex align-items-center text-body-emphasis" href="customer-details.html">
                           <div class="avatar avatar-m"><img class="rounded-circle" src="{{ asset('storage/users/' . $user->image) }}" alt="" /></div>
                           <p class="mb-0 ms-3 text-body-emphasis fw-bold">{{ $user->first_name }} {{ $user->last_name }}</p>
                           </a></td>
                       <td class="email align-middle white-space-nowrap pe-5"><a class="fw-semibold" href="mailto:annac34@gmail.com">{{ $user->email }}</a></td>
-                      <td class="align-middle white-space-nowrap fw-semibold text-end text-body-highlight">{{ $user->role->name }}</td>
-                      <td class=" align-middle white-space-nowrap fw-bold text-end ps-3 text-body-emphasis">$ 23987</td>
-                      <td class="city align-middle white-space-nowrap text-body-highlight ps-7">Budapest</td>
-                      <td class="last-seen align-middle white-space-nowrap text-body-tertiary text-end">34 min ago</td>
-                      <td class="last-order align-middle white-space-nowrap text-body-tertiary text-end">Dec 12, 12:56 PM</td>
+                      <td class=" align-middle white-space-nowrap fw-bold text-center ps-3 text-body-emphasis">
+                          {{ $user->shippingAddress->no_telp ?? 'Data kosong.' }}
+                      </td>
+                      <td class="align-middle pr-3 white-space-nowrap fw-semibold text-center text-body-highlight">{{ $user->role->name }}</td>
+                      <td class="last-seen align-middle white-space-nowrap text-body-tertiary text-center">
+                      {{ $user->shippingAddress->city->name ?? 'Data kosong.' }}
+                      {{ $user->shippingAddress->district->name ?? '' }}
+                      {{ $user->shippingAddress->village->name ?? '' }}
+                      {{ $user->shippingAddress->address ?? '' }}
+                      <td class="align-middle white-space-nowrap text-end pe-0 ps-4 btn-reveal-trigger">
+                        <div class="btn-reveal-trigger position-static"><button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h fs-10"></span></button>
+                          <div class="dropdown-menu dropdown-menu-end py-2">
+                            <a class="dropdown-item" >View</a>
+                            <a class="dropdown-item" href="{{ route('profile-pengguna.edit', $user->id) }}">Edit</a>
+                            <div class="dropdown-divider"></div>
+                            <!-- Tombol di dalam dropdown -->
+                            <form id="delete-form-{{ $user->id }}" action="{{ route('profile-pengguna.destroy', $user->id) }}" method="POST" class="d-inline">
+                              @csrf
+                              @method('DELETE')
+                              <button type="button" class="dropdown-item text-danger" onclick="deleteRecord({{ $user->id }})">Remove</button>
+                            </form>                  
+                          </div>
+                        </div>
+                      </td>
                     </tr>
                     @empty
                       <tr>
@@ -110,5 +113,25 @@
             </div>
           </div>
         </div>
+
+<!-- alert delete -->
+<script>
+    function deleteRecord(productId) {
+        Swal.fire({
+            title: 'Apakah anda yakin?',
+            text: 'Anda tidak akan dapat mengembalikannya!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, Hapus!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Submit form DELETE
+                document.getElementById('delete-form-' + productId).submit();
+            }
+        });
+    }
+</script>
 
 @endsection

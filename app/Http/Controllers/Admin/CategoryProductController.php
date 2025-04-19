@@ -38,7 +38,20 @@ class CategoryProductController extends Controller
             'image'       => 'required|image|mimes:jpeg,jpg,png',
             'description' => 'nullable|string',
             'status' => 'required|in:draft,publish',
+        ],
+    
+        [
+            'name.required' => 'Kolom nama wajib diisi.', // Pesan khusus untuk validasi name
+            'status.required' => 'Kolom status wajib diisi.', // Contoh untuk field lain
+            'image' => 'Kolom gambar wajib diisi.',
         ]);
+
+        $cekNama = CategoryProduct::where('name', $request->name)->exists();
+        if ($cekNama) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Nama ini sudah digunakan, silakan gunakan nama lain.');
+        };
 
         $image = $request->file('image');
         $imageName = $image->hashName();
@@ -67,7 +80,20 @@ class CategoryProductController extends Controller
             'image'       => 'nullable|image|mimes:jpeg,jpg,png',
             'description' => 'nullable|string',
             'status'      => 'required|in:draft,publish',
+        ],
+    
+        [
+            'name.required' => 'Kolom nama wajib diisi.', // Pesan khusus untuk validasi name
+            'status.required' => 'Kolom status wajib diisi.', // Contoh untuk field lain
+            'image' => 'Kolom gambar wajib diisi.',
         ]);
+
+        $cekNama = CategoryProduct::where('name', $request->name)->exists();
+        if ($cekNama) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Nama ini sudah digunakan, silakan gunakan nama lain.');
+        };
 
         // Cek apakah nama sudah ada di database
         $cekName = CategoryProduct::where('name', $request->name)->where('id', '!=', $id)->exists();
