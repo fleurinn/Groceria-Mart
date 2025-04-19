@@ -61,7 +61,7 @@ class PaymentController extends Controller
     // Menampilkan daftar pembayaran dengan detail transaksi
     public function index()
     {
-        $payments = Payment::with(['user', 'transaction'])->latest()->get();
+        $payments = Payment::with(['user', 'transaction', 'shippingAddress'])->latest()->get(); // Tambahkan relasi ke shippingAddress
         $totalTransactions = Transaction::count(); // Gunakan Transaction
         $totalBalance = Payment::sum('total');
         $yearlyBalance = Payment::whereYear('created_at', date('Y'))->sum('total');
@@ -107,7 +107,7 @@ class PaymentController extends Controller
         // Buat transaksi baru
         $transaction = Transaction::create([
             'user_id' => $user->id,
-            'shipping_address_id' => $request->shipping_address_id,
+            'shipping_address_id' => $request->shipping_address_id,  // Tambahkan shipping_address_id
             'discount_voucher_id' => $request->discount_voucher_id ?? null,
             'transaction_code' => 'TRX-' . strtoupper(Str::random(10)),
             'shipping_cost' => $cartItems->sum('shipping_cost'),
@@ -120,7 +120,7 @@ class PaymentController extends Controller
         $paymentId = 'PAY-' . strtoupper(Str::random(10));
 
         // === Midtrans Configuration ===
-        Config::$serverKey = config('services.midtrans.server_key') ;// 
+        Config::$serverKey = config('services.midtrans.server_key'); // 
         Config::$clientKey = config('services.midtrans.client_key');
         Config::$isProduction = config('services.midtrans.is_production');
         Config::$isSanitized = config('services.midtrans.is_sanitized');
@@ -140,10 +140,11 @@ class PaymentController extends Controller
 
         $snapToken = Snap::getSnapToken($params);
 
-        // Simpan ke tabel payments
+        // Simpan ke tabel payments dengan shipping_address_id
         Payment::create([
             'user_id' => $user->id,
             'transaction_id' => $transaction->id,
+            'shipping_address_id' => $request->shipping_address_id,  // Menambahkan shipping_address_id
             'payment_id' => $paymentId,
             'snap_token' => $snapToken,
             'payment_status' => 'pending',

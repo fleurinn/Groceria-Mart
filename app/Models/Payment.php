@@ -49,4 +49,9 @@ class Payment extends Model
         return $query->whereYear('created_at', $year)
             ->whereRaw('WEEK(created_at, 1) = ?', [$week]);
     }
+
+    public function shippingAddress()
+    {
+        return $this->belongsTo(ShippingAddress::class);
+    }
 }

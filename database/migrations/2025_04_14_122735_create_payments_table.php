@@ -17,6 +17,7 @@ class CreatePaymentsTable extends Migration
             $table->id(); // Kolom ID
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // ID pengguna yang melakukan pembayaran
             $table->foreignId('transaction_id')->constrained('transactions')->onDelete('cascade'); // ID transaksi
+            // $table->foreignId('shipping_address_id')->constrained('shipping_addresses')->onDelete('cascade'); // ID alamat pengiriman
             $table->string('payment_id')->unique()->nullable(); // Kolom untuk menyimpan ID pembayaran unik (opsional, bisa digunakan untuk referensi internal)
             $table->string('snap_token')->nullable(); // Token dari Midtrans untuk pembayaran menggunakan Snap
             $table->enum('payment_status', ['pending', 'success', 'failed'])->default('pending'); // Status pembayaran

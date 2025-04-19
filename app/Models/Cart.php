@@ -15,13 +15,29 @@ class Cart extends Model
         'product_id',
         'quantity',
         'cart_items',
-        'shipping_type', // Tambahkan ini
-        'shipping_cost', // Tambahkan ini
+        'shipping_type',
+        'shipping_cost',
+        'shipping_address_id',
+        'discount_voucher_id',
+        'price', //Tambahkan ini
     ];
 
     protected $casts = [
         'cart_items' => 'array',
     ];
+
+    // Total harga setelah diskon + ongkir
+    public function getTotalPriceAttribute()
+    {
+        $subtotal = $this->quantity * $this->price;
+        $discountAmount = 0;
+
+        if ($this->discountVoucher) {
+            $discountAmount = ($this->discountVoucher->amount ?? 0);
+        }
+
+        return max(0, $subtotal + $this->shipping_cost - $discountAmount);
+    }
 
     // Relasi ke User
     public function user()
@@ -29,13 +45,25 @@ class Cart extends Model
         return $this->belongsTo(User::class);
     }
 
-    // Relasi dengan produk
+    // Relasi ke Product
     public function product()
     {
         return $this->belongsTo(Product::class);
     }
 
-    // Menghitung harga setelah diskon otomatis
+    // Relasi ke Shipping Address
+    public function shippingAddress()
+    {
+        return $this->belongsTo(ShippingAddress::class);
+    }
+
+    // Relasi ke Discount Voucher
+    public function discountVoucher()
+    {
+        return $this->belongsTo(DiscountVoucher::class);
+    }
+
+    // Hitung harga produk setelah diskon
     public function getPriceAttribute()
     {
         if ($this->product) {
@@ -44,28 +72,21 @@ class Cart extends Model
         return 0;
     }
 
-    // Menghitung total harga berdasarkan quantity * harga setelah diskon + ongkir
-    public function getTotalPriceAttribute()
-    {
-        return ($this->quantity * $this->price) + $this->shipping_cost; // Tambahkan ongkir
-    }
-
     // Validasi sebelum menyimpan data
     protected static function boot()
     {
         parent::boot();
 
         static::saving(function ($cart) {
-            $validator = Validator::make($cart->toArray(), [ // Validasi semua atribut
+            $validator = Validator::make($cart->toArray(), [
                 'quantity' => 'integer|min:1|max:100',
-                'shipping_type' => 'nullable|in:reguler,express', // Tambahkan validasi ini
-                'shipping_cost' => 'nullable|numeric|min:0', // Tambahkan validasi ini
+                'shipping_type' => 'nullable|in:reguler,express',
+                'shipping_cost' => 'nullable|numeric|min:0',
             ]);
 
             if ($validator->fails()) {
-                throw new \Exception($validator->errors()->first()); // Ambil pesan error pertama
+                throw new \Exception($validator->errors()->first());
             }
         });
     }
-
 }
