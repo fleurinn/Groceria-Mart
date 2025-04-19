@@ -6,6 +6,9 @@ use App\Models\Slider;
 use App\Models\CategoryProduct;
 use App\Models\Product;
 use App\Models\Cart;
+use Illuminate\Support\Str;
+use Midtrans\Snap;
+use Midtrans\Config;
 use Illuminate\Http\Request;
 
 class LandingPageController extends Controller
@@ -67,33 +70,48 @@ class LandingPageController extends Controller
         $product = Product::with('variants')->findOrFail($id);
         return view('landing.pages.produk.product-show', compact('product'));
     }
-
     
-
     public function cartIndex(Request $request)
-    {   
-        // Ambil semua produk dan kategori (jika memang perlu di view)
+    {
         $products = Product::all();
         $categoryproducts = CategoryProduct::all();
-
         $total = 0;
-        $carts = collect(); // default kosong
-
-        // Cek apakah user sudah login
+        $carts = collect();
+        $snapToken = null;
+    
         if (auth()->check()) {
-            // Ambil data keranjang berdasarkan user yang login
-            $carts = Cart::with('product')->where('user_id', auth()->id())->get();
-
-            // Hitung total harga
+            $user = auth()->user();
+            $carts = Cart::with('product')->where('user_id', $user->id)->get();
+    
             foreach ($carts as $cart) {
                 if ($cart->product) {
-                    $total += $cart->product->price * $cart->quantity;
+                    $total += $cart->product->price * $cart->quantity + $cart->shipping_cost;
                 }
             }
+    
+            // === Midtrans Snap Token ===
+            Config::$serverKey = config('services.midtrans.server_key');
+            Config::$isProduction = false;
+            Config::$isSanitized = true;
+            Config::$is3ds = true;
+    
+            $params = [
+                'transaction_details' => [
+                    'order_id' => 'CART-' . strtoupper(Str::random(10)),
+                    'gross_amount' => $total,
+                ],
+                'customer_details' => [
+                    'first_name' => $user->name,
+                    'email' => $user->email,
+                ]
+            ];
+    
+            $snapToken = Snap::getSnapToken($params);
         }
-
-        return view('landing.pages.cart.cart-index', compact('categoryproducts', 'products', 'carts', 'total'));
+    
+        return view('landing.pages.cart.cart-index', compact('categoryproducts', 'products', 'carts', 'total', 'snapToken'));
     }
+    
 
     public function increaseQuantity(Request $request)
     {

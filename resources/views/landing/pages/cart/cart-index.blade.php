@@ -2,7 +2,7 @@
 
 @section('page_title', 'Keranjang Pengguna | Groceria')
 @section('content')
-
+<script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('midtrans.client_key') }}"></script>
 <!-- Cart section -->
 <section class="gi-cart-section py-[40px] max-[767px]:py-[30px]">
     <h2 class="hidden">Cart Page</h2>
@@ -147,10 +147,59 @@
                                     <div class="w-full">
                                         <div class="pt-6 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mt-6">                    
                                             <!-- Checkout Button -->
-                                            <button type="button"
+                                           <!-- Tombol Bayar Sekarang -->
+                                           <button id="pay-button"
                                                 class="gi-btn-2 ml-auto transition-all duration-300 ease-in-out rounded-[5px] py-2 px-4 bg-[#5caf90] text-white text-[14px] font-medium hover:bg-[#4b5966]">
-                                                Check Out
+                                                Bayar Sekarang
                                             </button>
+
+                                            <script>
+                                                document.addEventListener('DOMContentLoaded', function() {
+                                                    const payButton = document.getElementById('pay-button');
+
+                                                    // Jika ada snapToken, lanjutkan dengan proses pembayaran
+                                                    if ("{{ $snapToken }}") {
+                                                        payButton.addEventListener('click', function() {
+                                                            // Memanggil Midtrans Snap API dengan token
+                                                            snap.pay("{{ $snapToken }}", {
+                                                                onSuccess: function(result) {
+                                                                    console.log('Pembayaran sukses', result);
+                                                                    // Kirim status pembayaran ke server untuk diperbarui
+                                                                    fetch("{{ route('payment.update-status') }}", {
+                                                                        method: "POST",
+                                                                        headers: {
+                                                                            "Content-Type": "application/json",
+                                                                            "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                                                                        },
+                                                                        body: JSON.stringify(result)
+                                                                    })
+                                                                    .then(response => response.json())
+                                                                    .then(data => {
+                                                                        console.log("Status pembayaran diperbarui:", data);
+                                                                        window.location.href = "{{ route('keranjang') }}";
+                                                                    })
+                                                                    .catch(error => {
+                                                                        console.error("Gagal mengirim status pembayaran ke server:", error);
+                                                                    });
+                                                                },
+                                                                onPending: function(result) {
+                                                                    console.log('Menunggu pembayaran', result);
+                                                                },
+                                                                onError: function(result) {
+                                                                    console.error('Terjadi error', result);
+                                                                    alert('Terjadi kesalahan saat proses pembayaran.');
+                                                                }
+                                                            });
+                                                        });
+                                                    } else {
+                                                        // Jika tidak ada snapToken, tampilkan notifikasi atau penanganan lain
+                                                        payButton.addEventListener('click', function() {
+                                                            alert('Token pembayaran tidak tersedia. Harap coba lagi atau hubungi dukungan.');
+                                                        });
+                                                    }
+                                                });
+                                            </script>
+
                                         </div>
                                     </div>
                                 </div>

@@ -37,6 +37,10 @@ Route::controller(LandingPageController::class)->group(function () {
 
 });
 
+// Rute untuk menyimpan pembayaran baru (jika diperlukan)
+Route::post('/create-payment', [PaymentController::class, 'createPayment'])->name('create-payment');
+Route::post('/payments/update-status', [PaymentController::class, 'updateStatusFromClient'])->name('payment.update-status');
+
 Route::resource('/wishlist', WishlistController::class);
 
 
@@ -124,6 +128,44 @@ Route::middleware(['auth'])->prefix('dashboard')->group(function () {
     Route::resource('/carts', CartController::class);
     //Tambahkan Bulk for Cart
     Route::post('/carts/bulk-delete', [CartController::class, 'bulkDelete'])->name('carts.bulk-delete');
+
+
+    //payment
+    Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
+        // Rute untuk menampilkan daftar pembayaran
+        Route::get('/payments', [PaymentController::class, 'index'])->name('payments.index');
+    
+        // Rute untuk menampilkan form tambah pembayaran (jika diperlukan)
+        Route::get('/payments/create', [PaymentController::class, 'create'])->name('payments.create');
+    
+        // Rute untuk menyimpan pembayaran baru (jika diperlukan)
+        Route::post('/payments', [PaymentController::class, 'store'])->name('payments.store');
+    
+        // Rute untuk menampilkan form edit pembayaran
+        Route::get('/payments/{payment}/edit', [PaymentController::class, 'edit'])->name('payments.edit');
+    
+        // Rute untuk mengupdate pembayaran
+        Route::put('/payments/{payment}', [PaymentController::class, 'update'])->name('payments.update');
+    
+        // Rute untuk menghapus pembayaran
+        Route::delete('/payments/{payment}', [PaymentController::class, 'destroy'])->name('payments.destroy');
+    
+        // Rute untuk menampilkan detail pembayaran dan invoice
+        Route::get('/payments/{payment}/show', [PaymentController::class, 'show'])->name('payments.show');
+    
+        // Rute untuk mengunduh invoice dalam format PDF
+        Route::get('/payments/{payment}/download-invoice', [PaymentController::class, 'downloadInvoice'])->name('payments.downloadInvoice');
+    
+        // Rute untuk membuat transaksi Midtrans dan mendapatkan snap token (API endpoint)
+        Route::post('/payments/midtrans/create-transaction', [PaymentController::class, 'createMidtransTransaction'])->name('payments.midtrans.createTransaction');
+    });
+    
+    // Rute untuk halaman checkout (di sisi pengguna/landing)
+    Route::middleware(['auth'])->get('/checkout', [PaymentController::class, 'checkout'])->name('checkout');
+    
+    // Rute untuk memproses pembayaran setelah checkout (API endpoint)
+    Route::middleware(['auth'])->post('/process-payment', [PaymentController::class, 'processPayment'])->name('process.payment');
+    
 
     Route::resource('/discount-vouchers', DiscountVoucherController::class);
     Route::get('/vouchers/update-expired-status', [DiscountVoucherController::class, 'autoUpdateExpiredVouchers']);
