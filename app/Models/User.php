@@ -62,8 +62,8 @@ class User extends Authenticatable
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function shippingAddresses()
+    public function shippingAddress()
     {
-        return $this->hasMany(ShippingAddress::class);
+        return $this->hasOne(ShippingAddress::class);
     }
 }

@@ -6,22 +6,7 @@
 <div class="content">
 
 {{-- ✅ Menampilkan pesan error jika ada --}}
-  @if ($errors->any())
-    <div class="alert alert-danger">
-      <ul class="mb-0">
-        @foreach ($errors->all() as $error)
-          <li>{{ $error }}</li>
-        @endforeach
-      </ul>
-    </div>
-  @endif
-
-  {{-- ✅ Menampilkan pesan sukses jika ada --}}
-  @if (session('success'))
-    <div class="alert alert-success">
-      {{ session('success') }}
-    </div>
-  @endif
+@include('admin.components.alert')
 
   <form class="mb-9" action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data">
     @csrf
@@ -38,17 +23,30 @@
 
     <div class="row g-5">
       <div class="col-12 col-xl-8">
+      <div class="mb-6">
         <h4 class="mb-3">Product Title</h4>
-        <input class="form-control mb-5" type="text" name="name" placeholder="Write title here..." required />
+        <input class="form-control @error('name') is-invalid @enderror" id="name" value="{{ old('name') }}" type="text" name="name"  placeholder="Write title here..." />
+          @error('name')
+             <span class="invalid-feedback" role="alert"  style="color: red;">
+                 {{ $message }}
+             </span>
+          @enderror
+      </div>  
 
         <div class="mb-6">
           <h4 class="mb-3">Product Description</h4>
           <textarea class="tinymce" name="description" data-tinymce='{"height":"15rem","placeholder":"Write a description here...","license_key":"gpl"}'></textarea>
         </div>
 
+        <div class="mb-6">
         <h4 class="mb-3">Display images</h4>
-        <input type="file" name="image" required class="form-control mb-6">
-
+        <input type="file" name="image" id="image" value="{{ old('image') }}" class="form-control @error('image') is-invalid @enderror">
+          @error('image')
+              <span class="invalid-feedback" role="alert"  style="color: red;">
+                  {{ $message }}
+              </span>
+          @enderror
+        </div>
         <h4 class="mb-3">Inventory</h4>
         <div class="row g-0 border-top border-bottom">
           <div class="col-sm-4">
@@ -74,7 +72,12 @@
                 <div class="row g-3">
                   <div class="col-12 col-lg-6">
                     <h5 class="mb-2 text-body-highlight">Regular price</h5>
-                    <input type="number" step="0.01" class="form-control" name="price" required placeholder="$$$">
+                    <input type="number" step="0.01" class="form-control @error('price') is-invalid @enderror" name="price" id="price" value="{{ old('price') }}" placeholder="$$$">
+                      @error('price')
+                          <span class="invalid-feedback" role="alert"  style="color: red;">
+                              {{ $message }}
+                          </span>
+                      @enderror
                   </div>
                   <div class="col-12 col-lg-6">
                     <h5 class="mb-2 text-body-highlight">Discount price</h5>
@@ -87,7 +90,12 @@
                   <h5 class="mb-3 text-body-highlight">Add to Stock</h5>
                   <div class="row g-3 flex-1 mb-4">
                     <div class="col-sm">
-                    <input type="number" class="form-control" name="stock" required>
+                    <input type="number" class="form-control @error('stock') is-invalid @enderror" name="stock" id="stock" value="{{ old('stock') }}">
+                      @error('stock')
+                          <span class="invalid-feedback" role="alert"  style="color: red;">
+                              {{ $message }}
+                          </span>
+                      @enderror
                     </div>
                   </div>
                   <table>
@@ -130,22 +138,34 @@
                     <div class="d-flex flex-wrap mb-2">
                       <h5 class="mb-0 text-body-highlight me-2">Category</h5>
                     </div>
-                    <select class="form-select" name="category_product_id" required>
+                    <select class="form-select @error('category_product_id') is-invalid @enderror" id="category_product_id" name="category_product_id">
                       <option selected disabled>Select category product</option>
                       @foreach($categories as $category)
-                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                        @if($category->status !== 'draft')
+                          <option value="{{ $category->id }}">{{ $category->name }}</option>
+                        @endif
                       @endforeach
                     </select>
+                    @error('category_product_id')
+                              <span class="invalid-feedback" role="alert"  style="color: red;">
+                                  {{ $message }}
+                              </span>
+                      @enderror
                   </div>
                   <div class="col-12 mb-4">
                     <div class="d-flex flex-wrap mb-2">
                       <h5 class="mb-0 text-body-highlight me-2">Status</h5>
                     </div>
-                    <select class="form-select" name="status" id="status" required>
+                    <select class="form-select @error('status') is-invalid @enderror" name="status" id="status">
                       <option selected disabled>Select Status</option>
                       <option value="draft">Draft</option>
                       <option value="publish">Published</option>
                     </select>
+                    @error('status')
+                            <span class="invalid-feedback" role="alert"  style="color: red;">
+                                {{ $message }}
+                            </span>
+                    @enderror
                   </div>
                   <div class="col-12 mb-4">
                     <h5 class="mb-2">Tags</h5>
@@ -257,5 +277,17 @@
       `<span class="badge bg-primary me-1">${t}</span>`
     ).join('');
   }
+</script>
+
+
+<script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const alerts = document.querySelectorAll('.error-message');
+            alerts.forEach(alert => {
+                setTimeout(() => {
+                    alert.style.display = 'none';
+                }, 5000); // 5 detik
+            });
+        });
 </script>
 @endsection

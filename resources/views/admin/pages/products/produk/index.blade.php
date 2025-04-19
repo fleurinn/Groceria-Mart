@@ -3,6 +3,18 @@
 @section('page_title', 'Products | Groceria')
 @section('content')
 
+@if(session('success'))
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        Swal.fire({
+            title: 'Berhasil!',
+            text: '{{ session('success') }}',
+            icon: 'success',
+            confirmButtonText: 'OK'
+        });
+    });
+</script>
+@endif
 <!-- MAIN CONTENT -->
 <div class="content">
   <div class="mb-9">
@@ -36,13 +48,13 @@
             </div>
             
             <div class="flex flex-wrap items-center gap-1">
-                <button class="btn btn-success rounded-1">
-                    <span class="fas fa-arrow-right-from-bracket me-2"></span>Publish
+                <button id="publikButton" class="btn btn-success rounded-1">
+                    <span  class="fas fa-arrow-right-from-bracket me-2"></span>Publish
                 </button>
-                <button class="btn btn-warning rounded-1">
+                <button id="draftButton" class="btn btn-warning rounded-1">
                     <span class="fas fa-arrow-right-to-bracket me-2"></span>Draft
                 </button>
-                <button class="btn btn-danger rounded-1">
+                <button id="deleteButton" class="btn btn-danger rounded-1">
                     <span class="fas fa-trash me-2"></span>Delete
                 </button>
                 <button class="btn btn-primary rounded-1" onclick="window.location='{{ route('products.create') }}'">
@@ -68,13 +80,13 @@
                   <input class="form-check-input" id="selectAll" type="checkbox" data-bulk-select='{"body":"products-table-body"}' />
                 </div>
               </th>
-              <th class="align-middle ps-2 text-center">IMAGE</th>
-              <th class="align-middle ps-2 text-center" style="width:300px;">PRODUCT NAME</th>
-              <th class="align-middle ps-2 text-center">PRICE</th>
-              <th class="align-middle ps-2 text-center">CATEGORY</th>
+              <th class="align-middle ps-2 text-center">GAMBAR</th>
+              <th class="align-middle ps-2 text-center" style="width:300px;"> NAMA</th>
+              <th class="align-middle ps-2 text-center">HARGA</th>
+              <th class="align-middle ps-2 text-center">KATEGORI</th>
               <th class="align-middle ps-2 text-center">STATUS</th>
-              <th class="align-middle ps-2 text-center">TAGS</th>
-              <th class="align-middle ps-2 text-center">ACTION</th>
+              <th class="align-middle ps-2 text-center">TAG</th>
+              <th class="align-middle ps-2 text-center">AKSI</th>
             </tr>
           </thead>
             <tbody class="list" id="products-table-body">
@@ -85,9 +97,19 @@
                     <input class="form-check-input" type="checkbox" value="{{ $product->id }}"></div>
                   </div>
                 </td>
-                <td class="align-middle white-space-nowrap py-0">
-                  <a class="d-block border border-translucent rounded-2" href="../landing/product-details.html">
-                    <img src="{{ asset('storage/products/' . $product->image) }}" alt="" width="53" /></a>
+                <td class="align-middle text-center pt-2 pb-1" style="vertical-align: middle;">
+                  <a 
+                    href="../landing/product-details.html"
+                    class="d-inline-block border border-translucent rounded-2 overflow-hidden"
+                    style="width: 60px; height: 60px;"
+                  >
+                    <img 
+                      src="{{ asset('storage/products/' . $product->image) }}" 
+                      alt="" 
+                      class="w-100 h-100" 
+                      style="object-fit: cover;" 
+                    />
+                  </a>
                 </td>
                 <td class="product align-middle ps-4">
                   <a class="fw-semibold line-clamp-3 mb-0" href="../landing/product-details.html">
@@ -129,10 +151,11 @@
                       <a class="dropdown-item" >View</a>
                       <a class="dropdown-item" href="{{ route('products.edit', $product->id) }}">Edit</a>
                       <div class="dropdown-divider"></div>
-                      <form action="{{ route('products.destroy', $product->id) }}" method="POST" class="d-inline">
+                      <!-- Tombol di dalam dropdown -->
+                      <form id="delete-form-{{ $product->id }}" action="{{ route('products.destroy', $product->id) }}" method="POST" class="d-inline">
                           @csrf
                           @method('DELETE')
-                          <button type="submit" class="dropdown-item text-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus produk ini?');">Remove</button>
+                          <button type="button" class="dropdown-item text-danger" onclick="deleteRecord({{ $product->id }})">Remove</button>
                       </form>                   
                     </div>
                   </div>
@@ -180,9 +203,164 @@
     </div>
   </div>
 
-<script>
-    // Menghandle checkbox
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+<!-- alert delete -->
+<script>
+    function deleteRecord(productId) {
+        Swal.fire({
+            title: 'Apakah anda yakin?',
+            text: 'Anda tidak akan dapat mengembalikannya!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, Hapus!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Submit form DELETE
+                document.getElementById('delete-form-' + productId).submit();
+            }
+        });
+    }
+</script>
+
+<!-- alert checkbox delete -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("deleteButton").addEventListener("click", function () {
+            deleteSelectedRecords();
+        });
+
+        // Tampilkan alert sukses setelah reload
+        const successType = localStorage.getItem('bulkActionSuccess');
+        if (successType) {
+            let messages = {
+                delete: { title: 'Dihapus!', text: 'Data berhasil dihapus.', icon: 'success' },
+                publish: { title: 'Dipublish!', text: 'Data berhasil dipublish.', icon: 'success' },
+                draft: { title: 'Didraft!', text: 'Data berhasil didraft.', icon: 'success' }
+            };
+            Swal.fire({
+                title: messages[successType].title,
+                text: messages[successType].text,
+                icon: messages[successType].icon,
+                confirmButtonText: 'OK'
+            });
+            localStorage.removeItem('bulkActionSuccess');
+        }
+    });
+
+    function deleteSelectedRecords() {
+        let ids = getSelectedServices();
+        if (ids.length === 0) {
+            Swal.fire({
+                title: 'Pilih data terlebih dahulu!',
+                text: 'Silakan pilih klien untuk dihapus.',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+            });
+            return;
+        }
+
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: 'Data yang dipilih akan dihapus!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, Hapus!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                performAction('/dashboard/products/bulk-delete', ids);
+                localStorage.setItem('bulkActionSuccess', 'delete');
+                location.reload();
+            }
+        });
+    }
+</script>
+
+<!-- alert checkbox publish -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("publikButton").addEventListener("click", function () {
+            publishSelectedRecords();
+        });
+    });
+
+    function publishSelectedRecords() {
+        let ids = getSelectedServices();
+        if (ids.length === 0) {
+            Swal.fire({
+                title: 'Pilih data terlebih dahulu!',
+                text: 'Silakan pilih klien untuk dipublish.',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+            });
+            return;
+        }
+
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: 'Data yang dipilih akan dipublish!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#B8D576',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, Publish!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                performAction('/dashboard/products/bulk-publish', ids);
+                localStorage.setItem('bulkActionSuccess', 'publish');
+                location.reload();
+            }
+        });
+    }
+</script>
+
+<!-- alert checkbox draft -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("draftButton").addEventListener("click", function () {
+            draftSelectedRecords();
+        });
+    });
+
+    function draftSelectedRecords() {
+        let ids = getSelectedServices();
+        if (ids.length === 0) {
+            Swal.fire({
+                title: 'Pilih data terlebih dahulu!',
+                text: 'Silakan pilih klien untuk didraft.',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+            });
+            return;
+        }
+
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: 'Data yang dipilih akan didraft!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#FBA518',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, Draft!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                performAction('/dashboard/products/bulk-draft', ids);
+                localStorage.setItem('bulkActionSuccess', 'draft');
+                location.reload();
+            }
+        });
+    }
+</script>
+
+
+<!-- checkbox -->
+<script>
        document.getElementById('selectAll').onclick = function() {
            const checkboxes = document.querySelectorAll('.form-check-input');
            checkboxes.forEach((checkbox) => {

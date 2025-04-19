@@ -102,9 +102,19 @@
                   <div class="form-check mb-0 fs-8">
                     <input class="form-check-input" type="checkbox" value="{{ $voucher->id }}"></div>
                 </td>
-                <td class="align-middle white-space-nowrap py-0">
-                  <a class="d-block border border-translucent rounded-2">
-                    <img src="{{ asset('storage/voucher_images/' . $voucher->image) }}" alt="" width="53" /></a>
+                <td class="align-middle text-center pt-2 pb-1" style="vertical-align: middle;">
+                  <a 
+                    href="../landing/product-details.html"
+                    class="d-inline-block border border-translucent rounded-2 overflow-hidden"
+                    style="width: 100px; height: 45px;"
+                  >
+                    <img 
+                      src="{{ asset('storage/voucher_images/' . $voucher->image) }}" 
+                      alt="" 
+                      class="w-100 h-100" 
+                      style="object-fit: cover;" 
+                    />
+                  </a>
                 </td>
                 <td class="align-middle ps-4">
                   <a class="fw-semibold line-clamp-3 mb-0">
@@ -112,13 +122,13 @@
                   </a>
                 </td>
                 <td class="category align-middle text-center white-space-nowrap text-body-quaternary fs-9 ps-4 fw-semibold">
-                    {{ Str::limit($voucher->description, 80) }}
+                  {!! Str::limit(strip_tags($voucher->description), 80) !!}
                 </td>
                 <td class="category align-middle text-center white-space-nowrap text-body-quaternary fs-9 ps-4 fw-semibold">
                 {{ $voucher->categoryproduct->name ?? '-' }}
                 </td>
                 <td class="align-middle text-center">
-                  <span class="btn btn-outline-{{ $voucher->status == 'Publish' ? 'success' : 'warning' }} rounded-1">
+                  <span class="btn btn-outline-{{ $voucher->status == 'publish' ? 'success' : 'warning' }} rounded-1">
                     {{ ucfirst($voucher->status) }}
                   </span>
                 </td>
