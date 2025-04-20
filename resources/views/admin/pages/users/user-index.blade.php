@@ -3,6 +3,19 @@
 @section('page_title', 'List Profile Pengguna | Groceria')
 @section('content')
 
+
+@if(session('success'))
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        Swal.fire({
+            title: 'Berhasil!',
+            text: '{{ session('success') }}',
+            icon: 'success',
+            confirmButtonText: 'OK'
+        });
+    });
+</script>
+@endif
 <!-- MAIN CONTENT -->
 <div class="content">
         <div class="mb-9">
@@ -65,7 +78,7 @@
                   @forelse ( $users as $user)
                     <tr class="hover-actions-trigger btn-reveal-trigger position-static">
                       <td class="customer align-middle white-space-nowrap pe-5"><a class="d-flex align-items-center text-body-emphasis" href="customer-details.html">
-                          <div class="avatar avatar-m"><img class="rounded-circle" src="{{ asset('storage/users/' . $user->image) }}" alt="" /></div>
+                          <div class="avatar avatar-m"><img class="rounded-circle" src="{{ asset('storage/profile_images/' . $user->image) }}" alt="" /></div>
                           <p class="mb-0 ms-3 text-body-emphasis fw-bold">{{ $user->first_name }} {{ $user->last_name }}</p>
                           </a></td>
                       <td class="email align-middle white-space-nowrap pe-5"><a class="fw-semibold" href="mailto:annac34@gmail.com">{{ $user->email }}</a></td>
@@ -74,14 +87,13 @@
                       </td>
                       <td class="align-middle pr-3 white-space-nowrap fw-semibold text-center text-body-highlight">{{ $user->role->name }}</td>
                       <td class="last-seen align-middle white-space-nowrap text-body-tertiary text-center">
-                      {{ $user->shippingAddress->city->name ?? 'Data kosong.' }}
-                      {{ $user->shippingAddress->district->name ?? '' }}
-                      {{ $user->shippingAddress->village->name ?? '' }}
+                      {{ $user->shippingAddress->city->name ?? 'Data kosong.' }},
+                      {{ $user->shippingAddress->district->name ?? '' }},
+                      {{ $user->shippingAddress->village->name ?? '' }},
                       {{ $user->shippingAddress->address ?? '' }}
                       <td class="align-middle white-space-nowrap text-end pe-0 ps-4 btn-reveal-trigger">
                         <div class="btn-reveal-trigger position-static"><button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h fs-10"></span></button>
                           <div class="dropdown-menu dropdown-menu-end py-2">
-                            <a class="dropdown-item" >View</a>
                             <a class="dropdown-item" href="{{ route('profile-pengguna.edit', $user->id) }}">Edit</a>
                             <div class="dropdown-divider"></div>
                             <!-- Tombol di dalam dropdown -->

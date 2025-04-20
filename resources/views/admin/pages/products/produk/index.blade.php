@@ -203,6 +203,7 @@
     </div>
   </div>
 
+
 <!-- alert delete -->
 <script>
     function deleteRecord(productId) {

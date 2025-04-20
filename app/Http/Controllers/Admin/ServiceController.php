@@ -78,7 +78,7 @@ class ServiceController extends Controller
     public function show($id): View
     {
         $service = Service::findOrFail($id);
-        return view('admin.pages.services.services-show', compact('service'));
+        return view('admin.pages.services.service-submitted', compact('service'));
     }
 
     /**
@@ -97,21 +97,26 @@ class ServiceController extends Controller
      */
     public function reply(Request $request, $id)
     {
-        $validator = Validator::make($request->all(), [
+        $request->validate([
             'reply_message' => 'required|string',
         ]);
-
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
-
+    
         $service = Service::findOrFail($id);
-
+    
         // Kirim balasan via email
-        Mail::to($service->email)->send(new ServiceFormSubmitted($service, $request->reply_message));
-
-        return redirect()->route('services.index')->with('success', 'Balasan berhasil dikirim ke ' . $service->email);
+        Mail::raw($request->reply_message, function ($message) use ($service) {
+            $message->to($service->email)
+                    ->subject('Balasan untuk Layanan Anda');
+        });
+    
+        return redirect()
+            ->route('services.index')
+            ->with('success', 'Pesan berhasil dikirim!');
     }
+    
+
+
+
 
     /**
      * Menghapus banyak layanan sekaligus

@@ -83,12 +83,26 @@
               <li class="nav-item">
                 <!-- parent pages-->
                  <div class="nav-item-wrapper"><a class="nav-link label-1" href="{{ route('dashboard.admin') }}" role="button" data-bs-toggle="" aria-expanded="false">
-                    <div class="d-flex align-items-center"><span class="nav-link-icon"><span data-feather="message-square"></span></span><span class="nav-link-text-wrapper"><span class="nav-link-text">Home</span></span></div>
+                    <div class="d-flex align-items-center"><span class="nav-link-icon"><span data-feather="message-square"></span></span><span class="nav-link-text-wrapper"><span class="nav-link-text">Beranda</span></span></div>
                 </a></div><!-- parent pages-->
               </li>
               <li class="nav-item">
                 <!-- label-->
-                <p class="navbar-vertical-label">Apps</p>
+                <p class="navbar-vertical-label">Aplikasi</p>
+                <hr class="navbar-vertical-line" /><!-- parent pages-->
+                <div class="nav-item-wrapper"><a class="nav-link label-1" href="{{ route('profile-pengguna.index') }}" role="button" data-bs-toggle="" aria-expanded="false">
+                    <div class="d-flex align-items-center"><span class="nav-link-icon"><span data-feather="message-square"></span></span><span class="nav-link-text-wrapper"><span class="nav-link-text">Data Penggguna</span></span></div>
+                </a></div><!-- parent pages-->
+                <div class="nav-item-wrapper"><a class="nav-link label-1" href="{{ route('slider.index') }}" role="button" data-bs-toggle="" aria-expanded="false">
+                    <div class="d-flex align-items-center"><span class="nav-link-icon"><span data-feather="message-square"></span></span><span class="nav-link-text-wrapper"><span class="nav-link-text">Display Banner</span></span></div>
+                </a></div><!-- parent pages-->
+                <div class="nav-item-wrapper"><a class="nav-link label-1" href="{{ route('services.index') }}" role="button" data-bs-toggle="" aria-expanded="false">
+                    <div class="d-flex align-items-center"><span class="nav-link-icon"><span data-feather="message-square"></span></span><span class="nav-link-text-wrapper"><span class="nav-link-text">Pesan Layanan</span></span></div>
+                </a></div><!-- parent pages-->
+              </li>
+              <li class="nav-item">
+                <!-- label-->
+                <p class="navbar-vertical-label">Toko Pusat</p>
                 <hr class="navbar-vertical-line" /><!-- parent pages-->
                 <div class="nav-item-wrapper"><a class="nav-link dropdown-indicator label-1" href="#nv-CRM" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="nv-CRM">
                     <div class="d-flex align-items-center">
@@ -97,18 +111,27 @@
                   </a>
                   <div class="parent-wrapper label-1">
                     <ul class="nav collapse parent" data-bs-parent="#navbarVerticalCollapse" id="nv-CRM">
-                      <li class="collapsed-nav-item-title d-none">Product</li>
+                      <li class="collapsed-nav-item-title d-none">Data Produk</li>
                       <li class="nav-item"><a class="nav-link" href="{{ route('products.index') }}">
-                          <div class="d-flex align-items-center"><span class="nav-link-text">Product List</span></div>
+                          <div class="d-flex align-items-center"><span class="nav-link-text">List Produk</span></div>
                         </a><!-- more inner pages-->
                       </li>
                       <li class="nav-item"><a class="nav-link" href="{{ route('category-products.index') }}">
-                          <div class="d-flex align-items-center"><span class="nav-link-text">Product Category</span></div>
+                          <div class="d-flex align-items-center"><span class="nav-link-text">List Kategori Produk</span></div>
                         </a><!-- more inner pages-->
                       </li>
                     </ul>
                   </div>
                 </div><!-- parent pages-->
+                
+                <div class="nav-item-wrapper"><a class="nav-link label-1" href="{{ route('discount-vouchers.index') }}" role="button" data-bs-toggle="" aria-expanded="false">
+                    <div class="d-flex align-items-center"><span class="nav-link-icon"><span data-feather="message-square"></span></span><span class="nav-link-text-wrapper"><span class="nav-link-text">Kupon Diskon</span></span></div>
+                </a></div><!-- parent pages-->
+
+                <div class="nav-item-wrapper"><a class="nav-link label-1" href="{{ route('discount-vouchers.index') }}" role="button" data-bs-toggle="" aria-expanded="false">
+                    <div class="d-flex align-items-center"><span class="nav-link-icon"><span data-feather="message-square"></span></span><span class="nav-link-text-wrapper"><span class="nav-link-text">Ulasan Produk</span></span></div>
+                </a></div><!-- parent pages-->
+
                 <div class="nav-item-wrapper"><a class="nav-link dropdown-indicator label-1" href="#nv-project-management" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="nv-project-management">
                     <div class="d-flex align-items-center">
                       <div class="dropdown-indicator-icon-wrapper"><span class="fas fa-caret-right dropdown-indicator-icon"></span></div><span class="nav-link-icon"><span data-feather="clipboard"></span></span><span class="nav-link-text">Order</span>
@@ -118,57 +141,31 @@
                     <ul class="nav collapse parent" data-bs-parent="#navbarVerticalCollapse" id="nv-project-management">
                       <li class="collapsed-nav-item-title d-none">Order</li>
                       <li class="nav-item"><a class="nav-link" href="../../project-management/create-new.html">
-                          <div class="d-flex align-items-center"><span class="nav-link-text">Order List</span></div>
+                          <div class="d-flex align-items-center"><span class="nav-link-text">List Order </span></div>
                         </a><!-- more inner pages-->
                       </li>
                       <li class="nav-item"><a class="nav-link" href="../../project-management/project-list-view.html">
-                          <div class="d-flex align-items-center"><span class="nav-link-text">Order Detail</span></div>
+                          <div class="d-flex align-items-center"><span class="nav-link-text">Detail Order </span></div>
                         </a><!-- more inner pages-->
                       </li>
                     </ul>
                   </div>
                 </div><!-- parent pages-->
+
                 <div class="nav-item-wrapper"><a class="nav-link dropdown-indicator label-1" href="#nv-travel-agency" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="nv-travel-agency">
                     <div class="d-flex align-items-center">
-                      <div class="dropdown-indicator-icon-wrapper"><span class="fas fa-caret-right dropdown-indicator-icon"></span></div><span class="nav-link-icon"><span data-feather="briefcase"></span></span><span class="nav-link-text">Payment</span>
+                      <div class="dropdown-indicator-icon-wrapper"><span class="fas fa-caret-right dropdown-indicator-icon"></span></div><span class="nav-link-icon"><span data-feather="briefcase"></span></span><span class="nav-link-text">Transaksi</span>
                     </div>
                   </a>
                   <div class="parent-wrapper label-1">
                     <ul class="nav collapse parent" data-bs-parent="#navbarVerticalCollapse" id="nv-travel-agency">
-                      <li class="collapsed-nav-item-title d-none">Payment</li>
+                      <li class="collapsed-nav-item-title d-none">Transaksi</li>
                       <li class="nav-item"><a class="nav-link" href="../../travel-agency/landing.html">
-                          <div class="d-flex align-items-center"><span class="nav-link-text">Payment List</span></div>
+                          <div class="d-flex align-items-center"><span class="nav-link-text">List Transaksi</span></div>
                         </a><!-- more inner pages-->
                       </li>
                       <li class="nav-item"><a class="nav-link" href="../../travel-agency/landing.html">
-                          <div class="d-flex align-items-center"><span class="nav-link-text">Payment History</span></div>
-                        </a><!-- more inner pages-->
-                      </li>
-                    </ul>
-                  </div>
-                </div><!-- parent pages-->
-                <div class="nav-item-wrapper"><a class="nav-link dropdown-indicator label-1" href="#banner" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="banner">
-                    <div class="d-flex align-items-center">
-                      <div class="dropdown-indicator-icon-wrapper"><span class="fas fa-caret-right dropdown-indicator-icon"></span></div><span class="nav-link-icon"><span data-feather="briefcase"></span></span><span class="nav-link-text">Banner</span>
-                    </div>
-                  </a>
-                  <div class="parent-wrapper label-1">
-                    <ul class="nav collapse parent" data-bs-parent="#navbarVerticalCollapse" id="banner">
-                      <li class="collapsed-nav-item-title d-none">Banner</li>
-                      <li class="nav-item"><a class="nav-link" href="{{ route('slider.index') }}">
-                          <div class="d-flex align-items-center"><span class="nav-link-text">Banner</span></div>
-                        </a><!-- more inner pages-->
-                      </li>
-                      <li class="nav-item"><a class="nav-link" href="{{ route('abouts.index') }}">
-                          <div class="d-flex align-items-center"><span class="nav-link-text">About</span></div>
-                        </a><!-- more inner pages-->
-                      </li>
-                      <li class="nav-item"><a class="nav-link" href="{{ route('testimonials.index') }}">
-                          <div class="d-flex align-items-center"><span class="nav-link-text">Testimonial</span></div>
-                        </a><!-- more inner pages-->
-                      </li>
-                      <li class="nav-item"><a class="nav-link" href="{{ route('teams.index') }}">
-                          <div class="d-flex align-items-center"><span class="nav-link-text">Team</span></div>
+                          <div class="d-flex align-items-center"><span class="nav-link-text">Riwayat Transaksi</span></div>
                         </a><!-- more inner pages-->
                       </li>
                     </ul>
@@ -177,27 +174,12 @@
               </li>
               <li class="nav-item">
                 <!-- label-->
-                <p class="navbar-vertical-label">Account</p>
+                <p class="navbar-vertical-label">Profil Akun</p>
                 <hr class="navbar-vertical-line" /><!-- parent pages-->
-                <div class="nav-item-wrapper"><a class="nav-link dropdown-indicator label-1" href="#nv-customization" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="nv-customization">
-                    <div class="d-flex align-items-center">
-                      <div class="dropdown-indicator-icon-wrapper"><span class="fas fa-caret-right dropdown-indicator-icon"></span></div><span class="nav-link-icon"><span data-feather="settings"></span></span><span class="nav-link-text">Customization</span>
-                    </div>
-                  </a>
-                  <div class="parent-wrapper label-1">
-                    <ul class="nav collapse parent" data-bs-parent="#navbarVerticalCollapse" id="nv-customization">
-                      <li class="collapsed-nav-item-title d-none">Customization</li>
-                      <li class="nav-item"><a class="nav-link" href="../../../documentation/customization/configuration.html">
-                          <div class="d-flex align-items-center"><span class="nav-link-text">Profile</span></div>
-                        </a><!-- more inner pages-->
-                      </li>
-                      <li class="nav-item"><a class="nav-link" href="../../../documentation/customization/styling.html">
-                          <div class="d-flex align-items-center"><span class="nav-link-text">Setting Profile</span></div>
-                        </a><!-- more inner pages-->
-                      </li>
-                    </ul>
-                  </div>
-                </div><!-- parent pages-->
+
+                <div class="nav-item-wrapper"><a class="nav-link label-1" href="{{ route('profile-pengguna.show', Auth::user()->id) }}" role="button" data-bs-toggle="" aria-expanded="false">
+                    <div class="d-flex align-items-center"><span class="nav-link-icon"><span data-feather="settings"></span></span><span class="nav-link-text-wrapper"><span class="nav-link-text">Profil</span></span></div>
+                </a></div><!-- parent pages-->
                 </li>
             </ul>
           </div>
@@ -243,7 +225,7 @@
                     <h6 class="mt-2 text-body-emphasis">{{$user->name}}</h6>
                   </div>
                 </div>
-                <div class="overflow-auto scrollbar" style="height: 10rem;">
+                <div class="overflow-auto scrollbar" style="height:8rem;">
                   <ul class="nav d-flex flex-column mb-2 pb-1">
                     <li class="nav-item"><a class="nav-link px-3 d-block" href="{{ route('dashboard') }}"><span class="me-2 text-body align-bottom" data-feather="pie-chart"></span>Dashboard</a></li>
                     <li class="nav-item"><a class="nav-link px-3 d-block" href="#!"> <span class="me-2 text-body align-bottom" data-feather="settings"></span>Settings &amp; Account </a></li>
@@ -274,10 +256,7 @@
       <footer class="footer position-absolute">
           <div class="row g-0 justify-content-between align-items-center h-100">
             <div class="col-12 col-sm-auto text-center">
-              <p class="mb-0 mt-2 mt-sm-0 text-body">Thank you for creating with Phoenix<span class="d-none d-sm-inline-block"></span><span class="d-none d-sm-inline-block mx-1">|</span><br class="d-sm-none" />2024 &copy;<a class="mx-1" href="https://themewagon.com/">Themewagon</a></p>
-            </div>
-            <div class="col-12 col-sm-auto text-center">
-              <p class="mb-0 text-body-tertiary text-opacity-85">v1.20.1</p>
+              <p class="mb-0 mt-2 mt-sm-0 text-body">Copyright <span class="d-none d-sm-inline-block"></span>&copy;<a class="mx-1" href="https://instagram/dhya.s0.com/">Groceria</a>all rights reserved. Powered by Groceria.</p>
             </div>
           </div>
         </footer>

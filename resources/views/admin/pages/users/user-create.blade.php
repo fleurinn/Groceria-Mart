@@ -8,8 +8,8 @@
         @csrf
           <div class="row g-3 flex-between-end mb-5">
             <div class="col-auto">
-              <h2 class="mb-2">Add a user</h2>
-              <h5 class="text-body-tertiary fw-semibold">Orders placed across your store</h5>
+              <h2 class="mb-2">Tambah Pengguna</h2>
+              <h5 class="text-body-tertiary fw-semibold">Form Pendaftaran Pengguna</h5>
             </div>
             <div class="col-auto">
             <a href="{{ route('profile-pengguna.index') }}" class="btn btn-phoenix-secondary me-2 mb-2 mb-sm-0">Cancel</a>
@@ -18,26 +18,26 @@
           <div class="row g-5">
             <div class="col-12 col-xl-4">
               <h4 class="mb-3">First Name</h4>
-              <input class="form-control mb-5" name="first_name" type="text" placeholder="Write title here..." />
+              <input class="form-control mb-5" name="first_name" type="text" placeholder="Tulis name depan di sini..." />
             </div>
             <div class="col-12 col-xl-4">
               <h4 class="mb-3">Last Name</h4>
-              <input class="form-control mb-5" name="last_name" type="text" placeholder="Write title here..." />
+              <input class="form-control mb-5" name="last_name" type="text" placeholder="Tulis name belakang di sini..." />
             </div>
             <div class="col-12 col-xl-4">
               <h4 class="mb-3">Full Name</h4>
-              <input class="form-control mb-5" name="name" type="text" placeholder="Write title here..." />
+              <input class="form-control mb-5" name="name" type="text" placeholder="Tulis name lengkap di sini..." />
             </div>
           </div>
 
           <div class="row g-5">
             <div class="col-12 col-xl-3">
               <h4 class="mb-3">E-mail</h4>
-              <input class="form-control mb-5" name="email" type="text" placeholder="Write title here..." />
+              <input class="form-control mb-5" name="email" type="text" placeholder="Tulis e-mail di sini..." />
             </div>
             <div class="col-12 col-xl-3">
               <h4 class="mb-3">Password</h4>
-              <input class="form-control mb-5" name="password" type="password" placeholder="Write title here..." />
+              <input class="form-control mb-5" name="password" type="password" placeholder="Minimal 6 karakter " />
             </div>
             <div class="col-12 col-xl-3">
               <h4 class="mb-3">Role</h4>
@@ -50,7 +50,7 @@
             </div>
             <div class="col-12 col-xl-3">
                 <h4 class="mb-3">No. Handphone</h4>
-                <input class="form-control mb-5" name="shipping_addresses[0][no_telp]" type="text" placeholder="Write title here..." />
+                <input class="form-control mb-5" name="shipping_addresses[0][no_telp]" type="text" placeholder="Tulis nomor handphone aktif di sini..." />
             </div>
           </div>
 
@@ -118,7 +118,7 @@
                     <div class="tab-pane fade h-100" id="content-detail" role="tabpanel" aria-labelledby="tab-detail">
                       <div class="d-flex flex-column h-100">
                         <h5 class="mb-3 text-body-highlight">Detail Alamat Lengkap</h5>
-                        <textarea class="form-control" name="shipping_addresses[0][address]" rows="4" required></textarea>
+                        <textarea class="form-control" placeholder="Contoh: 19920 (Kode Pos), Jl. Cinangneng RT 05/RW 06  (Detail Alamat)" name="shipping_addresses[0][address]" rows="4" required></textarea>
                       </div>
                     </div>
                   </div>
