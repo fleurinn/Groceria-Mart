@@ -20,6 +20,7 @@ class Cart extends Model
         'shipping_address_id',
         'discount_voucher_id',
         'price', //Tambahkan ini
+        'variant',
     ];
 
     protected $casts = [
@@ -56,6 +57,13 @@ class Cart extends Model
     {
         return $this->belongsTo(ShippingAddress::class);
     }
+
+    // Relasi ke variant
+    public function VariantProduct()
+    {
+        return $this->belongsTo(VariantProduct::class);
+    }
+
 
     // Relasi ke Discount Voucher
     public function discountVoucher()

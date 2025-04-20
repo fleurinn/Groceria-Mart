@@ -48,6 +48,16 @@ Route::controller(LandingPageController::class)->group(function () {
 
 });
 
+Route::middleware('auth')->group(function () {
+    Route::post('/cart/apply-shipping', [CartController::class, 'setShippingCost'])->name('cart.shipping');
+    Route::post('/cart/apply-voucher', [CartController::class, 'applyVoucher'])->name('voucher.apply');
+    Route::get('/cart/total', [CartController::class, 'getCartTotal'])->name('cart.total');
+
+    
+});
+
+Route::post('/set-shipping-cost', [CartController::class, 'setShippingCost'])->middleware('auth');
+
 // Rute untuk menyimpan pembayaran baru (jika diperlukan)
 Route::post('/create-payment', [PaymentController::class, 'createPayment'])->name('create-payment');
 Route::post('/payments/update-status', [PaymentController::class, 'updateStatusFromClient'])->name('payment.update-status');
@@ -66,6 +76,7 @@ Route::get('/produk-detail', function () {
 Route::get('/service', function () {
     return view('landing.pages.layanan.service-index');
 })->name('service');
+
 
 
 Route::middleware(['auth'])->group(function () {
@@ -166,13 +177,20 @@ Route::middleware(['auth'])->prefix('dashboard')->group(function () {
     
         // Rute untuk membuat transaksi Midtrans dan mendapatkan snap token (API endpoint)
         Route::post('/payments/midtrans/create-transaction', [PaymentController::class, 'createMidtransTransaction'])->name('payments.midtrans.createTransaction');
+
+        // Rute untuk memproses pembayaran setelah checkout (API endpoint)
+        Route::middleware(['auth'])->post('/process-payment', [PaymentController::class, 'processPayment'])->name('process.payment');
+
+        // web.php
+        Route::post('/payment/get-snap-token', [PaymentController::class, 'getSnapToken'])->name('payment.snap-token');
+
     });
     
     // Rute untuk halaman checkout (di sisi pengguna/landing)
     Route::middleware(['auth'])->get('/checkout', [PaymentController::class, 'checkout'])->name('checkout');
     
-    // Rute untuk memproses pembayaran setelah checkout (API endpoint)
-    Route::middleware(['auth'])->post('/process-payment', [PaymentController::class, 'processPayment'])->name('process.payment');
+
+    
     
 
     Route::resource('/discount-vouchers', DiscountVoucherController::class);

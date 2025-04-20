@@ -26,6 +26,7 @@ class User extends Authenticatable
         'password',
         'image',
         'role_id',
+        'shipping_cost',
         'phone_number',
     ];
 
@@ -66,4 +67,10 @@ class User extends Authenticatable
     {
         return $this->hasOne(ShippingAddress::class);
     }
+
+    public function cart()
+    {
+        return $this->hasOne(Cart::class);
+    }
+    
 }

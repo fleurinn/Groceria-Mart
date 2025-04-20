@@ -38,6 +38,8 @@ class ShippingController extends Controller
         return response()->json($shippingRate);
     }
 
+    
+
 
     /**
      * Membuat pengiriman baru dengan ongkos kirim.
