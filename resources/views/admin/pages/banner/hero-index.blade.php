@@ -1,5 +1,6 @@
 @extends('admin.layouts.admin-layouts')
 
+
 @section('page_title', 'Banner | Groceria')
 @section('content')
 
@@ -55,15 +56,15 @@
           </div>
           
           <div class="flex flex-wrap items-center gap-1">
-            <button class="btn btn-success rounded-1">
-              <span class="fas fa-arrow-right-from-bracket me-2"></span>Publish
-            </button>
-            <button class="btn btn-warning rounded-1">
-              <span class="fas fa-arrow-right-to-bracket me-2"></span>Draft
-            </button>
-            <button class="btn btn-danger rounded-1">
-              <span class="fas fa-trash me-2"></span>Delete
-            </button>
+          <button id="publikButton" class="btn btn-success rounded-1">
+                    <span  class="fas fa-arrow-right-from-bracket me-2"></span>Publish
+                </button>
+                <button id="draftButton" class="btn btn-warning rounded-1">
+                    <span class="fas fa-arrow-right-to-bracket me-2"></span>Draft
+                </button>
+                <button id="deleteButton" class="btn btn-danger rounded-1">
+                    <span class="fas fa-trash me-2"></span>Delete
+                </button>
             <button class="btn btn-primary rounded-1" data-bs-toggle="modal" data-bs-target="#createSliderModal">
               <span class="fas fa-plus me-2"></span>Add
             </button>
@@ -118,7 +119,7 @@
                 {{ $slider->categoryproduct->name ?? '-' }}
                 </td>
                 <td class="align-middle text-center">
-                  <span class="btn btn-outline-{{ $slider->status == 'Publish' ? 'success' : 'warning' }} rounded-1">
+                  <span class="btn btn-outline-{{ $slider->status == 'publish' ? 'success' : 'warning' }} rounded-1">
                     {{ ucfirst($slider->status) }}
                   </span>
                 </td>
@@ -139,11 +140,11 @@
                         Edit
                       </a>
                       <div class="dropdown-divider"></div>
-                      <form action="{{ route('slider.destroy', $slider->id) }}" method="POST" class="d-inline">
+                      <form id="delete-form-{{ $slider->id }}" action="{{ route('slider.destroy', $slider->id) }}" method="POST" class="d-inline">
                           @csrf
                           @method('DELETE')
-                          <button type="submit" class="dropdown-item text-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus banner ini?');">Remove</button>
-                      </form>                   
+                          <button type="button" class="dropdown-item text-danger" onclick="deleteRecord({{ $slider->id }})">Remove</button>
+                      </form>   
                     </div>
                   </div>
                 </td>
@@ -191,7 +192,6 @@
       </div>
     </div>
   </div>
-
 <!-- Modal untuk Create Category -->
 <div class="modal fade" id="createSliderModal" tabindex="-1" aria-labelledby="createSliderModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -277,8 +277,8 @@
           <div class="mb-3">
               <label for="editSliderStatus" class="form-label">Status</label>
               <select class="form-select" id="editSliderStatus" name="status" required>
-                  <option value="Publish">Publish</option>
-                  <option value="Draft">Draft</option>
+                  <option value="publish">Publish</option>
+                  <option value="draft">Draft</option>
               </select>
           </div>
         </div>
@@ -292,6 +292,155 @@
 </div>
 
 
+<!-- alert checkbox delete -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("deleteButton").addEventListener("click", function () {
+            deleteSelectedRecords();
+        });
+
+        // Tampilkan alert sukses setelah reload
+        const successType = localStorage.getItem('bulkActionSuccess');
+        if (successType) {
+            let messages = {
+                delete: { title: 'Dihapus!', text: 'Data berhasil dihapus.', icon: 'success' },
+                publish: { title: 'Dipublish!', text: 'Data berhasil dipublish.', icon: 'success' },
+                draft: { title: 'Didraft!', text: 'Data berhasil didraft.', icon: 'success' }
+            };
+            Swal.fire({
+                title: messages[successType].title,
+                text: messages[successType].text,
+                icon: messages[successType].icon,
+                confirmButtonText: 'OK'
+            });
+            localStorage.removeItem('bulkActionSuccess');
+        }
+    });
+
+    function deleteSelectedRecords() {
+        let ids = getSelectedServices();
+        if (ids.length === 0) {
+            Swal.fire({
+                title: 'Pilih data terlebih dahulu!',
+                text: 'Silakan pilih klien untuk dihapus.',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+            });
+            return;
+        }
+
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: 'Data yang dipilih akan dihapus!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, Hapus!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                performAction('/dashboard/slider/bulk-delete', ids);
+                localStorage.setItem('bulkActionSuccess', 'delete');
+                location.reload();
+            }
+        });
+    }
+</script>
+
+<!-- alert checkbox publish -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("publikButton").addEventListener("click", function () {
+            publishSelectedRecords();
+        });
+    });
+
+    function publishSelectedRecords() {
+        let ids = getSelectedServices();
+        if (ids.length === 0) {
+            Swal.fire({
+                title: 'Pilih data terlebih dahulu!',
+                text: 'Silakan pilih klien untuk dipublish.',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+            });
+            return;
+        }
+
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: 'Data yang dipilih akan dipublish!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#B8D576',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, Publish!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                performAction('/dashboard/slider/bulk-publish', ids);
+                localStorage.setItem('bulkActionSuccess', 'publish');
+                location.reload();
+            }
+        });
+    }
+</script>
+
+<!-- alert checkbox draft -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("draftButton").addEventListener("click", function () {
+            draftSelectedRecords();
+        });
+    });
+
+    function draftSelectedRecords() {
+        let ids = getSelectedServices();
+        if (ids.length === 0) {
+            Swal.fire({
+                title: 'Pilih data terlebih dahulu!',
+                text: 'Silakan pilih klien untuk didraft.',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+            });
+            return;
+        }
+
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: 'Data yang dipilih akan didraft!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#FBA518',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, Draft!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                performAction('/dashboard/slider/bulk-draft', ids);
+                localStorage.setItem('bulkActionSuccess', 'draft');
+                location.reload();
+            }
+        });
+    }
+</script>
+<!-- alert delete -->
+<script>
+    function deleteRecord(productId) {
+        Swal.fire({
+            title: 'Apakah anda yakin?',
+            text: 'Anda tidak akan dapat mengembalikannya!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, Hapus!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Submit form DELETE
+                document.getElementById('delete-form-' + productId).submit();
+            }
+        });
+    }
+</script>
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     const editButtons = document.querySelectorAll('.edit-slider');

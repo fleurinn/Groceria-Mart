@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
         $city = City::all(); // Ambil semua kota
         $district = District::all(); // Ambil semua kecamatan
@@ -25,24 +25,7 @@ class UserController extends Controller
         $users = User::with('role')->get();
         $roles = Role::whereIn('id', [1, 2, 3, 4])->get(); // Tambahkan ini
         $shippingAddress = ShippingAddress::all(); // Ambil semua desa
-        $search = $request->input('search');
 
-        $users = User::with('shippingAddress')
-            ->when($search, function ($query, $search) {
-                $query->where(function ($q) use ($search) {
-                    $q->where('name', 'like', "%{$search}%")
-                      ->orWhere('email', 'like', "%{$search}%")
-                      ->orWhere('role', 'like', "%{$search}%")
-                      ->orWhereHas('shippingAddress', function ($q2) use ($search) {
-                          $q2->where('city', 'like', "%{$search}%")
-                             ->orWhere('district', 'like', "%{$search}%")
-                             ->orWhere('village', 'like', "%{$search}%")
-                             ->orWhere('no_telp', 'like', "%{$search}%")
-                             ->orWhere('address', 'like', "%{$search}%");
-                      });
-                });
-            })
-            ->paginate(10); // Atau sesuai kebutuhan
         return view('admin.pages.users.user-index', compact('users', 'shippingAddress', 'roles', 'city', 'district', 'villages'));
     }
 
@@ -76,6 +59,10 @@ class UserController extends Controller
             'shipping_addresses.0.no_telp' => 'required|string',
         ]);
 
+        // Simpan gambar utama dengan move()
+        $imageName = $request->file('image')->hashName();
+        $request->file('image')->move(public_path('storage/profile_images'), $imageName);
+
         // Simpan user
         $user = new User();
         $user->name = $request->name;
@@ -84,13 +71,7 @@ class UserController extends Controller
         $user->email = $request->email;
         $user->password = bcrypt($request->password);
         $user->role_id = $request->role_id;
-
-        // Simpan foto jika ada
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('profile_images', 'public');
-            $user->image = $imagePath;
-        }
-
+        $user->image = $imageName;
         $user->save();
 
         // Simpan alamat
@@ -105,7 +86,6 @@ class UserController extends Controller
 
         return redirect()->route('profile-pengguna.index')->with('success', 'User berhasil ditambahkan!');
     }
-
 
     public function getVillages($district_id)
     {
@@ -122,13 +102,29 @@ class UserController extends Controller
 
     public function edit($id)
     {
-        $user = User::with('shippingAddresses')->findOrFail($id);
+        // Ambil user beserta shipping address-nya
+        $user = User::with('shippingAddress')->findOrFail($id);
+
+        // Ambil semua data kota untuk dropdown city
         $city = City::all();
-        $district = District::all();
-        $villages = Village::all();
+
+        // Ambil district hanya yang sesuai dengan city_id dari shipping address user
+        $shipping = $user->shippingAddress;
+        $district = collect(); // Default kosong
+
+        if ($shipping && $shipping->city_id) {
+            $district = District::where('city_id', $shipping->city_id)->get();
+        }
+
+        $villages = collect();
+        if ($shipping && $shipping->district_id) {
+            $villages = Village::where('district_id', $shipping->district_id)->get();
+        }
+
+        // Ambil data role
         $roles = Role::whereIn('id', [1, 2, 3])->get();
 
-        return view('admin.pages.users.user-edit', compact('user', 'roles', 'city', 'district', 'villages'));
+        return view('admin.pages.users.user-edit', compact('user', 'city', 'district', 'villages', 'roles'));
     }
 
     public function update(Request $request, $id)
@@ -138,8 +134,6 @@ class UserController extends Controller
             'first_name' => 'required',
             'last_name' => 'required',
             'email' => 'required|email|unique:users,email,' . $id,
-            'password' => 'nullable|string|min:8',
-            'role_id' => 'required|exists:roles,id',
             'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
 
             'shipping_addresses.0.city_id' => 'required|exists:cities,id',
@@ -154,11 +148,6 @@ class UserController extends Controller
         $user->first_name = $request->first_name;
         $user->last_name = $request->last_name;
         $user->email = $request->email;
-        $user->role_id = $request->role_id;
-
-        if ($request->filled('password')) {
-            $user->password = bcrypt($request->password);
-        }
 
         if ($request->hasFile('image')) {
             // Hapus gambar lama jika ada
@@ -172,7 +161,7 @@ class UserController extends Controller
         $user->save();
 
         $addressData = $request->shipping_addresses[0];
-        $address = $user->shippingAddresses()->first();
+        $address = $user->shippingAddress()->first();
         if (!$address) {
             $address = new ShippingAddress();
             $address->user_id = $user->id;
@@ -184,7 +173,7 @@ class UserController extends Controller
         $address->no_telp = $addressData['no_telp'];
         $address->save();
 
-        return redirect()->route('profile-pengguna.index')->with('success', 'User berhasil diperbarui!');
+        return redirect()->route('profile-pengguna.show', ['profile_pengguna' => $user->id])->with('success', 'User berhasil diperbarui!');
     }
 
 
@@ -214,8 +203,14 @@ class UserController extends Controller
 
     public function show($id)
     {
-        $user = User::with(['role', 'shippingAddresses.city', 'shippingAddresses.district', 'shippingAddresses.village'])->findOrFail($id);
         
+        $user = User::with([
+            'role',
+            'shippingAddress.village',
+            'shippingAddress.district',
+            'shippingAddress.city'
+        ])->findOrFail($id);
+
         return view('admin.pages.users.user-show', compact('user'));
     }
 

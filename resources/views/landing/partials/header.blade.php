@@ -210,7 +210,7 @@
                                             </li>
 
                                             <li class="non-drop mx-[20px] transition-all duration-[0.3s] ease-in-out max-[1199px]:mx-[15px]">
-                                                <a href="{{ route('profile.index') }}" class="transition-all duration-[0.3s] ease-in-out text-[15px] leading-[60px] capitalize text-[#4b5966] flex items-center font-medium">
+                                                <a href="{{ route('user.index') }}" class="transition-all duration-[0.3s] ease-in-out text-[15px] leading-[60px] capitalize text-[#4b5966] flex items-center font-medium">
                                                     <i class="transition-all duration-[0.3s] ease-in-out mr-[5px] text-[18px] text-[#4b5966] flex"></i>Profil
                                                 </a>
                                             </li>

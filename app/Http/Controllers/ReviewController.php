@@ -17,31 +17,41 @@ class ReviewController extends Controller
 
     // Simpan review baru
     public function store(Request $request)
-    {
-        $request->validate([
-            'product_id' => 'required|exists:products,id',
-            'rating' => 'required|integer|min:1|max:5',
-            'comment' => 'nullable|string'
-        ]);
+{
+    $request->validate([
+        'product_id' => 'required|exists:products,id',
+        'rating' => 'required|integer|min:1|max:5',
+        'comment' => 'nullable|string'
+    ]);
 
-        $user = Auth::user();
+    $user = Auth::user();
 
-        $review = Review::create([
-            'user_id' => $user->id,
-            'product_id' => $request->product_id,
-            'email' => $user->email, // Menyimpan email dari user yang login
-            'rating' => $request->rating,
-            'comment' => $request->comment
-        ]);
+    // Menyimpan review
+    $review = Review::create([
+        'user_id' => $user->id,
+        'product_id' => $request->product_id,
+        'email' => $user->email,
+        'rating' => $request->rating,
+        'comment' => $request->comment
+    ]);
 
-        return response()->json(['message' => 'Review added successfully!', 'data' => $review]);
-    }
+    return response()->json([
+        'success' => true,
+        'review' => [
+            'user_name' => $user->name,
+            'created_at' => $review->created_at->diffForHumans(),
+            'rating' => $review->rating,
+            'comment' => $review->comment,
+        ]
+    ]);
+}
+
 
     // Tampilkan review tertentu
     public function show($id)
     {
-        $review = Review::with('user', 'product')->findOrFail($id);
-        return response()->json($review);
+        $product = Product::with('reviews')->findOrFail($id);
+        return view('product.show', compact('product'));
     }
 
     // Perbarui review
