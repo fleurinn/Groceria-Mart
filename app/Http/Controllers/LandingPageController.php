@@ -9,6 +9,8 @@ use App\Models\Product;
 use App\Models\Cart;
 use Illuminate\Support\Str;
 use Midtrans\Snap;
+use App\Models\Payment;
+use App\Models\Transaction;
 use Midtrans\Config;
 use App\Models\User;
 use App\Models\Role;
@@ -86,45 +88,70 @@ class LandingPageController extends Controller
     }
 
     public function cartIndex(Request $request)
-    {
-        $products = Product::all();
-        $categoryproducts = CategoryProduct::all();
-        $total = 0;
-        $carts = collect();
-        $snapToken = null;
-    
-        if (auth()->check()) {
-            $user = auth()->user();
-            $carts = Cart::with('product')->where('user_id', $user->id)->get();
-    
-            foreach ($carts as $cart) {
-                if ($cart->product) {
-                    $total += $cart->product->price * $cart->quantity + $cart->shipping_cost;
-                }
-            }
-    
-            // === Midtrans Snap Token ===
-            Config::$serverKey = config('services.midtrans.server_key');
-            Config::$isProduction = false;
-            Config::$isSanitized = true;
-            Config::$is3ds = true;
-    
-            $params = [
-                'transaction_details' => [
-                    'order_id' => 'CART-' . strtoupper(Str::random(10)),
-                    'gross_amount' => $total,
-                ],
-                'customer_details' => [
-                    'first_name' => $user->name,
-                    'email' => $user->email,
-                ]
-            ];
-    
-            $snapToken = Snap::getSnapToken($params);
+{
+    $products = Product::all();
+    $categoryproducts = CategoryProduct::all();
+    $total = 0;
+    $carts = collect();
+    $snapToken = null;
+
+    try {
+        // Ambil user dan transaksi berdasarkan request
+        $transaction = Transaction::findOrFail($request->transaction_id);
+        $user = User::findOrFail($request->user_id);
+
+        // Ambil isi keranjang user
+        $carts = Cart::with('product')->where('user_id', $user->id)->get();
+
+        if ($carts->isEmpty()) {
+            return redirect()->back()->with('error', 'Keranjang kamu masih kosong.');
         }
-    
-        return view('landing.pages.cart.cart-index', compact('categoryproducts', 'products', 'carts', 'total', 'snapToken'));
+
+        // Hitung total dan siapkan item_details untuk Midtrans
+        $itemDetails = [];
+        foreach ($carts as $cart) {
+            if ($cart->product) {
+                $itemTotal = $cart->product->price * $cart->quantity;
+                $total += $itemTotal;
+
+                $itemDetails[] = [
+                    'id' => 'ITEM-' . $cart->id,
+                    'price' => $cart->product->price,
+                    'quantity' => $cart->quantity,
+                    'name' => $cart->product->name,
+                ];
+            }
+        }
+
+        // === Midtrans Config ===
+        Config::$serverKey = config('services.midtrans.server_key');
+        Config::$isProduction = false;
+        Config::$isSanitized = true;
+        Config::$is3ds = true;
+
+        $params = [
+            'transaction_details' => [
+                'order_id' => $transaction->transaction_code,
+                'gross_amount' => $total,
+            ],
+            'item_details' => $itemDetails,
+            'customer_details' => [
+                'first_name' => $user->name,
+                'last_name' => '',
+                'email' => $user->email,
+                'phone' => $user->phone ?? '',
+            ]
+        ];
+
+        $snapToken = Snap::getSnapToken($params);
+
+    } catch (\Exception $e) {
+        return redirect()->back()->with('error', 'Gagal menampilkan halaman cart: ' . $e->getMessage());
     }
+
+    return view('landing.pages.cart.cart-index', compact('categoryproducts', 'products', 'carts', 'total', 'snapToken'));
+}
+
     
 
     public function increaseQuantity(Request $request)
@@ -217,7 +244,7 @@ class LandingPageController extends Controller
             'address' => 'required|string|max:255',
         ]);
 
-        $alamat = Alamat::create([
+        $address = Alamat::create([
             'user_id' => Auth::id(), // Otomatis ambil ID user yang login
             'no_telp' => $request->no_telp,
             'city_id' => $request->city_id,

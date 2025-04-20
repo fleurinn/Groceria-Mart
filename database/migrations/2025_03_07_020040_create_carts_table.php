@@ -11,13 +11,13 @@ return new class extends Migration
         Schema::create('carts', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('product_id');
             $table->unsignedBigInteger('shipping_address_id')->nullable();
+            $table->unsignedBigInteger('product_id');
+            $table->decimal('shipping_cost', 10, 2)->nullable();
             $table->unsignedBigInteger('discount_voucher_id')->nullable();
             $table->unsignedInteger('quantity')->default(1);
             $table->json('cart_items')->nullable();
             $table->decimal('price', 10, 2)->nullable();
-            $table->decimal('shipping_cost', 10, 2)->nullable();
             // $table->string('shipping_type')->nullable();
             $table->timestamps();
 

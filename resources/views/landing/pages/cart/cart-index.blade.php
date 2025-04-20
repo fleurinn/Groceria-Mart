@@ -16,74 +16,217 @@
                             <div class="gi-sb-title">
                                 <h3 class="gi-sidebar-title text-[20px] font-semibold tracking-[0] mb-[0] leading-[1.2] relative text-[#4b5966] max-[1199px]:text-[18px]">Detail</h3>
                             </div>
+                        
+                            {{-- Informasi Pengguna --}}
                             <div class="gi-sb-block-content mb-[0] border-b-[0] mt-[15px]">
-                                <h4 class="gi-ship-title mb-[0] text-[17px] font-bold tracking-[0] leading-[1.2] border-b-[1px] border-solid border-[#eee] text-[#777] pb-[15px] relative flex items-center justify-between">Informasi Pengguna</h4>
+                                <h4 class="gi-ship-title mb-[0] text-[17px] font-bold border-b-[1px] border-[#eee] text-[#777] pb-[15px] flex justify-between">Informasi Pengguna</h4>
                                 <div class="gi-cart-form pt-[19px]">
-                                    <form action="#" method="post">
-                                        <span class="gi-cart-wrap">
-                                            <label class="mb-[9px] text-[#4b5966] text-[14px] font-medium tracking-[0] leading-[1] inline-block">Nama Lengkap</label>
-                                            <input type="text" name="name" placeholder="Nama lengkap" class="h-[50px] bg-transparent border-[1px] border-solid border-[#eee] text-[#4b5966] text-[14px] mb-[26px] px-[15px] w-full outline-[0] rounded-[5px]">
-                                        </span>
-                                        <span class="gi-cart-wrap">
-                                            <label class="mb-[9px] text-[#4b5966] text-[14px] font-medium tracking-[0] leading-[1] inline-block">Nomor Handphone</label>
-                                            <input type="text" name="no_telp" placeholder="Zip/Postal Code" class="h-[50px] bg-transparent border-[1px] border-solid border-[#eee] text-[#4b5966] text-[14px] mb-[26px] px-[15px] w-full outline-[0] rounded-[5px]">
-                                        </span>
-                                        <span class="gi-cart-wrap">
-                                            <label class="mb-[9px] text-[#4b5966] text-[14px] font-medium tracking-[0] leading-[1] inline-block">E-mail</label>
-                                            <input type="text" name="email" placeholder="Zip/Postal Code" class="h-[50px] bg-transparent border-[1px] border-solid border-[#eee] text-[#4b5966] text-[14px] mb-[26px] px-[15px] w-full outline-[0] rounded-[5px]">
-                                        </span>
-                                    </form>
+                                    <span class="gi-cart-wrap">
+                                        <label class="mb-[9px] text-[#4b5966] text-[14px] font-medium">Nama Lengkap</label>
+                                        <input type="text" value="{{ Auth::user()->name }}" readonly class="h-[50px] bg-gray-100 border-[#eee] text-[#4b5966] text-[14px] mb-[26px] px-[15px] w-full rounded-[5px]">
+                                    </span>
+                                    <span class="gi-cart-wrap">
+                                        <label class="mb-[9px] text-[#4b5966] text-[14px] font-medium">Nomor Handphone</label>
+                                        <input type="text" value="{{ Auth::user()->shippingAddress->no_telp ?? '-'}}" readonly class="h-[50px] bg-gray-100 border-[#eee] text-[#4b5966] text-[14px] mb-[26px] px-[15px] w-full rounded-[5px]">
+                                    </span>
+                                    <span class="gi-cart-wrap">
+                                        <label class="mb-[9px] text-[#4b5966] text-[14px] font-medium">E-mail</label>
+                                        <input type="text" value="{{ Auth::user()->email }}" readonly class="h-[50px] bg-gray-100 border-[#eee] text-[#4b5966] text-[14px] mb-[26px] px-[15px] w-full rounded-[5px]">
+                                    </span>
                                 </div>
                             </div>
+                        
+                            {{-- Informasi Tambahan --}}
                             <div class="gi-sb-block-content-user mb-[0] border-b-[0] mt-[15px]">
-                                <h4 class="gi-ship-title cursor-pointer text-[17px] font-bold tracking-[0] leading-[1.2] border-b-[1px] border-solid border-[#eee] text-[#777] pb-[15px] relative flex items-center justify-between"
+                                <h4 class="gi-ship-title cursor-pointer text-[17px] font-bold border-b-[1px] border-[#eee] text-[#777] pb-[15px] flex justify-between"
                                     onclick="toggleDropdownUser(this)">
                                     Informasi Tambahan
                                 </h4>
                                 <div class="gi-cart-form-user pt-[19px] hidden">
-                                    <form action="#" method="post">
                                     <span class="gi-cart-wrap">
-                                        <label class="mb-[9px] text-[#4b5966] text-[14px] font-medium tracking-[0] leading-[1] inline-block">Status</label>
-                                        <input type="text" name="status" placeholder="Status pengguna" class="h-[50px] bg-transparent border-[1px] border-solid border-[#eee] text-[#4b5966] text-[14px] mb-[26px] px-[15px] w-full outline-[0] rounded-[5px]">
+                                        <label class="mb-[9px] text-[#4b5966] text-[14px] font-medium">Kota</label>
+                                        <input type="text" value="{{ Auth::user()->shippingAddress->city->name ?? '-' }}" readonly class="h-[50px] bg-gray-100 border-[#eee] text-[#4b5966] text-[14px] mb-[26px] px-[15px] w-full rounded-[5px]">
                                     </span>
                                     <span class="gi-cart-wrap">
-                                        <label class="mb-[9px] text-[#4b5966] text-[14px] font-medium tracking-[0] leading-[1] inline-block">Role</label>
-                                        <input type="text" name="role" placeholder="Role pengguna" class="h-[50px] bg-transparent border-[1px] border-solid border-[#eee] text-[#4b5966] text-[14px] mb-[26px] px-[15px] w-full outline-[0] rounded-[5px]">
+                                        <label class="mb-[9px] text-[#4b5966] text-[14px] font-medium">Kecamatan</label>
+                                        <input type="text" value="{{ Auth::user()->shippingAddress->district->name ?? '-' }}" readonly class="h-[50px] bg-gray-100 border-[#eee] text-[#4b5966] text-[14px] mb-[26px] px-[15px] w-full rounded-[5px]">
                                     </span>
-                                    </form>
+                                    <span class="gi-cart-wrap">
+                                        <label class="mb-[9px] text-[#4b5966] text-[14px] font-medium">Desa</label>
+                                        <input type="text" value="{{ Auth::user()->shippingAddress->village->name ?? '-' }}" readonly class="h-[50px] bg-gray-100 border-[#eee] text-[#4b5966] text-[14px] mb-[26px] px-[15px] w-full rounded-[5px]">
+                                    </span>
+                                    <span class="gi-cart-wrap">
+                                        <label class="mb-[9px] text-[#4b5966] text-[14px] font-medium">Alamat Lengkap</label>
+                                        <input type="text" value="{{ Auth::user()->shippingAddress->address ?? '-' }}" readonly class="h-[50px] bg-gray-100 border-[#eee] text-[#4b5966] text-[14px] mb-[26px] px-[15px] w-full rounded-[5px]">
+                                    </span>
                                 </div>
                             </div>
+                        
+                            @php
+                            $shippingOptions = [
+                                5000 => 'Reguler - Rp5.000',
+                                10000 => 'Express - Rp10.000',
+                            ];
+                        @endphp
+                        
+                        {{-- Ringkasan Pembayaran --}}
+                        <div class="gi-sb-block-content mb-[0] border-b-[0] mt-[15px]">
+                            <div class="gi-cart-summary-bottom">
+                                <div class="gi-cart-summary">
+                                    {{-- Subtotal --}}
+                                            @php
+                                                $total = $carts->sum(function ($cart) {
+                                                    return ($cart->product->price * ((100 - $cart->product->discount) / 100)) * $cart->quantity;
+                                                });
+                                            @endphp
+                                        <div class="flex justify-between items-center mb-[10px]">
+                                        <span class="text-left text-[#4b5966] text-[14px]">Sub-Total</span>
+                                        <span class="text-right text-[#4b5966] text-[14px] font-medium">
+                                            
 
-                            <div class="gi-sb-block-content mb-[0] border-b-[0] mt-[15px]">
-                                <div class="gi-cart-summary-bottom">
-                                    <div class="gi-cart-summary">
-                                        <div class="flex justify-between items-center mb-[10px]">
-                                            <span class="text-left text-[#4b5966] text-[14px] leading-[24px] tracking-[0]">Sub-Total</span>
-                                            <span class="text-right text-[#4b5966] text-[14px] leading-[24px] font-medium">Rp80.00</span>
-                                        </div>
-                                        <div class="flex justify-between items-center mb-[10px]">
-                                            <span class="text-left text-[#4b5966] text-[14px] leading-[24px] tracking-[0]">Ongkos Kirim</span>
-                                            <span class="text-right text-[#4b5966] text-[14px] leading-[24px] font-medium">Rp80.00</span>
-                                        </div>
-                                        <div class="flex justify-between items-center mb-[10px]">
-                                            <span class="text-left text-[#4b5966] text-[14px] leading-[24px] tracking-[0]">Kupon Diskon</span>
-                                            <span class="text-right text-[#5caf90] text-[14px] leading-[24px] font-medium"><a class="gi-cart-coupan">Pakai Kupon</a></span>
-                                        </div>
-                                        <div class="gi-cart-coupan-content mb-[0] hidden">
-                                            <form class="gi-cart-coupan-form flex border-[1px] border-solid border-[#eee] p-[5px] rounded-[5px]" name="gi-cart-coupan-form" method="post" action="#">
-                                                <input class="gi-coupan inline-block align-top leading-[35px] h-[40px] text-[#777] text-[14px] w-[80%] border-[0] bg-transparent text-left px-[10px] tracking-[0.5px] outline-[0] rounded-[5px]" type="text" required="" placeholder="Masukan kode kupon" name="gi-coupan" value="">
-                                                <button type="submit" class="gi-btn-2 transition-all duration-[0.3s] ease-in-out overflow-hidden text-center relative rounded-[5px] py-[10px] max-[767px]:py-[6px] px-[15px] max-[767px]:px-[10px] bg-[#5caf90] text-[#fff] border-[0] text-[14px] max-[767px]:text-[13px] tracking-[0] font-medium inline-flex items-center hover:bg-[#4b5966] hover:text-[#fff]" name="subscribe" value="">Pakai</button>
-                                            </form>
-                                        </div>
-                                        <div class="gi-cart-summary-total border-t-[1px] border-solid border-[#eee] pt-[19px] mb-[0] mt-[16px] flex justify-between items-center">
-                                            <span class="text-left text-[16px] font-medium text-[#4b5966] leading-[24px] tracking-[0]">Total Keseluruhan</span>
-                                            <span class="text-right text-[16px] font-medium text-[#4b5966] leading-[24px] tracking-[0]">Rp80.00</span>
-                                        </div>
+                                            <span>Rp {{ number_format($total, 0, ',', '.') }}</span>
+                                        </span>
                                     </div>
-
+                        
+                                    {{-- Pilihan Ongkos Kirim --}}
+                                    <div class="flex justify-between items-center mb-[10px]">
+                                        <span class="text-left text-[#4b5966] text-[14px]">Ongkos Kirim</span>
+                                        <select id="shipping-select" name="shipping_cost" class="text-right text-[#4b5966] text-[14px] font-medium bg-transparent border-none" 							name="shipping_cost">
+                                            <option value="">Pilih Ongkir</option>
+                                            @foreach ($shippingOptions as $value => $label)
+                                            <option value="{{ $value }}" {{ old('shipping_cost') == $value ? 'selected' : '' }}>{{ $label }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                        
+                                    {{-- Kupon Diskon --}}
+                                    <div class="flex justify-between items-center mb-[10px]">
+                                        <span class="text-left text-[#4b5966] text-[14px]">Kupon Diskon</span>
+                                        <span class="text-right text-[#5caf90] text-[14px] font-medium">
+                                            <a class="gi-cart-coupan cursor-pointer">Pakai Kupon</a>
+                                        </span>
+                                    </div>
+                        
+                                    <div class="gi-cart-coupan-content mb-[0] hidden">
+                                        <form id="voucher-form" class="gi-cart-coupan-form flex border-[1px] border-[#eee] p-[5px] rounded-[5px]">
+                                            @csrf
+                                            <input class="gi-coupan h-[40px] text-[#777] text-[14px] w-[80%] px-[10px]" type="text" placeholder="Masukan kode kupon" name="discount_code" required>
+                                            <button type="submit" class="gi-btn-2 py-[10px] px-[15px] bg-[#5caf90] text-[#fff] hover:bg-[#4b5966] hover:text-[#fff] rounded-[5px] text-[14px]">Pakai</button>
+                                        </form>
+                                        <div id="voucher-response" class="text-[14px] text-[#4b5966] mt-2"></div>
+                                    </div>
+                        
+                                    {{-- Total Keseluruhan --}}
+                                    <div class="gi-cart-summary-total border-t-[1px] border-[#eee] pt-[19px] mt-[16px] flex justify-between items-center">
+                                        <span class="text-left text-[16px] font-medium text-[#4b5966]">Total Keseluruhan</span>
+                                        <span class="text-right text-[16px] font-medium text-[#4b5966]">Rp
+                                            <span id="total"></span>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                        
+                        {{-- Script --}}
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function () {
+                                const shippingSelect = document.getElementById('shipping-select');
+                                const subtotalElement = document.getElementById('subtotal');
+                                const totalElement = document.getElementById('total');
+                                let originalSubtotal = parseInt({{ $total }});
+                                let discountAmount = 0;
+                                let shippingCost = parseInt(shippingSelect.value); // Nilai default saat halaman dimuat
+                        
+                                // Ambil total cart (yang sudah termasuk diskon + ongkir dari backend)
+                                const updateTotal = async () => {
+                                    try {
+                                        const response = await fetch("{{ route('cart.total') }}");
+                                        const data = await response.json();
+                                        if (response.ok) {
+                                            const finalTotal = data.total_price;
+                                            totalElement.innerText = finalTotal.toLocaleString('id-ID');
+                                        } else {
+                                            console.error('Gagal mengambil total cart');
+                                        }
+                                    } catch (error) {
+                                        console.error('Error saat mengambil total:', error);
+                                    }
+                                };
+                        
+                                // Event saat user mengganti ongkir
+                                shippingSelect.addEventListener('change', function () {
+                                    shippingCost = parseInt(this.value);
+                        
+                                    // Kirim data ongkir ke server
+                                    fetch("{{ url('/set-shipping-cost') }}", {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                                        },
+                                        body: JSON.stringify({
+                                            shipping_cost: shippingCost
+                                        })
+                                    })
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        if (data.message) {
+                                            updateTotal(); // Perbarui total setelah ongkir berhasil di-set
+                                        }
+                                    })
+                                    .catch(error => {
+                                        console.error('Gagal mengirim ongkir:', error);
+                                    });
+                                });
+                        
+                                // Toggle form kupon
+                                const couponToggleBtn = document.querySelector('.gi-cart-coupan');
+                                const couponContent = document.querySelector('.gi-cart-coupan-content');
+                                if (couponToggleBtn && couponContent) {
+                                    couponToggleBtn.addEventListener('click', function () {
+                                        couponContent.classList.toggle('hidden');
+                                    });
+                                }
+                        
+                                // Submit form kupon
+                                const voucherForm = document.getElementById('voucher-form');
+                                if (voucherForm) {
+                                    voucherForm.addEventListener('submit', function (e) {
+                                        e.preventDefault();
+                                        const formData = new FormData(voucherForm);
+                        
+                                        fetch("{{ route('voucher.apply') }}", {
+                                            method: 'POST',
+                                            headers: {
+                                                'X-CSRF-TOKEN': formData.get('_token'),
+                                                'Accept': 'application/json'
+                                            },
+                                            body: formData
+                                        })
+                                        .then(res => res.json())
+                                        .then(data => {
+                                            if (data.discount_amount) {
+                                                updateTotal(); // Ambil ulang total setelah diskon diterapkan
+                                            } else {
+                                                document.getElementById('voucher-response').innerText = data.message || 'Kupon tidak valid.';
+                                            }
+                                        })
+                                        .catch(err => {
+                                            document.getElementById('voucher-response').innerText = 'Terjadi kesalahan saat menghubungi server.';
+                                        });
+                                    });
+                                }
+                        
+                                // Panggil saat halaman pertama kali dimuat
+                                updateTotal();
+                            });
+                        </script>
+                        
+                        
+                        
+
+                        </div>
+                        
                     </div>
                 </div>
             <div class="gi-cart-leftside min-[992px]:w-[66.66%] w-full px-[12px] max-[991px]:mt-[30px]">
@@ -147,58 +290,64 @@
                                     <div class="w-full">
                                         <div class="pt-6 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mt-6">                    
                                             <!-- Checkout Button -->
-                                           <!-- Tombol Bayar Sekarang -->
-                                           <button id="pay-button"
+
+
+                                            <!-- Tombol Bayar Sekarang -->
+                                            <button id="pay-button"
                                                 class="gi-btn-2 ml-auto transition-all duration-300 ease-in-out rounded-[5px] py-2 px-4 bg-[#5caf90] text-white text-[14px] font-medium hover:bg-[#4b5966]">
                                                 Bayar Sekarang
                                             </button>
 
-                                            <script>
-                                                document.addEventListener('DOMContentLoaded', function() {
-                                                    const payButton = document.getElementById('pay-button');
+                                            <!-- Script Midtrans Snap -->
+                                            <script src="https://app.sandbox.midtrans.com/snap/snap.js"
+                                                data-client-key="{{ env('MIDTRANS_CLIENT_KEY') }}"></script>
 
-                                                    // Jika ada snapToken, lanjutkan dengan proses pembayaran
-                                                    if ("{{ $snapToken }}") {
-                                                        payButton.addEventListener('click', function() {
-                                                            // Memanggil Midtrans Snap API dengan token
-                                                            snap.pay("{{ $snapToken }}", {
-                                                                onSuccess: function(result) {
-                                                                    console.log('Pembayaran sukses', result);
-                                                                    // Kirim status pembayaran ke server untuk diperbarui
-                                                                    fetch("{{ route('payment.update-status') }}", {
-                                                                        method: "POST",
-                                                                        headers: {
-                                                                            "Content-Type": "application/json",
-                                                                            "X-CSRF-TOKEN": "{{ csrf_token() }}"
-                                                                        },
-                                                                        body: JSON.stringify(result)
-                                                                    })
-                                                                    .then(response => response.json())
-                                                                    .then(data => {
-                                                                        console.log("Status pembayaran diperbarui:", data);
-                                                                        window.location.href = "{{ route('keranjang') }}";
-                                                                    })
-                                                                    .catch(error => {
-                                                                        console.error("Gagal mengirim status pembayaran ke server:", error);
-                                                                    });
-                                                                },
-                                                                onPending: function(result) {
-                                                                    console.log('Menunggu pembayaran', result);
-                                                                },
-                                                                onError: function(result) {
-                                                                    console.error('Terjadi error', result);
-                                                                    alert('Terjadi kesalahan saat proses pembayaran.');
-                                                                }
-                                                            });
+                                            <script>
+                                                document.addEventListener('DOMContentLoaded', function () {
+                                                const payButton = document.getElementById('pay-button');
+                                                const snapToken = @json($snapToken); // Dapatkan snapToken dari controller
+
+                                                if (snapToken) {
+                                                    payButton.addEventListener('click', function () {
+                                                        console.log(snapToken);  // Tambahkan ini untuk memeriksa nilai snapToken
+                                                        snap.pay(snapToken, {
+                                                            onSuccess: function (result) {
+                                                                console.log('Pembayaran sukses', result);
+                                                                fetch("{{ route('payment.update-status') }}", {
+                                                                    method: "POST",
+                                                                    headers: {
+                                                                        "Content-Type": "application/json",
+                                                                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                                                                    },
+                                                                    body: JSON.stringify(result)
+                                                                })
+                                                                .then(response => response.json())
+                                                                .then(data => {
+                                                                    console.log("Status pembayaran diperbarui:", data);
+                                                                    window.location.href = "{{ route('keranjang') }}";
+                                                                })
+                                                                .catch(error => {
+                                                                    console.error("Gagal mengirim status pembayaran ke server:", error);
+                                                                });
+                                                            },
+                                                            onPending: function (result) {
+                                                                console.log('Menunggu pembayaran', result);
+                                                            },
+                                                            onError: function (result) {
+                                                                console.error('Terjadi error', result);
+                                                                alert('Terjadi kesalahan saat proses pembayaran.');
+                                                            }
                                                         });
-                                                    } else {
-                                                        // Jika tidak ada snapToken, tampilkan notifikasi atau penanganan lain
-                                                        payButton.addEventListener('click', function() {
-                                                            alert('Token pembayaran tidak tersedia. Harap coba lagi atau hubungi dukungan.');
-                                                        });
-                                                    }
-                                                });
+                                                    });
+                                                } else {
+                                                    payButton.addEventListener('click', function () {
+                                                        alert('Token pembayaran tidak tersedia. Harap coba lagi atau hubungi dukungan.');
+                                                    });
+                                                }
+                                            });
                                             </script>
+
+                                            
 
                                         </div>
                                     </div>
@@ -327,3 +476,4 @@ function toggleDropdownUser(header) {
 </script>
 
 @endsection
+

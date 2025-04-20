@@ -105,10 +105,6 @@ class ProductController extends Controller
             $imageName = $request->file('image')->hashName();
             $request->file('image')->move(public_path('storage/products'), $imageName);
 
-            $originalPrice = $request->price;
-            $discountPercent = $request->discount ?? 0;
-            $discountedPrice = $originalPrice - ($originalPrice * ($discountPercent / 100));
-
             $product = Product::create([
                 'name' => $request->name,
                 'weight' => $request->weight,
@@ -117,11 +113,11 @@ class ProductController extends Controller
                 'description' => $request->description,
                 'category_product_id' => $request->category_product_id,
                 'image' => $imageName,
-                'price' => $discountedPrice,
+                'price' => $request->price,
                 'stock' => $request->stock,
                 'status' => $request->status,
                 'tags' => $request->tags,
-                'discount' => $discountPercent,
+                'discount' => $request->discount,
             ]);
 
             if ($request->has('variants')) {
@@ -195,13 +191,6 @@ class ProductController extends Controller
             'category_product_id' => 'Kolom kategori wajib diisi.', // Contoh untuk field lain
 
         ]);
-
-        $cekNama = Product::where('name', $request->name)->exists();
-        if ($cekNama) {
-            return redirect()->back()
-                ->withInput()
-                ->with('error', 'Nama ini sudah digunakan, silakan gunakan nama lain.');
-        };
 
         try {
             if ($request->hasFile('image')) {
