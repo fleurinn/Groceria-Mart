@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\User\UserController;
@@ -22,6 +23,7 @@ use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\VariantProductController;
 use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\ProfileCustController;
+
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [LandingPageController::class, 'index'])->name('landing-page');
@@ -40,8 +42,8 @@ Route::controller(LandingPageController::class)->group(function () {
  
     Route::get('/profile', 'indexUser')->name('profile');
 
-    // Route::get('/profile/edit/{id}', 'editUser')->name('profile.edit');
-    // Route::post('/profile/{id}', 'updateCust')->name('profile.update');
+    Route::get('/profile/edit/{id}', 'editUser')->name('profile.edit');
+    Route::post('/profile/{id}', 'updateCust')->name('profile.update');
     Route::get('/profile/get-villages/{district_id}', 'getVillages')->name('profile.get-villages');
     Route::get('/profile/get-districts/{city_id}','getDistricts')->name('profile.get-districts');
 
@@ -62,7 +64,17 @@ Route::get('/service', function () {
     return view('landing.pages.layanan.service-index');
 })->name('service');
 
+Route::get('/order', function () {
+    return view('landing.pages.order.order-index');
+})->name('order');
 
+
+
+Route::get('/api/districts/{city_id}', [RegisteredUserController::class, 'getDistricts']);
+Route::get('/api/villages/{district_id}', [RegisteredUserController::class, 'getVillages']);
+Route::get('/user/{id}/edit', [RegisteredUserController::class, 'edit'])->name('user.edit');
+Route::put('/user/{id}', [RegisteredUserController::class, 'update'])->name('user.update');
+Route::get('/user', [RegisteredUserController::class, 'index'])->name('user.index');
 
 
 
@@ -76,11 +88,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/kurir/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard.kurir');
 
 
-    Route::resource('/profile', ProfileCustController::class);
-    Route::get('/profile/get-districts/{city_id}', [ProfileCustController::class, 'getDistricts']);
-    Route::get('/profile/get-villages/{village_id}', [ProfileCustController::class, 'getVillages']);
-
-
 });
 
 Route::middleware(['auth'])->prefix('dashboard')->group(function () {
@@ -88,11 +95,14 @@ Route::middleware(['auth'])->prefix('dashboard')->group(function () {
     Route::resource('/profile-pengguna', UserController::class);
     Route::post('/profile-pengguna/bulk-delete', [UserController::class, 'bulkDelete'])->name('users.bulk-delete');
     Route::resource('/shipping_addresses', UserController::class);
+    
     Route::get('/profile-pengguna/create/get-districts/{city_id}', [UserController::class, 'getDistricts']);
     Route::get('/profile-pengguna/create/get-villages/{village_id}', [UserController::class, 'getVillages']);
 
 
     Route::resource('/category-products', CategoryProductController::class);
+    Route::resource('/slider', SliderController::class);
+
 
     //Tambahan: Bulk actions for CategoryProduct
     Route::post('/category-products/bulk-delete', [CategoryProductController::class, 'bulkDelete'])->name('category-products.bulk-delete');
@@ -123,14 +133,15 @@ Route::middleware(['auth'])->prefix('dashboard')->group(function () {
 
 
     Route::resource('/services', ServiceController::class);
+    Route::post('/services/{id}/reply', [ServiceController::class, 'reply'])->name('services.reply');
     //Tambahan Bulk actions for Service
     Route::post('/services/bulk-delete', [ServiceController::class, 'bulkDelete'])->name('services.bulk-delete');
 
-    Route::resource('/slider', SliderController::class);
-    //Tambahan Bulk actions for Slider
+    
     Route::post('/slider/bulk-delete', [SliderController::class, 'bulkDelete'])->name('slider.bulk-delete');
     Route::post('/slider/bulk-draft', [SliderController::class, 'bulkDraft'])->name('slider.bulk-draft');
     Route::post('/slider/bulk-publish', [SliderController::class, 'bulkPublish'])->name('slider.bulk-publish');
+
 
 
     Route::resource('/abouts', AboutController::class);
@@ -151,6 +162,8 @@ Route::middleware(['auth'])->prefix('dashboard')->group(function () {
     Route::resource('/proof-of-deliverys', ProofOfDeliveryController::class);
     Route::resource('/reports', ReportController::class);
     Route::resource('/reviews', ReviewController::class);
+    Route::post('/reviews/store', [ReviewController::class, 'store'])->name('review.store');
+
 
     Route::resource('/shippings', ShippingController::class);
     // Bulk for Shippings

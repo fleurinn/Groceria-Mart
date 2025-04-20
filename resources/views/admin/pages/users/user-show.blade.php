@@ -3,10 +3,24 @@
 @section('page_title', 'Profile Pengguna | Groceria')
 @section('content')
 
+
+@if(session('success'))
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        Swal.fire({
+            title: 'Berhasil!',
+            text: '{{ session('success') }}',
+            icon: 'success',
+            confirmButtonText: 'OK'
+        });
+    });
+</script>
+
 @php
-  $shippingAddress = $user->shippingAddresses->first();
+  $shippingAddress = $user->shippingAddresses ? $user->shippingAddresses->first() : null;
 @endphp
 
+@endif
 <div class="content">
   <div class="mb-9">
     <div class="row align-items-center justify-content-between g-3 mb-4">
@@ -22,7 +36,7 @@
             </form>
           </div>
           <div class="col-auto">
-            <a href="{{ route('admin.user.edit', $user->id) }}" class="btn btn-phoenix-secondary">
+            <a href="{{ route('profile-pengguna.edit', $user->id) }}" class="btn btn-phoenix-secondary">
               <span class="fas fa-key me-2"></span>Edit Profile
             </a>
           </div>
@@ -40,7 +54,7 @@
                   <div class="col-12 col-sm-auto mb-sm-2">
                     <div class="avatar avatar-5xl">
                       <img class="rounded-circle"
-                        src="{{ $user->image ? asset('storage/' . $user->image) : asset('assets/img/team/default.png') }}"
+                        src="{{ $user->image ? asset('storage/profile_images/' . $user->image) : asset('assets/img/team/default.png') }}"
                         alt="{{ $user->name }}" />
                     </div>
                   </div>
@@ -48,20 +62,20 @@
                     <h3>{{ $user->name }}</h3>
                   </div>
                 </div>
-                <div class="d-flex flex-column gap-3 border-top border-dashed pt-4">
-                  <div>
-                    <h6>Email</h6>
-                    <p class="fs-7 text-body-secondary mb-0">{{ $user->email }}</p>
-                  </div>
-                  <div>
-                    <h6>No. Handphone</h6>
-                    <p class="fs-7 text-body-secondary mb-0">{{ $shippingAddress?->no_telp ?? '-' }}</p>
-                  </div>
-                  <div>
-                    <h6>Posisi</h6>
-                    <p class="fs-7 text-body-secondary mb-0">{{ $user->role->name ?? '-' }}</p>
-                  </div>
-                </div>
+                <div class="d-flex flex-row justify-content-between gap-5 border-top border-dashed pt-4 align-items-start">
+                    <div>
+                        <h6>Email</h6>
+                        <p class="fs-7 text-body-secondary mb-0">{{ $user->email }}</p>
+                    </div>
+                    <div>
+                        <h6>No. Handphone</h6>
+                        <p class="fs-7 text-body-secondary mb-0">{{ $user->shippingAddress->no_telp ?? '-'}}</p>
+                    </div>
+                    <div>
+                        <h6>Posisi</h6>
+                        <p class="fs-7 text-body-secondary mb-0">{{ $user->role->name ?? '-' }}</p>
+                    </div>
+                    </div>
               </div>
             </div>
           </div>
@@ -77,16 +91,16 @@
 
                 <div class="mb-3">
                   <h5 class="text-body-secondary">Nama Belakang</h5>
-                  <p class="text-body-secondary">{{ $user->last_name }}</p>
+                  <p class="text-body-secondary">{{ $user->last_name     }}</p>
                 </div>
 
                 <h5 class="text-body-secondary">Alamat Lengkap</h5>
                 <p class="text-body-secondary">
-                  {{ $shippingAddress?->address ?? '-' }}<br />
-                  {{ $shippingAddress?->village?->name ?? '-' }}<br />
-                  {{ $shippingAddress?->district?->name ?? '-' }}<br />
-                  {{ $shippingAddress?->city?->name ?? '-' }}
-                </p>
+                    {{ $user->shippingAddress->city->name ?? 'Data kosong.' }},
+                    {{ $user->shippingAddress->district->name ?? '' }} <br />
+                    {{ $user->shippingAddress->village->name ?? '' }},
+                    {{ $user->shippingAddress->address ?? '' }}
+                  </p>
               </div>
             </div>
           </div>
@@ -96,7 +110,6 @@
     </div>
 
   </div>
-</div>
 
 <!-- alert delete -->
 <script>

@@ -7,6 +7,7 @@ use App\Models\Slider;
 use App\Models\CategoryProduct;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Log;
 
@@ -54,7 +55,7 @@ class SliderController extends Controller
     public function edit(Slider $slider)
     {
         $categoryproducts = CategoryProduct::all();
-        return view('admin.pages.banner.hero-edit', compact('slider', 'categoryproducts'));
+        return view('admin.pages.banner.hero-edit', compact('sliders', 'categoryproducts'));
     }
 
     public function update(Request $request, Slider $slider)
@@ -87,7 +88,7 @@ class SliderController extends Controller
                 'description'         => $request->description,
                 'image'               => $image->hashName(),
                 'status'              => $request->status,
-                'categoryproducts_id' => $request->categoryproducts_id,
+                'category_products_id' => $request->category_products_id,
             ]);
         } else {
             // Update tanpa ubah gambar
@@ -95,11 +96,11 @@ class SliderController extends Controller
                 'title'               => $request->title,
                 'description'         => $request->description,
                 'status'              => $request->status,
-                'categoryproducts_id' => $request->categoryproducts_id,
+                'category_products_id' => $request->category_products_id,
             ]);
         }
 
-        return redirect()->route('sliders.index')->with('success', 'Slider berhasil diperbarui.');
+        return redirect()->route('slider.index')->with('success', 'Slider berhasil diperbarui.');
     }
 
     public function destroy(Slider $slider)
@@ -111,14 +112,14 @@ class SliderController extends Controller
 
             $slider->delete();
 
-            return redirect()->route('sliders.index')->with('success', 'Slider berhasil diperbarui.');
+            return redirect()->route('slider.index')->with('success', 'Slider berhasil diperbarui.');
 
     }
 
     public function show(string $id): View
     {
         $slider = Slider::with('categoryproduct')->findOrFail($id);
-        return view('sliders.show', compact('slider'));
+        return view('slider.show', compact('slider'));
     }
 
     public function bulkDelete(Request $request)

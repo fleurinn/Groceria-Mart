@@ -54,6 +54,15 @@ class ProductController extends Controller
         return view('admin.pages.products.produk.index', compact('products', 'search', 'category', 'status', 'sort', 'tag', 'allTags'));
     }
 
+    public function show(Product $product)
+    {
+        // Ambil semua data relasi: kategori dan variants
+        $products->load('category', 'variants');
+
+        return view('landing.pages.produk.product-show', compact('products'));
+    }
+
+
     public function create()
     {
         $categories = CategoryProduct::all();

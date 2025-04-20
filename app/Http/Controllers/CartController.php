@@ -98,9 +98,7 @@ class CartController extends Controller
                 'product_id' => $request->product_id,
                 'quantity' => $request->quantity,
                 'cart_items' => json_encode(['product_name' => $product->name]),
-                'price' => $price,
-                'shipping_type' => $request->shipping_type, // Simpan jenis pengiriman
-                'shipping_cost' => $shippingCost, // Simpan biaya pengiriman
+                'price' => $price, // Simpan biaya pengiriman
             ]);
         }
 

@@ -141,75 +141,84 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Single product tab start -->
-                    <div class="gi-single-pro-tab mt-[40px]">
-                        <div class="gi-single-pro-tab-wrapper flex flex-col">
-                            <div class="gi-single-pro-tab-nav w-full m-auto relative block text-center float-left">
-                                <ul class="nav-tabs inline-block float-left" id="singleprotab">
-                                    <li class="active mr-[5px] ml-auto mb-[5px] inline-block float-left">
-                                        <a href="#gi-spt-nav-details" class="capitalize leading-[24px] py-[8px] px-[28px] m-[0] text-[15px] font-medium relative transition-all duration-[300ms] linear inline-block cursor-pointer bg-[#fff] text-[#4b5966] border-[1px] border-solid border-[#eee] rounded-[5px] leading-[0] hover:bg-[#5caf90] hover:text-[#fff] hover:border-[#5caf90]">
-                                            Detail
-                                        </a>
-                                    </li>
-                                    <li class="mr-[5px] ml-auto mb-[5px] inline-block float-left">
-                                        <a href="#gi-spt-nav-info" class="capitalize leading-[24px] py-[8px] px-[28px] m-[0] text-[15px] font-medium relative transition-all duration-[300ms] linear inline-block cursor-pointer bg-[#fff] text-[#4b5966] border-[1px] border-solid border-[#eee] rounded-[5px] leading-[0] hover:bg-[#5caf90] hover:text-[#fff] hover:border-[#5caf90]">
-                                            Spesifikasi
-                                        </a>
-                                    </li>
-                                    <li class="mr-[5px] ml-auto mb-[5px] inline-block float-left">
-                                        <a href="#gi-spt-nav-review" class="capitalize leading-[24px] py-[8px] px-[28px] m-[0] text-[15px] font-medium relative transition-all duration-[300ms] linear inline-block cursor-pointer bg-[#fff] text-[#4b5966] border-[1px] border-solid border-[#eee] rounded-[5px] leading-[0] hover:bg-[#5caf90] hover:text-[#fff] hover:border-[#5caf90]">
-                                            Ulasan
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="tab-content transition-all w-full overflow-hidden bg-[#fff] text-left p-[30px] border-[1px] border-solid border-[#eee] text-[#202020] text-[18px] tracking-[0] leading-[1.6] rounded-[5px]" id="singleTabContent">
-                                <div id="gi-spt-nav-details" class="tab-single-pane">
-                                    <div class="gi-single-pro-tab-desc">
-                                        <p class="mb-[15px] text-[14px] tracking-[0] text-[#777] leading-[28px] font-normal font-Poppins">
-                                        {!! Str::limit(strip_tags($product->description, '<b><i><strong><em>'), 80) !!}
-                                        </p>
+                    <div id="gi-spt-nav-review" class="tab-single-pane">
+                        <div class="gi-single-pro-tab-review">
+                        <h3 class="text-[20px] font-semibold leading-[1] font-Poppins text-[#4b5966] mb-[20px]">Ulasan Produk</h3>
+                    
+                    <!-- Review List -->
+                                        <div id="review-list">
+                                            @foreach ($product->reviews as $review)
+                                                <div class="single-review mb-[30px]">
+                                                    <div class="review-header mb-[10px]">
+                                                        <span class="text-[16px] font-Poppins text-[#4b5966] font-medium">{{ $review->user->name }}</span>
+                                                        <span class="text-[14px] text-[#777] ml-[10px]">{{ $review->created_at->diffForHumans() }}</span>
+                                                    </div>
+                                                    <div class="review-body">
+                                                        <div class="gi-ratting-star">
+                                                            @for ($i = 1; $i <= 5; $i++)
+                                                                <i class="gicon gi-star inline-block text-[16px] {{ $i <= $review->rating ? 'text-[#f27d0c]' : 'text-[#b2b2b2]' }}"></i>
+                                                            @endfor
+                                                        </div>
+                                                        <p class="text-[#777] text-[14px] font-Poppins">{{ $review->comment }}</p>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
                                     </div>
                                 </div>
-                                <div id="gi-spt-nav-info" class="tab-single-pane">
-                                    <div class="gi-single-pro-tab-moreinfo">
-                                        <p class="font-Poppins text-[#777] text-[14px] font-normal leading-[28px] mb-[16px]">
-                                        Toko Groceria dengan bangga mempersembahkan produk unggulan yang dirancang khusus untuk memenuhi kebutuhan Anda. Dengan desain yang modern dan fungsional, setiap produk kami tidak hanya memenuhi standar tinggi, tetapi juga mencerminkan kualitas terbaik. Kami berkomitmen untuk memberikan pengalaman berbelanja yang luar biasa, dengan perhatian penuh terhadap detail di setiap elemen.
-                                        berikut spesifikasi dari produk.
-                                        </p>
-                                        <ul class="pl-[24px]">
-                                            <li class="list-disc mb-[4px] text-[15px] text-[#777] tracking-[0.02rem] leading-[1.6] max-[575px]:mb-[10px]"><span class="mr-[25px] min-w-[150px] text-[15px] text-[#4b5966] inline-block font-medium tracking-[0.02rem] max-[575px]:w-full">Weight</span> {{ $product->weight }}</li>
-                                            <li class="list-disc mb-[4px] text-[15px] text-[#777] tracking-[0.02rem] leading-[1.6] max-[575px]:mb-[10px]"><span class="mr-[25px] min-w-[150px] text-[15px] text-[#4b5966] inline-block font-medium tracking-[0.02rem] max-[575px]:w-full">Dimensions</span> {{ $product->dimension }}</li>
-                                            <li class="list-disc mb-[4px] text-[15px] text-[#777] tracking-[0.02rem] leading-[1.6] max-[575px]:mb-[10px]"><span class="mr-[25px] min-w-[150px] text-[15px] text-[#4b5966] inline-block font-medium tracking-[0.02rem] max-[575px]:w-full">Color</span>{{ $product->color }} </li>
-                                        </ul>
-                                    </div>
-                                </div>
+
                                 <div id="gi-spt-nav-review" class="tab-single-pane">
                                     <div class="flex flex-wrap w-full">
                                         <div class="gi-t-review-wrapper mt-[10px]">
-                                        @foreach ($product->reviews as $review)
                                             <div class="gi-t-review-item flex mb-[25px] pb-[25px] border-b-[1px] border-solid border-[#eee]">
                                                 <div class="gi-t-review-avtar basis-[50px] grow-[0] shrink-[0] mr-[15px]">
                                                     <img src="assets/img/user/1.jpg" alt="user" class="max-w-full rounded-[5px]">
                                                 </div>
                                                 <div class="gi-t-review-content">
                                                     <div class="gi-t-review-top flex flex-col mb-[10px]">
-                                                        <div class="gi-t-review-name text-[15px] m-[0] leading-[1.5] block text-[#4b5966]">{{ $review->user->name }}</div>
-                                                        <div class="gi-t-review-name text-[15px] m-[0] leading-[1.5] block text-[#4b5966]">{{ $review->created_at->diffForHumans() }}</div>
+                                                        <div class="gi-t-review-name text-[15px] m-[0] leading-[1.5] block text-[#4b5966]">Mariya Lykra</div>
                                                         <div class="gi-t-review-rating mt-[5px]">
-                                                            @for ($i = 1; $i <= 5; $i++)
-                                                                <i class="gicon gi-star inline-block text-[16px] {{ $i <= $review->rating ? 'text-[#f27d0c]' : 'text-[#b2b2b2]' }}"></i>
-                                                            @endfor
+                                                            <i class="gicon gi-star fill inline-block text-[#f27d0c] float-left text-[14px] mr-[3px]"></i>
+                                                            <i class="gicon gi-star fill inline-block text-[#f27d0c] float-left text-[14px] mr-[3px]"></i>
+                                                            <i class="gicon gi-star fill inline-block text-[#f27d0c] float-left text-[14px] mr-[3px]"></i>
+                                                            <i class="gicon gi-star fill inline-block text-[#f27d0c] float-left text-[14px] mr-[3px]"></i>
+                                                            <i class="gicon gi-star-o inline-block text-[#b2b2b2] float-left text-[14px] mr-[3px]"></i>
                                                         </div>
                                                     </div>
                                                     <div class="gi-t-review-bottom">
-                                                        <p class="w-full text-[14px] text-[#777] font-normal">
-                                                        {{ $review->comment }}
+                                                        <p class="w-full text-[14px] text-[#777] font-normal">Lorem Ipsum is simply dummy text of the printing and
+                                                            typesetting industry. Lorem Ipsum has been the industry's
+                                                            standard dummy text ever since the 1500s, when an unknown
+                                                            printer took a galley of type and scrambled it to make a
+                                                            type specimen.
                                                         </p>
                                                     </div>
                                                 </div>
                                             </div>
-                                        @endforeach
+                                            <div class="gi-t-review-item flex mb-[25px] pb-[25px] border-b-[1px] border-solid border-[#eee]">
+                                                <div class="gi-t-review-avtar basis-[50px] grow-[0] shrink-[0] mr-[15px]">
+                                                    <img src="assets/img/user/2.jpg" alt="user" class="max-w-full rounded-[5px]">
+                                                </div>
+                                                <div class="gi-t-review-content">
+                                                    <div class="gi-t-review-top flex flex-col mb-[10px]">
+                                                        <div class="gi-t-review-name text-[15px] m-[0] leading-[1.5] block text-[#4b5966]">Moris Willson</div>
+                                                        <div class="gi-t-review-rating mt-[5px]">
+                                                            <i class="gicon gi-star fill inline-block text-[#f27d0c] float-left text-[14px] mr-[3px]"></i>
+                                                            <i class="gicon gi-star fill inline-block text-[#f27d0c] float-left text-[14px] mr-[3px]"></i>
+                                                            <i class="gicon gi-star fill inline-block text-[#f27d0c] float-left text-[14px] mr-[3px]"></i>
+                                                            <i class="gicon gi-star-o inline-block text-[#b2b2b2] float-left text-[14px] mr-[3px]"></i>
+                                                            <i class="gicon gi-star-o inline-block text-[#b2b2b2] float-left text-[14px] mr-[3px]"></i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="gi-t-review-bottom">
+                                                        <p class="w-full text-[14px] text-[#777] font-normal">Lorem Ipsum has been the industry's
+                                                            standard dummy text ever since the 1500s, when an unknown
+                                                            printer took a galley of type and scrambled it to make a
+                                                            type specimen.
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                         <div class="gi-ratting-content w-full">
     <h3 class="mb-[10px] text-[20px] font-semibold leading-[1] font-Poppins text-[#4b5966] tracking-[0.01rem]">Tambahkan Ulasan</h3>
@@ -338,5 +347,88 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 </script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Bintang rating interaktif
+    const stars = document.querySelectorAll('#star-rating i');
+    const ratingInput = document.getElementById('rating');
+
+    stars.forEach(star => {
+        star.addEventListener('click', function () {
+            const rating = this.dataset.value;
+            ratingInput.value = rating;
+
+            // Update tampilan bintang
+            stars.forEach(s => {
+                s.classList.remove('gi-star', 'text-[#f27d0c]');
+                s.classList.add('gi-star-o', 'text-[#b2b2b2]');
+            });
+
+            for (let i = 0; i < rating; i++) {
+                stars[i].classList.remove('gi-star-o', 'text-[#b2b2b2]');
+                stars[i].classList.add('gi-star', 'text-[#f27d0c]');
+            }
+        });
+    });
+
+    // Kirim review via AJAX
+    const form = document.getElementById('review-form');
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const formData = new FormData(form);
+
+        fetch("{{ route('review.store') }}", {
+            method: "POST",
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Reset form
+                form.reset();
+
+                // Reset bintang
+                stars.forEach(s => {
+                    s.classList.remove('gi-star', 'text-[#f27d0c]');
+                    s.classList.add('gi-star-o', 'text-[#b2b2b2]');
+                });
+                ratingInput.value = 0;
+
+                // Tambahkan review baru di tampilan
+                const reviewList = document.getElementById('review-list');
+                const newReview = `
+                    <div class="single-review mb-[30px]">
+                        <div class="review-header mb-[10px]">
+                            <span class="text-[16px] font-Poppins text-[#4b5966] font-medium">${data.review.user_name}</span>
+                            <span class="text-[14px] text-[#777] ml-[10px]">${data.review.created_at}</span>
+                        </div>
+                        <div class="review-body">
+                            <div class="gi-ratting-star">
+                                ${new Array(5).fill(0).map((_, index) => {
+                                    return `<i class="gicon gi-star inline-block text-[16px] ${index < data.review.rating ? 'text-[#f27d0c]' : 'text-[#b2b2b2]'}"></i>`;
+                                }).join('')}
+                            </div>
+                            <p class="text-[#777] text-[14px] font-Poppins">${data.review.comment}</p>
+                        </div>
+                    </div>
+                `;
+                reviewList.insertAdjacentHTML('beforeend', newReview);
+            } else {
+                alert("Terjadi kesalahan saat mengirim review.");
+            }
+        })
+        .catch(error => {
+            console.error("Gagal:", error);
+            alert("Terjadi kesalahan saat mengirim review.");
+        });
+    });
+});
+</script>
+
 
 @endsection
