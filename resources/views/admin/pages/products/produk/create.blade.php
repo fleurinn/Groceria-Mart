@@ -72,7 +72,16 @@
                 <div class="row g-3">
                   <div class="col-12 col-lg-6">
                     <h5 class="mb-2 text-body-highlight">Regular price</h5>
-                    <input type="number" placeholder="Tulis tanpa menggunakan koma/titik" step="0.01" class="form-control @error('price') is-invalid @enderror" name="price" id="price" value="{{ old('price') }}" placeholder="$$$">
+                    <div class="input-group">
+                      <span class="input-group-text">Rp.</span>
+                      <input type="number" placeholder="Tulis tanpa menggunakan koma/titik" step="0.01" class="form-control @error('price') is-invalid @enderror" name="price" id="price" value="{{ old('price') }}">
+                    </div>
+                    @error('price')
+                        <span class="invalid-feedback d-block" role="alert" style="color: red;">
+                            {{ $message }}
+                        </span>
+                    @enderror
+                    
                       @error('price')
                           <span class="invalid-feedback" role="alert"  style="color: red;">
                               {{ $message }}
@@ -299,4 +308,59 @@
             });
         });
 </script>
+
+<script>
+  // === ✅ Tag Update Function ===
+  function updateTags() {
+    const input = document.getElementById('tags-input').value;
+    const tagsDisplay = document.getElementById('tags-display');
+    const tags = input.split(',').map(tag => tag.trim()).filter(tag => tag.length > 0);
+    tagsDisplay.innerHTML = '';
+    tags.forEach(tag => {
+      const span = document.createElement('span');
+      span.className = 'badge bg-primary me-1';
+      span.innerText = tag;
+      tagsDisplay.appendChild(span);
+    });
+  }
+
+  // === ✅ Swiper untuk Varian ===
+  let variantCount = 0;
+
+  function addVariantSlide() {
+    const variantContainer = document.getElementById('variant-container');
+    const slide = document.createElement('div');
+    slide.className = 'swiper-slide';
+    slide.innerHTML = `
+      <div class="border p-3 rounded bg-light">
+        <label class="form-label">Nama Varian</label>
+        <input type="text" class="form-control mb-2" name="variants[${variantCount}][name]" placeholder="Contoh: Warna Merah" required>
+        
+        <label class="form-label">Harga Varian</label>
+        <input type="number" step="0.01" class="form-control mb-2" name="variants[${variantCount}][price]" placeholder="Harga" required>
+
+        <label class="form-label">Stok Varian</label>
+        <input type="number" class="form-control" name="variants[${variantCount}][stock]" placeholder="Stok" required>
+      </div>
+    `;
+    variantContainer.appendChild(slide);
+    variantSwiper.update();
+    variantCount++;
+  }
+
+  const variantSwiper = new Swiper('.mySwiper', {
+    slidesPerView: 1,
+    spaceBetween: 10,
+    pagination: {
+      el: '#pagination',
+      clickable: true,
+    },
+  });
+
+  document.getElementById('add-variant').addEventListener('click', addVariantSlide);
+
+  // Inisialisasi tags awal jika user reload
+  document.addEventListener('DOMContentLoaded', updateTags);
+</script>
+
 @endsection
