@@ -332,7 +332,7 @@
                                                                                 .then(response => response.json())
                                                                                 .then(data => {
                                                                                     console.log("Status pembayaran diperbarui:", data);
-                                                                                    window.location.href = "{{ route('keranjang') }}"; // Arahkan ke halaman keranjang setelah sukses
+                                                                                    window.location.href = "{{ route('landing-page') }}"; // Arahkan ke halaman keranjang setelah sukses
                                                                                 })
                                                                                 .catch(error => {
                                                                                     console.error("Gagal mengirim status pembayaran ke server:", error);

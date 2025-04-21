@@ -113,27 +113,46 @@ class PaymentController extends Controller
         }
     }
 
-    
+    public function updatePaymentStatus(Request $request)
+{
+    try {
+        $data = $request->all();
 
+        // Ambil user yang sedang login
+        $user = auth()->user();
 
-    public function updateStatus(Request $request): JsonResponse
-    {
-        $paymentId = $request->get('payment_id'); // Ganti dari transaction_id ke payment_id
-        $status = $request->get('transaction_status');
-
-        // Update status pembayaran di tabel payments
-        $payment = Payment::where('payment_id', $paymentId)->first();
-
-        if ($payment) {
-            $payment->update([
-                'payment_status' => $status
-            ]);
-
-            return response()->json(['success' => true, 'message' => 'Status pembayaran diperbarui']);
-        } else {
-            return response()->json(['success' => false, 'message' => 'Pembayaran tidak ditemukan'], 404);
+        // Cek apakah ada transaksi_id dari Midtrans
+        if (!isset($data['payment_id'])) {
+            return response()->json(['error' => 'ID payment tidak ditemukan.'], 400);
         }
+
+        // Cari payment berdasarkan transaction_id (jika kamu menyimpan payment_id dari Midtrans sebagai payment_id)
+        $payment = Payment::where('payment_id', $data['payment_id'])->first();
+
+        if (!$payment) {
+            return response()->json(['error' => 'Pembayaran tidak ditemukan.'], 404);
+        }
+
+        // Pastikan hanya bisa update payment milik user yang login
+        if ($payment->user_id !== $user->id) {
+            return response()->json(['error' => 'Akses ditolak.'], 403);
+        }
+
+        // Update status pembayaran menjadi success
+        $payment->update([
+            'payment_status' => 'success'
+        ]);
+
+        // Kosongkan keranjang user
+        Cart::where('user_id', $user->id)->delete();
+
+        return response()->json(['message' => 'Status pembayaran berhasil diperbarui.']);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Gagal memperbarui status pembayaran: ' . $e->getMessage()], 500);
     }
+}
+
+
 
     public function index()
     {
@@ -155,44 +174,6 @@ class PaymentController extends Controller
         $users = User::all();
         $transactions = Transaction::all();
         return view('admin.payments.create', compact('users', 'transactions'));
-    }
-    
-
-    public function updateStatusFromClient(Request $request)
-    {
-        $paymentId = $request->input('payment_id');
-
-        if (!$paymentId) {
-            return response()->json(['error' => 'ID pembayaran tidak ditemukan'], 400);
-        }
-
-        $payment = Payment::where('payment_id', $paymentId)->first();
-
-        if (!$payment) {
-            return response()->json(['error' => 'Data pembayaran tidak ditemukan'], 404);
-        }
-
-        DB::beginTransaction();
-
-        try {
-            $payment->payment_status = 'paid';
-            $payment->save();
-
-            $transaction = Transaction::find($payment->transaction_id);
-            if ($transaction) {
-                $transaction->status = 'paid';
-                $transaction->save();
-            } else {
-                DB::rollBack();
-                return response()->json(['error' => 'Data transaksi tidak ditemukan'], 404);
-            }
-
-            DB::commit();
-            return response()->json(['message' => 'Status pembayaran berhasil diperbarui.'], 200);
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return response()->json(['error' => 'Terjadi kesalahan, silakan coba lagi.'], 500);
-        }
     }
 
     public function edit(Payment $payment)
