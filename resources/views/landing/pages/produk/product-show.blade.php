@@ -216,44 +216,44 @@
                                             </div>
                                         @endforeach
                                 </div>
-<div class="gi-ratting-content w-full">
-    <h3 class="mb-[10px] text-[20px] font-semibold leading-[1] font-Poppins text-[#4b5966] tracking-[0.01rem]">Tambahkan Ulasan</h3>
-    <div class="gi-ratting-form">
-        <!-- Form untuk review -->
-        <form id="review-form" method="POST">
-            @csrf
-            <!-- Hidden input untuk product_id -->
-            <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                <div class="gi-ratting-content w-full">
+                                    <h3 class="mb-[10px] text-[20px] font-semibold leading-[1] font-Poppins text-[#4b5966] tracking-[0.01rem]">Tambahkan Ulasan</h3>
+                                    <div class="gi-ratting-form">
+                                        <!-- Form untuk review -->
+                                        <form id="review-form" method="POST">
+                                            @csrf
+                                            <!-- Hidden input untuk product_id -->
+                                            <input type="hidden" name="product_id" value="{{ $product->id }}">
 
-            <!-- Rating Stars -->
-            <div class="gi-ratting-star flex mt-[5px] mb-[25px] items-center">
-                <span class="mr-[18px] text-[16px] text-[#777] tracking-[0.02rem]">Rating Anda:</span>
-                <div class="gi-t-review-rating" id="star-rating">
-                    @for ($i = 1; $i <= 5; $i++)
-                        <i class="gicon gi-star-o inline-block text-[18px] text-[#b2b2b2] float-left mr-[3px] cursor-pointer" data-value="{{ $i }}"></i>
-                    @endfor
-                </div>
-                <input type="hidden" name="rating" id="rating" value="0">
-            </div>
+                                            <!-- Rating Stars -->
+                                            <div class="gi-ratting-star flex mt-[5px] mb-[25px] items-center">
+                                                <span class="mr-[18px] text-[16px] text-[#777] tracking-[0.02rem]">Rating Anda:</span>
+                                                <div class="gi-t-review-rating" id="star-rating">
+                                                    @for ($i = 1; $i <= 5; $i++)
+                                                        <i class="gicon gi-star-o inline-block text-[18px] text-[#b2b2b2] float-left mr-[3px] cursor-pointer" data-value="{{ $i }}"></i>
+                                                    @endfor
+                                                </div>
+                                                <input type="hidden" name="rating" id="rating" value="0">
+                                            </div>
 
-            <!-- Nama pengguna (di-disable jika sudah login) -->
-            <div class="gi-ratting-input mb-[10px]">
-                <input name="your-name" placeholder="Nama*" type="text" class="text-[14px] rounded-[5px] w-full mb-[15px] py-[5px] px-[20px] outline-[0] border-[1px] border-solid border-[#eee] text-[#777] h-[50px]" value="{{ Auth::user()->name }}" disabled>
-            </div>
+                                            <!-- Nama pengguna (di-disable jika sudah login) -->
+                                            <div class="gi-ratting-input mb-[10px]">
+                                                <input name="your-name" placeholder="Nama*" type="text" class="text-[14px] rounded-[5px] w-full mb-[15px] py-[5px] px-[20px] outline-[0] border-[1px] border-solid border-[#eee] text-[#777] h-[50px]" value="{{ Auth::user()->name }}" disabled>
+                                            </div>
 
-            <!-- Email pengguna (di-disable jika sudah login) -->
-            <div class="gi-ratting-input mb-[10px]">
-                <input name="your-email" placeholder="Email*" type="email" class="text-[14px] rounded-[5px] w-full mb-[15px] py-[5px] px-[20px] outline-[0] border-[1px] border-solid border-[#eee] text-[#777] h-[50px]" value="{{ Auth::user()->email }}" disabled>
-            </div>
+                                            <!-- Email pengguna (di-disable jika sudah login) -->
+                                            <div class="gi-ratting-input mb-[10px]">
+                                                <input name="your-email" placeholder="Email*" type="email" class="text-[14px] rounded-[5px] w-full mb-[15px] py-[5px] px-[20px] outline-[0] border-[1px] border-solid border-[#eee] text-[#777] h-[50px]" value="{{ Auth::user()->email }}" disabled>
+                                            </div>
 
-            <!-- Komentar -->
-            <div class="gi-ratting-input form-submit">
-                <textarea name="comment" placeholder="Masukan komentar anda*" class="bg-transparent border-[1px] border-solid border-[#eee] text-[#4b5966] h-[150px] p-[20px] mb-[15px] w-full outline-[0] text-[14px] rounded-[5px]"></textarea>
-                <button type="submit" class="gi-btn-2 transition-all duration-[0.3s] ease-in-out py-[10px] px-[15px] text-[14px] font-medium bg-[#5caf90] text-[#fff] text-center rounded-[5px] hover:bg-[#4b5966] hover:text-[#fff]">Kirim</button>
-            </div>  
-        </form>
-    </div>
-</div>
+                                            <!-- Komentar -->
+                                            <div class="gi-ratting-input form-submit">
+                                                <textarea name="comment" placeholder="Masukan komentar anda*" class="bg-transparent border-[1px] border-solid border-[#eee] text-[#4b5966] h-[150px] p-[20px] mb-[15px] w-full outline-[0] text-[14px] rounded-[5px]"></textarea>
+                                                <button type="submit" class="gi-btn-2 transition-all duration-[0.3s] ease-in-out py-[10px] px-[15px] text-[14px] font-medium bg-[#5caf90] text-[#fff] text-center rounded-[5px] hover:bg-[#4b5966] hover:text-[#fff]">Kirim</button>
+                                            </div>  
+                                        </form>
+                                    </div>
+                                </div>
 
                     <!-- product details description area end -->   
                     </div>

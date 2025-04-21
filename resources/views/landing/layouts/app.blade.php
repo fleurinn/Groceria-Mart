@@ -24,6 +24,8 @@
 
     <!-- Tailwindcss -->
     <script src="{{ asset('assets/js/plugins/tailwindcss3.4.1') }}"></script>
+    <!-- Tambahkan di layout, sebelum </body> -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- Main Style -->
     <link rel="stylesheet" id="main_style" href="{{ asset('assets/css/demo-1.css') }}">
