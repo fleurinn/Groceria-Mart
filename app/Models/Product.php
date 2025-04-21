@@ -46,6 +46,11 @@ class Product extends Model
         return $this->belongsTo(CategoryProduct::class, 'category_product_id');
     }
 
+    public function payment()
+    {
+        return $this->belongsTo(Payment::class);
+    }
+
     public function variants()
     {
         return $this->hasMany(VariantProduct::class, 'product_id', 'id');

@@ -20,6 +20,7 @@ class CreatePaymentsTable extends Migration
             $table->string('payment_id')->unique()->nullable(); // Kolom untuk menyimpan ID pembayaran unik (opsional, bisa digunakan untuk referensi internal)
             $table->string('snap_token')->nullable(); // Token dari Midtrans untuk pembayaran menggunakan Snap
             $table->enum('payment_status', ['pending', 'success', 'failed'])->default('pending'); // Status pembayaran
+            $table->enum('status_pengiriman', ['proses', 'dalam perjalanan', 'selesai'])->default('proses');            
             $table->decimal('total', 10, 2); // Total harga
             $table->timestamps(); // Kolom created_at dan updated_at
         });

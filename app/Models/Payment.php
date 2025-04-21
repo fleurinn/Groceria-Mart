@@ -25,6 +25,13 @@ class Payment extends Model
         return $this->belongsTo(User::class);
     }
 
+    // Di model Payment
+public function product()
+{
+    // Pastikan relasi benar, jika kolom penghubung di tabel products adalah payment_id
+    return $this->hasMany(Product::class, 'payment_id');
+}
+
     public function shippingAddresses()
     {
         return $this->belongsTo(ShippingAddress::class);

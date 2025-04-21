@@ -82,6 +82,8 @@ Route::get('/order', function () {
     return view('landing.pages.order.order-index');
 })->name('order');
 
+Route::get('/riwayat-pemesanan', [PaymentController::class, 'userOrderHistory'])->middleware('auth')->name('user.order.history');
+
 Route::get('/api/districts/{city_id}', [RegisteredUserController::class, 'getDistricts']);
 Route::get('/api/villages/{district_id}', [RegisteredUserController::class, 'getVillages']);
 Route::get('/user/{id}/edit', [RegisteredUserController::class, 'edit'])->name('user.edit');
@@ -99,7 +101,7 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::middleware(['auth'])->prefix('dashboard')->group(function () {
-    
+    Route::get('/payments', [PaymentController::class, 'index'])->name('payments.index');
     Route::resource('/profile-pengguna', UserController::class);
     Route::post('/profile-pengguna/bulk-delete', [UserController::class, 'bulkDelete'])->name('users.bulk-delete');
     Route::resource('/shipping_addresses', UserController::class);
@@ -159,9 +161,8 @@ Route::middleware(['auth'])->prefix('dashboard')->group(function () {
 
 
     //payment
-    Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
+    Route::middleware(['auth', 'admin'])->prefix('dashboard')->group(function () {
         // Rute untuk menampilkan daftar pembayaran
-        Route::get('/payments', [PaymentController::class, 'index'])->name('payments.index');
     
         // Rute untuk menampilkan form tambah pembayaran (jika diperlukan)
         Route::get('/payments/create', [PaymentController::class, 'create'])->name('payments.create');

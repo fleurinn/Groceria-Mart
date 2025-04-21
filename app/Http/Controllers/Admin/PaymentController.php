@@ -96,6 +96,7 @@ class PaymentController extends Controller
                 'shipping_address_id' => optional($user->shippingAddresses)->id,
                 'payment_id' => $orderId,
                 'snap_token' => $snapToken,
+                'status_pengiriman' => 'proses',
                 'payment_status' => 'pending',
                 'total' => $total
             ]);
@@ -152,22 +153,25 @@ class PaymentController extends Controller
     }
 }
 
+public function userOrderHistory(Request $request)
+{
+    $user = Auth::user(); // Ambil user yang sedang login
 
+    $payments = Payment::where('user_id', $user->id)
+        ->when($request->status_pengiriman, function ($query) use ($request) {
+            $query->where('status_pengiriman', $request->status_pengiriman);
+        })
+        ->with('user')
+        ->get(); // Ambil riwayat pembayaran miliknya, dengan filter jika ada
 
-    public function index()
-    {
-        $payments = Payment::with(['user', 'transaction', 'shippingAddress'])->latest()->get();
-        $totalTransactions = Transaction::count();
-        $totalBalance = Payment::sum('total');
-        $yearlyBalance = Payment::whereYear('created_at', date('Y'))->sum('total');
-        $monthlyBalance = Payment::whereYear('created_at', date('Y'))->whereMonth('created_at', date('m'))->sum('total');
-        $weeklyBalance = Payment::whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])->sum('total');
+    return view('landing.pages.order.order-index', compact('payments'));
+}
 
-        return view('admin.payments.index', compact(
-            'payments', 'totalTransactions', 'totalBalance',
-            'yearlyBalance', 'monthlyBalance', 'weeklyBalance'
-        ));
-    }
+public function index()
+{
+    $payments = Payment::with(['user', 'transaction', 'shippingAddress'])->latest()->get();
+    return view('admin.pages.payments.payment-history', compact('payments'));
+}
 
     public function create()
     {
