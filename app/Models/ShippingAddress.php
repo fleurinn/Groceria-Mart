@@ -65,4 +65,9 @@ class ShippingAddress extends Model
     {
         return $this->belongsTo(Village::class);
     }
+
+    public function payment(): BelongsTo
+    {
+        return $this->hasMany(Payment::class);
+    }
 }

@@ -1,4 +1,3 @@
-
 <?php
 
 use App\Http\Controllers\Auth\RegisteredUserController;
@@ -61,8 +60,8 @@ Route::middleware('auth')->group(function () {
 Route::post('/set-shipping-cost', [CartController::class, 'setShippingCost'])->middleware('auth');
 
 // Rute untuk menyimpan pembayaran baru (jika diperlukan)
-Route::post('/create-payment', [PaymentController::class, 'createPayment'])->name('create-payment');
-Route::post('/payments/update-status', [PaymentController::class, 'updateStatusFromClient'])->name('payment.update-status');
+Route::post('/keranjang/payment/create', [PaymentController::class, 'createPayment'])->name('payment.create');
+Route::post('/keranjang/payment/update-status', [PaymentController::class, 'updateStatus'])->name('payment.update-status');
 
 Route::resource('/wishlist', WishlistController::class);
 
@@ -79,6 +78,15 @@ Route::get('/service', function () {
     return view('landing.pages.layanan.service-index');
 })->name('service');
 
+Route::get('/order', function () {
+    return view('landing.pages.order.order-index');
+})->name('order');
+
+Route::get('/api/districts/{city_id}', [RegisteredUserController::class, 'getDistricts']);
+Route::get('/api/villages/{district_id}', [RegisteredUserController::class, 'getVillages']);
+Route::get('/user/{id}/edit', [RegisteredUserController::class, 'edit'])->name('user.edit');
+Route::put('/user/{id}', [RegisteredUserController::class, 'update'])->name('user.update');
+Route::get('/user', [RegisteredUserController::class, 'index'])->name('user.index');
 
 
 Route::middleware(['auth'])->group(function () {

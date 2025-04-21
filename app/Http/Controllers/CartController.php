@@ -90,23 +90,30 @@ class CartController extends Controller
         ]);
 
         $product = Product::find($request->product_id);
-        $cart = Cart::where('user_id', Auth::id())->where('product_id', $request->product_id)->first();
+        $cart = Cart::where('user_id', Auth::id())
+                    ->where('product_id', $request->product_id)
+                    ->first();
+
+        // Hitung harga diskon
         $price = $product->price * ((100 - $product->discount) / 100);
 
-        // Tentukan biaya pengiriman berdasarkan jenis pengiriman
-        $shippingCost = ($request->shipping_type == 'reguler') ? self::REGULAR_SHIPPING_COST : self::EXPRESS_SHIPPING_COST;
+        // Hitung biaya pengiriman
+        $shippingCost = ($request->shipping_type == 'reguler') 
+            ? self::REGULAR_SHIPPING_COST 
+            : self::EXPRESS_SHIPPING_COST;
 
         if ($cart) {
             $newQuantity = $cart->quantity + $request->quantity;
             if ($newQuantity > 100) {
                 return response()->json(['error' => 'Maksimum 100 item per produk diizinkan dalam keranjang.'], 422);
             }
+
             $cart->update([
                 'quantity' => $newQuantity,
                 'cart_items' => json_encode(['product_name' => $product->name]),
                 'price' => $price,
-                'shipping_type' => $request->shipping_type, // Simpan jenis pengiriman
-                'shipping_cost' => $shippingCost, // Simpan biaya pengiriman
+                'shipping_type' => $request->shipping_type,
+                'shipping_cost' => $shippingCost,
             ]);
         } else {
             $cart = Cart::create([
@@ -114,12 +121,15 @@ class CartController extends Controller
                 'product_id' => $request->product_id,
                 'quantity' => $request->quantity,
                 'cart_items' => json_encode(['product_name' => $product->name]),
-                'price' => $price, // Simpan biaya pengiriman
+                'price' => $price,
+                'shipping_type' => $request->shipping_type,
+                'shipping_cost' => $shippingCost,
             ]);
         }
 
         return redirect()->back()->withInput()->with('success', 'Produk berhasil dimasukkan ke keranjang.');
     }
+
 
     // Perbarui jumlah produk di keranjang
     public function update(Request $request, $id)

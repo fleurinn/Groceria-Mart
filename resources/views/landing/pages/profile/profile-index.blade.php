@@ -46,15 +46,11 @@
                                         <div class="w-full md:w-1/2 px-[15px]">
                                             <label class="block mb-[9px] text-[#4b5966] text-[15px] font-medium">Kota*</label>
                                             <span class="block w-full h-[50px] mb-[30px] relative rounded-[5px] border border-[#eee] text-[14px]">
-                                                <select readonly name="shipping_addresses[0][city_id]" id="citySelect" class="w-full h-full px-[10px] text-[#777] font-light cursor-pointer rounded-[5px]">
-                                                    <option disabled selected>Pilih Kota</option>
-                                                    @foreach($city as $cities)
-                                                        <option disabled selected value="{{ $cities->id }}" 
-                                                            {{ old('shipping_addresses.0.city_id', $user->shippingAddress->city_id ?? '') == $cities->id ? 'selected' : '' }}>
-                                                            {{ $cities->name }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
+                                            <select readonly name="shipping_addresses[0][city_id]" class="w-full h-full px-[10px] text-[#777] font-light cursor-pointer rounded-[5px]">
+                                                <option selected value="{{ $user->shippingAddress->city->id ?? '' }}">
+                                                    {{ $user->shippingAddress->city->name ?? 'Kota tidak ditemukan' }}
+                                                </option>
+                                            </select>
                                             </span>
                                         </div>
 
@@ -63,7 +59,6 @@
                                             <label class="block mb-[9px] text-[#4b5966] text-[15px] font-medium">Kecamatan*</label>
                                             <span class="block w-full h-[50px] mb-[30px] relative rounded-[5px] border border-[#eee] text-[14px]">
                                                 <select readonly name="shipping_addresses[0][district_id]" id="districtSelect" class="w-full h-full px-[10px] text-[#777] font-light cursor-pointer rounded-[5px]">
-                                                    <option disabled selected>Pilih Kecamatan</option>
                                                     @foreach($district as $d)
                                                         <option disabled selected value="{{ $d->id }}" 
                                                             {{ old('shipping_addresses.0.district_id', $user->shippingAddress->district_id ?? '') == $d->id ? 'selected' : '' }}>
@@ -79,7 +74,6 @@
                                             <label class="block mb-[9px] text-[#4b5966] text-[15px] font-medium">Desa*</label>
                                             <span class="block w-full h-[50px] mb-[30px] relative rounded-[5px] border border-[#eee] text-[14px]">
                                                 <select readonly name="shipping_addresses[0][village_id]" id="villageSelect" class="w-full h-full px-[10px] text-[#777] font-light cursor-pointer rounded-[5px]">
-                                                    <option disabled selected>Pilih Desa</option>
                                                     @foreach($villages as $v)
                                                         <option disabled selected value="{{ $v->id }}" 
                                                             {{ old('shipping_addresses.0.village_id', $user->shippingAddress->village_id ?? '') == $v->id ? 'selected' : '' }}>

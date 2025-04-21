@@ -12,7 +12,7 @@ class Payment extends Model
 
     protected $fillable = [
         'user_id',
-        'transaction_id', // Gunakan transaction_id
+        'shipping_addresses_id',
         'payment_id',    // Tambahkan payment_id
         'snap_token',
         'payment_status', // Tambahkan payment_status
@@ -23,6 +23,11 @@ class Payment extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function shippingAddresses()
+    {
+        return $this->belongsTo(ShippingAddress::class);
     }
 
     // Relasi ke Transaction
