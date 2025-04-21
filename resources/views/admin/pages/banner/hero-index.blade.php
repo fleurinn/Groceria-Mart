@@ -93,7 +93,6 @@
                 <th class="align-middle ps-2 text-center">DESKRIPSI</th>
                 <th class="align-middle ps-2 text-center">KATEGORI</th>
                 <th class="align-middle ps-2 text-center">STATUS</th>
-                <th class="align-middle ps-2 text-center">AKSI</th>
               </tr>
             </thead>
             <tbody class="list" id="slider-table-body">
@@ -123,31 +122,7 @@
                     {{ ucfirst($slider->status) }}
                   </span>
                 </td>
-                <td class="align-middle white-space-nowrap text-end pe-0 ps-4 btn-reveal-trigger">
-                  <div class="btn-reveal-trigger position-static">
-                    <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent">
-                      <span class="fas fa-ellipsis-h fs-10"></span>
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-end py-2">
-                      <a class="dropdown-item" >View</a>
-                      <a class="dropdown-item edit-slider" 
-                        data-id="{{ $slider->id }}" 
-                        data-image="{{ $slider->image }}"
-                        data-title="{{ $slider->title }}" 
-                        data-description="{{ $slider->description }}"
-                        data-categoryproducts="{{ $slider->category_product_id }}" 
-                        data-status="{{ $slider->status }}">
-                        Edit
-                      </a>
-                      <div class="dropdown-divider"></div>
-                      <form id="delete-form-{{ $slider->id }}" action="{{ route('slider.destroy', $slider->id) }}" method="POST" class="d-inline">
-                          @csrf
-                          @method('DELETE')
-                          <button type="button" class="dropdown-item text-danger" onclick="deleteRecord({{ $slider->id }})">Remove</button>
-                      </form>   
-                    </div>
-                  </div>
-                </td>
+                
               </tr>
               @empty
                 <tr>

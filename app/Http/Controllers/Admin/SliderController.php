@@ -49,7 +49,7 @@ class SliderController extends Controller
             'category_product_id' => $request->category_product_id,
         ]);
 
-        return redirect()->route('sliders.index')->with('success', 'Slider berhasil ditambahkan.');
+        return redirect()->route('slider.index')->with('success', 'Slider berhasil ditambahkan.');
     }
 
     public function edit(Slider $slider)

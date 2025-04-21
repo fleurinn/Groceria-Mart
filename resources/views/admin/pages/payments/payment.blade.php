@@ -54,7 +54,7 @@
               </div><button class="btn btn-sm btn-phoenix-secondary px-7 flex-shrink-0">More filters</button>
             </div>
           </div>
-          <div class="ms-xxl-auto"><button class="btn btn-link text-body me-4 px-0"><span class="fa-solid fa-file-export fs-9 me-2"></span>Export</button><button class="btn btn-primary" id="addBtn"><span class="fas fa-plus me-2"></span>Add product</button></div>
+          <button class="btn btn-primary" id="addBtn"><span class="fas fa-plus me-2"></span>Add product</button></div>
         </div>
       </div>
       <div class="mx-n4 px-4 mx-lg-n6 px-lg-6 bg-body-emphasis border-top border-bottom border-translucent position-relative top-1">
@@ -96,7 +96,7 @@
                 <td class="time align-middle white-space-nowrap text-body-tertiary text-opacity-85 ps-4">Nov 12, 10:45 PM</td>
                 <td class="align-middle white-space-nowrap text-end pe-0 ps-4 btn-reveal-trigger">
                   <div class="btn-reveal-trigger position-static"><button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h fs-10"></span></button>
-                    <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">View</a><a class="dropdown-item" href="#!">Export</a>
+                    <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">View</a>
                       <div class="dropdown-divider"></div><a class="dropdown-item text-danger" href="#!">Remove</a>
                     </div>
                   </div>
@@ -116,7 +116,7 @@
                 <td class="time align-middle white-space-nowrap text-body-tertiary text-opacity-85 ps-4">Nov 11, 7:36 PM</td>
                 <td class="align-middle white-space-nowrap text-end pe-0 ps-4 btn-reveal-trigger">
                   <div class="btn-reveal-trigger position-static"><button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h fs-10"></span></button>
-                    <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">View</a><a class="dropdown-item" href="#!">Export</a>
+                    <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">View</a>
                       <div class="dropdown-divider"></div><a class="dropdown-item text-danger" href="#!">Remove</a>
                     </div>
                   </div>
@@ -141,7 +141,7 @@
                 <td class="time align-middle white-space-nowrap text-body-tertiary text-opacity-85 ps-4">Nov 11, 8:16 AM</td>
                 <td class="align-middle white-space-nowrap text-end pe-0 ps-4 btn-reveal-trigger">
                   <div class="btn-reveal-trigger position-static"><button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h fs-10"></span></button>
-                    <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">View</a><a class="dropdown-item" href="#!">Export</a>
+                    <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">View</a>
                       <div class="dropdown-divider"></div><a class="dropdown-item text-danger" href="#!">Remove</a>
                     </div>
                   </div>
@@ -166,7 +166,7 @@
                 <td class="time align-middle white-space-nowrap text-body-tertiary text-opacity-85 ps-4">Nov 8, 6:39 PM</td>
                 <td class="align-middle white-space-nowrap text-end pe-0 ps-4 btn-reveal-trigger">
                   <div class="btn-reveal-trigger position-static"><button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h fs-10"></span></button>
-                    <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">View</a><a class="dropdown-item" href="#!">Export</a>
+                    <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">View</a>
                       <div class="dropdown-divider"></div><a class="dropdown-item text-danger" href="#!">Remove</a>
                     </div>
                   </div>
@@ -191,7 +191,7 @@
                 <td class="time align-middle white-space-nowrap text-body-tertiary text-opacity-85 ps-4">Nov 8, 5:32 PM</td>
                 <td class="align-middle white-space-nowrap text-end pe-0 ps-4 btn-reveal-trigger">
                   <div class="btn-reveal-trigger position-static"><button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h fs-10"></span></button>
-                    <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">View</a><a class="dropdown-item" href="#!">Export</a>
+                    <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">View</a>
                       <div class="dropdown-divider"></div><a class="dropdown-item text-danger" href="#!">Remove</a>
                     </div>
                   </div>
@@ -216,7 +216,7 @@
                 <td class="time align-middle white-space-nowrap text-body-tertiary text-opacity-85 ps-4">Nov 6, 11:34 PM</td>
                 <td class="align-middle white-space-nowrap text-end pe-0 ps-4 btn-reveal-trigger">
                   <div class="btn-reveal-trigger position-static"><button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h fs-10"></span></button>
-                    <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">View</a><a class="dropdown-item" href="#!">Export</a>
+                    <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">View</a>
                       <div class="dropdown-divider"></div><a class="dropdown-item text-danger" href="#!">Remove</a>
                     </div>
                   </div>
@@ -241,7 +241,7 @@
                 <td class="time align-middle white-space-nowrap text-body-tertiary text-opacity-85 ps-4">Nov 1, 7:45 AM</td>
                 <td class="align-middle white-space-nowrap text-end pe-0 ps-4 btn-reveal-trigger">
                   <div class="btn-reveal-trigger position-static"><button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h fs-10"></span></button>
-                    <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">View</a><a class="dropdown-item" href="#!">Export</a>
+                    <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">View</a>
                       <div class="dropdown-divider"></div><a class="dropdown-item text-danger" href="#!">Remove</a>
                     </div>
                   </div>
@@ -266,7 +266,7 @@
                 <td class="time align-middle white-space-nowrap text-body-tertiary text-opacity-85 ps-4">Nov 3, 12:27 PM</td>
                 <td class="align-middle white-space-nowrap text-end pe-0 ps-4 btn-reveal-trigger">
                   <div class="btn-reveal-trigger position-static"><button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h fs-10"></span></button>
-                    <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">View</a><a class="dropdown-item" href="#!">Export</a>
+                    <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">View</a>
                       <div class="dropdown-divider"></div><a class="dropdown-item text-danger" href="#!">Remove</a>
                     </div>
                   </div>
@@ -291,7 +291,7 @@
                 <td class="time align-middle white-space-nowrap text-body-tertiary text-opacity-85 ps-4">Nov 1, 9:39 AM</td>
                 <td class="align-middle white-space-nowrap text-end pe-0 ps-4 btn-reveal-trigger">
                   <div class="btn-reveal-trigger position-static"><button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h fs-10"></span></button>
-                    <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">View</a><a class="dropdown-item" href="#!">Export</a>
+                    <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">View</a>
                       <div class="dropdown-divider"></div><a class="dropdown-item text-danger" href="#!">Remove</a>
                     </div>
                   </div>
@@ -316,7 +316,7 @@
                 <td class="time align-middle white-space-nowrap text-body-tertiary text-opacity-85 ps-4">Oct 30, 3:49 PM</td>
                 <td class="align-middle white-space-nowrap text-end pe-0 ps-4 btn-reveal-trigger">
                   <div class="btn-reveal-trigger position-static"><button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h fs-10"></span></button>
-                    <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">View</a><a class="dropdown-item" href="#!">Export</a>
+                    <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">View</a>
                       <div class="dropdown-divider"></div><a class="dropdown-item text-danger" href="#!">Remove</a>
                     </div>
                   </div>
@@ -341,7 +341,7 @@
                 <td class="time align-middle white-space-nowrap text-body-tertiary text-opacity-85 ps-4">Nov 25, 5:00 PM</td>
                 <td class="align-middle white-space-nowrap text-end pe-0 ps-4 btn-reveal-trigger">
                   <div class="btn-reveal-trigger position-static"><button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h fs-10"></span></button>
-                    <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">View</a><a class="dropdown-item" href="#!">Export</a>
+                    <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">View</a>
                       <div class="dropdown-divider"></div><a class="dropdown-item text-danger" href="#!">Remove</a>
                     </div>
                   </div>
@@ -361,7 +361,7 @@
                 <td class="time align-middle white-space-nowrap text-body-tertiary text-opacity-85 ps-4">Sep 20, 1:00 PM</td>
                 <td class="align-middle white-space-nowrap text-end pe-0 ps-4 btn-reveal-trigger">
                   <div class="btn-reveal-trigger position-static"><button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h fs-10"></span></button>
-                    <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">View</a><a class="dropdown-item" href="#!">Export</a>
+                    <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">View</a>
                       <div class="dropdown-divider"></div><a class="dropdown-item text-danger" href="#!">Remove</a>
                     </div>
                   </div>
@@ -386,7 +386,7 @@
                 <td class="time align-middle white-space-nowrap text-body-tertiary text-opacity-85 ps-4">Oct 18, 3:40 PM</td>
                 <td class="align-middle white-space-nowrap text-end pe-0 ps-4 btn-reveal-trigger">
                   <div class="btn-reveal-trigger position-static"><button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h fs-10"></span></button>
-                    <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">View</a><a class="dropdown-item" href="#!">Export</a>
+                    <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">View</a>
                       <div class="dropdown-divider"></div><a class="dropdown-item text-danger" href="#!">Remove</a>
                     </div>
                   </div>
@@ -411,7 +411,7 @@
                 <td class="time align-middle white-space-nowrap text-body-tertiary text-opacity-85 ps-4">Sep 20, 1:00 PM</td>
                 <td class="align-middle white-space-nowrap text-end pe-0 ps-4 btn-reveal-trigger">
                   <div class="btn-reveal-trigger position-static"><button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h fs-10"></span></button>
-                    <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">View</a><a class="dropdown-item" href="#!">Export</a>
+                    <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">View</a>
                       <div class="dropdown-divider"></div><a class="dropdown-item text-danger" href="#!">Remove</a>
                     </div>
                   </div>
@@ -431,7 +431,7 @@
                 <td class="time align-middle white-space-nowrap text-body-tertiary text-opacity-85 ps-4">Dec 01, 12:00 PM</td>
                 <td class="align-middle white-space-nowrap text-end pe-0 ps-4 btn-reveal-trigger">
                   <div class="btn-reveal-trigger position-static"><button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h fs-10"></span></button>
-                    <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">View</a><a class="dropdown-item" href="#!">Export</a>
+                    <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">View</a>
                       <div class="dropdown-divider"></div><a class="dropdown-item text-danger" href="#!">Remove</a>
                     </div>
                   </div>
@@ -456,7 +456,7 @@
                 <td class="time align-middle white-space-nowrap text-body-tertiary text-opacity-85 ps-4">Dec 01, 12:00 PM</td>
                 <td class="align-middle white-space-nowrap text-end pe-0 ps-4 btn-reveal-trigger">
                   <div class="btn-reveal-trigger position-static"><button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h fs-10"></span></button>
-                    <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">View</a><a class="dropdown-item" href="#!">Export</a>
+                    <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">View</a>
                       <div class="dropdown-divider"></div><a class="dropdown-item text-danger" href="#!">Remove</a>
                     </div>
                   </div>

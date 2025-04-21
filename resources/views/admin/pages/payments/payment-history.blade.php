@@ -8,7 +8,7 @@
     <div class="mb-9">
         <div class="row g-3 mb-4">
             <div class="col-auto">
-                <h2 class="mb-0">Riwayat Pembayaran</h2>
+                <h2 class="mb-0">Riwayat Pesanan</h2>
             </div>
         </div>
         <div class="table-responsive scrollbar mx-n1 px-1">
@@ -20,7 +20,6 @@
                         <th class="align-middle ps-4">Total</th>
                         <th class="align-middle ps-4">Status</th>
                         <th class="align-middle ps-4">Date</th>
-                        <th class="align-middle ps-4">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -31,10 +30,6 @@
                         <td class="align-middle ps-4">{{ number_format($payment->total, 2) }}</td>
                         <td class="align-middle ps-4">{{ ucfirst($payment->payment_status) }}</td>
                         <td class="align-middle ps-4">{{ $payment->created_at->format('Y-m-d H:i') }}</td>
-                        <td class="align-middle ps-4">
-                            <a href="{{ route('payments.show', $payment->id) }}" class="btn btn-sm btn-primary">View</a>
-                            <a href="{{ route('payments.downloadInvoice', $payment->id) }}" class="btn btn-sm btn-secondary">Download Invoice</a>
-                        </td>
                     </tr>
                     @endforeach
                 </tbody>
