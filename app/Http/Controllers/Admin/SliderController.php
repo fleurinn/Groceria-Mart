@@ -65,30 +65,34 @@ class SliderController extends Controller
             'request_data' => $request->all()
         ]);
 
-            $request->validate([
-                'title'               => 'required|string|max:255',
-                'description'         => 'required|string|max:1000',
-                'image'               => 'nullable|image|mimes:jpeg,jpg,png',
-                'status'              => 'required|in:Draft,Publish',
-                'category_product_id' => 'required|exists:category_products,id',
-            ]);
+        $request->validate([
+            'title'               => 'required|string|max:255',
+            'description'         => 'required|string|max:1000',
+            'image'               => 'nullable|image|mimes:jpeg,jpg,png',
+            'status'              => 'required|in:Draft,Publish',
+            'category_product_id' => 'required|exists:category_products,id',
+        ]);
 
         // Cek jika ada gambar baru
         if ($request->hasFile('image')) {
             // Hapus gambar lama
-            Storage::delete('public/sliders/' . $slider->image);
+            $oldImagePath = public_path('storage/sliders/' . $slider->image);
+            if (file_exists($oldImagePath)) {
+                unlink($oldImagePath);
+            }
 
             // Upload gambar baru
             $image = $request->file('image');
-            $image->storeAs('public/sliders/', $image->hashName());
+            $imageName = $image->hashName();
+            $image->move(public_path('storage/sliders'), $imageName);
 
             // Update dengan gambar baru
             $slider->update([
                 'title'               => $request->title,
                 'description'         => $request->description,
-                'image'               => $image->hashName(),
+                'image'               => $imageName,
                 'status'              => $request->status,
-                'category_products_id' => $request->category_products_id,
+                'category_product_id' => $request->category_product_id,
             ]);
         } else {
             // Update tanpa ubah gambar
@@ -96,12 +100,13 @@ class SliderController extends Controller
                 'title'               => $request->title,
                 'description'         => $request->description,
                 'status'              => $request->status,
-                'category_products_id' => $request->category_products_id,
+                'category_product_id' => $request->category_product_id,
             ]);
         }
 
         return redirect()->route('slider.index')->with('success', 'Slider berhasil diperbarui.');
     }
+
 
     public function destroy(Slider $slider)
     {

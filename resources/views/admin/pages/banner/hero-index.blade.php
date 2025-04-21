@@ -252,36 +252,42 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <input type="hidden" id="editSliderId" name="slider_id">
+          <input type="hidden" id="editSliderId"> <!-- Tidak perlu pakai name -->
+
           <div class="mb-3">
             <label for="editSliderTitle" class="form-label">Judul</label>
             <input type="text" class="form-control" id="editSliderTitle" name="title" required>
           </div>
+
           <div class="mb-3">
             <label for="editSliderImage" class="form-label">Image</label>
             <input type="file" class="form-control" id="editSliderImage" name="image" accept="image/*">
             <img id="currentSliderImage" src="" class="mt-2" style="max-height: 100px;">
           </div>
+
           <div class="mb-3">
             <label for="editSliderDescription" class="form-label">Description</label>
             <textarea class="form-control" id="editSliderDescription" name="description" rows="3"></textarea>
           </div>
+
           <div class="mb-3">
-              <label for="editSliderCategoryproducts" class="form-label">Kategori</label>
-              <select class="form-select" id="editSliderCategoryproducts" name="category_product_id" required>
+            <label for="editSliderCategoryproducts" class="form-label">Kategori</label>
+            <select class="form-select" id="editSliderCategoryproducts" name="category_product_id" required>
               @foreach($categoryproducts as $categoryproduct)
-                  <option value="{{ $categoryproduct->id }}">{{ $categoryproduct->name }}</option>
+                <option value="{{ $categoryproduct->id }}">{{ $categoryproduct->name }}</option>
               @endforeach
-              </select>
+            </select>
           </div>
+
           <div class="mb-3">
-              <label for="editSliderStatus" class="form-label">Status</label>
-              <select class="form-select" id="editSliderStatus" name="status" required>
-                  <option value="publish">Publish</option>
-                  <option value="draft">Draft</option>
-              </select>
+            <label for="editSliderStatus" class="form-label">Status</label>
+            <select class="form-select" id="editSliderStatus" name="status" required>
+              <option value="draft">Draft</option>
+              <option value="publish">Publish</option>
+            </select>
           </div>
         </div>
+
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
           <button type="submit" class="btn btn-primary">Update</button>
@@ -290,6 +296,7 @@
     </form>
   </div>
 </div>
+
 
 
 <!-- alert checkbox delete -->
@@ -441,6 +448,7 @@
         });
     }
 </script>
+
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     const editButtons = document.querySelectorAll('.edit-slider');
@@ -455,10 +463,10 @@
         const category_product_id = this.getAttribute('data-category_product_id');
         const status = this.getAttribute('data-status');
 
-        // Set form action
+        // Set form action ke URL update
         editForm.action = `/dashboard/slider/${id}`;
 
-        // Set form values
+        // Isi nilai ke form
         document.getElementById('editSliderId').value = id;
         document.getElementById('editSliderTitle').value = title;
         document.getElementById('editSliderDescription').value = description;
@@ -466,13 +474,14 @@
         document.getElementById('editSliderStatus').value = status;
         document.getElementById('currentSliderImage').src = `/storage/sliders/${image}`;
 
-        // Show modal
+        // Tampilkan modal
         const modal = new bootstrap.Modal(document.getElementById('editSliderModal'));
         modal.show();
       });
     });
   });
 </script>
+
 
 
 <script>
