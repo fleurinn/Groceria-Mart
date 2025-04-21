@@ -29,6 +29,14 @@ class PaymentController extends Controller
         Config::$is3ds = true;
     }
 
+    public function downloadInvoice($id)
+    {
+        $payment = Payment::findOrFail($id);
+        // Generate PDF
+        $pdf = PDF::loadView('invoice', compact('payment'));
+        return $pdf->download('invoice-' . $payment->payment_id . '.pdf');
+    }
+
     
     public function createPayment(Request $request): JsonResponse
     {
@@ -262,11 +270,7 @@ public function indexKurir()
         return view('admin.payments.show', compact('payment'));
     }
 
-    public function downloadInvoice(Payment $payment)
-    {
-        $pdf = Pdf::loadView('admin.payments.invoice', compact('payment'));
-        return $pdf->download('invoice-' . $payment->payment_id . '.pdf');
-    }
+   
 
     // public function createMidtransTransaction(Request $request)
     // {
