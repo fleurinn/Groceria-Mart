@@ -91,6 +91,7 @@ Route::get('/user', [RegisteredUserController::class, 'index'])->name('user.inde
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
+    Route::get('/dashboard/sales/{month}', [DashboardController::class, 'getSalesByMonth']);
     Route::get('/admin/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard.admin');
     Route::get('/seller/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard.seller');
     Route::get('/kurir/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard.kurir');

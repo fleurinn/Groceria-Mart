@@ -4,6 +4,18 @@
 @section('page_title', 'Groceria | Belanja Online dengan Ceria!')
 
 @section('content')
+@if(session('success'))
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        Swal.fire({
+            title: 'Berhasil!',
+            text: '{{ session('success') }}',
+            icon: 'success',
+            confirmButtonText: 'OK'
+        });
+    });
+</script>
+@endif  
     <!-- Slider Section -->
     @include('landing.parts.hero')
 

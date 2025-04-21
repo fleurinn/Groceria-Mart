@@ -183,13 +183,6 @@
                     <h6 class="mt-2 text-body-emphasis">{{$user->name}}</h6>
                   </div>
                 </div>
-                <div class="overflow-auto scrollbar" style="height:8rem;">
-                  <ul class="nav d-flex flex-column mb-2 pb-1">
-                    <li class="nav-item"><a class="nav-link px-3 d-block" href="{{ route('dashboard') }}"><span class="me-2 text-body align-bottom" data-feather="pie-chart"></span>Dashboard</a></li>
-                    <li class="nav-item"><a class="nav-link px-3 d-block" href="#!"> <span class="me-2 text-body align-bottom" data-feather="settings"></span>Settings &amp; Account </a></li>
-                    <li class="nav-item"><a class="nav-link px-3 d-block" href="#!"> <span class="me-2 text-body align-bottom" data-feather="globe"></span>Language</a></li>
-                  </ul>
-                </div>
                 <div class="card-footer p-0 border-top border-translucent">
                   <div class="px-3 py-3">
                       <form method="POST" action="{{ route('logout') }}" class="d-flex flex-center w-100">
