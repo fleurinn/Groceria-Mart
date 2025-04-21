@@ -10,20 +10,22 @@ use Illuminate\Support\Facades\Storage;
 class CategoryProductController extends Controller
 {
     public function index(Request $request)
-    {
-        $categoryproducts = CategoryProduct::withCount('products')->get();
+{
+    // Inisialisasi query builder
+    $query = CategoryProduct::withCount('products');
 
-        if ($request->has('search')) {
-            $query->where('name', 'like', '%' . $request->search . '%');
-        }
-
-        if ($request->has('status') && in_array($request->status, ['draft', 'publish'])) {
-            $query->where('status', $request->status);
-        }
-
-        $categoryproducts = $query->paginate(10);
-        return view('admin.pages.products.kategori-produk.index', compact('categoryproducts'));
+    // Menambahkan kondisi berdasarkan status jika ada
+    if ($request->has('status') && in_array($request->status, ['draft', 'publish'])) {
+        $query->where('status', $request->status);
     }
+
+    // Mengambil data dengan paginasi
+    $categoryproducts = $query->paginate(10);
+
+    // Mengirim data ke view
+    return view('admin.pages.products.kategori-produk.index', compact('categoryproducts'));
+}
+
 
     public function create()
     {

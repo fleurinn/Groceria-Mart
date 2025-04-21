@@ -89,8 +89,12 @@
                                                         @endfor
                                                     </div>
                                                     <span class="gi-price">
-                                                        <span class="new-price text-[#4b5966] font-bold text-[14px] mr-[7px]">Rp{{ $product->discount }}</span>
-                                                        <span class="old-price text-[14px] text-[#777] line-through">Rp{{ $product->price }}</span>
+                                                        @if ($product->discount)
+                                                            <span class="new-price text-[#4b5966] font-bold text-[14px] mr-[7px]">Rp{{ number_format($product->discount, 0, ',', '.') }}</span>
+                                                            <span class="old-price text-[14px] text-[#777] line-through">Rp{{ number_format($product->price, 0, ',', '.') }}</span>
+                                                        @else
+                                                            <span class="new-price text-[#4b5966] font-bold text-[14px] mr-[7px]">Rp{{ number_format($product->price, 0, ',', '.') }}</span>
+                                                        @endif
                                                     </span>
                                                 </div>
                                             </div>
@@ -154,16 +158,23 @@
                                                 </a>
                                                 <h5 class="gi-pro-title h-full mb-[10px] text-[16px]"><a href="product-left-sidebar.html" class="block text-[14px] leading-[22px] font-normal text-[#4b5966] tracking-[0.85px] capitalize font-Poppins hover:text-[#5caf90]">{{ $product->name }}</a></h5>
                                                 <div class="gi-pro-rat-price mt-[5px] mb-[0] flex flex-col">
-                                                    <span class="gi-pro-rating mb-[10px] opacity-[0.7] relative">
-                                                        <i class="gicon gi-star fill text-[14px] text-[#f27d0c] mr-[3px] float-left mr-[3px]"></i>
-                                                        <i class="gicon gi-star fill text-[14px] text-[#f27d0c] mr-[3px] float-left mr-[3px]"></i>
-                                                        <i class="gicon gi-star fill text-[14px] text-[#f27d0c] mr-[3px] float-left mr-[3px]"></i>
-                                                        <i class="gicon gi-star text-[14px] text-[#777] mr-[3px] float-left mr-[3px]"></i>
-                                                        <i class="gicon gi-star text-[14px] text-[#777] mr-[3px] float-left mr-[3px]"></i>
-                                                    </span>
+                                                    <div class="gi-single-rating pr-[15px] leading-[17px]">
+                                                        @php
+                                                            $averageRating = $product->reviews->avg('rating'); // Menghitung rata-rata rating
+                                                            $averageRating = round($averageRating); // Membulatkan nilai agar menjadi integer
+                                                        @endphp
+
+                                                        @for ($i = 1; $i <= 5; $i++)
+                                                            <i class="gicon gi-star inline-block text-[14px] mr-[3px] {{ $i <= $averageRating ? 'text-[#f27d0c]' : 'text-[#b2b2b2]' }}"></i>
+                                                        @endfor
+                                                    </div>
                                                     <span class="gi-price">
-                                                        <span class="new-price text-[#4b5966] font-bold text-[14px] mr-[7px]">Rp{{ $product->discount }}</span>
-                                                        <span class="old-price text-[14px] text-[#777] line-through">Rp{{ $product->price }}</span>
+                                                        @if ($product->discount)
+                                                            <span class="new-price text-[#4b5966] font-bold text-[14px] mr-[7px]">Rp{{ number_format($product->discount, 0, ',', '.') }}</span>
+                                                            <span class="old-price text-[14px] text-[#777] line-through">Rp{{ number_format($product->price, 0, ',', '.') }}</span>
+                                                        @else
+                                                            <span class="new-price text-[#4b5966] font-bold text-[14px] mr-[7px]">Rp{{ number_format($product->price, 0, ',', '.') }}</span>
+                                                        @endif
                                                     </span>
                                                 </div>
                                             </div>
