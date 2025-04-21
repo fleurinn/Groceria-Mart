@@ -1,3 +1,4 @@
+
 <?php
 
 use App\Http\Controllers\Auth\RegisteredUserController;
@@ -49,6 +50,20 @@ Route::controller(LandingPageController::class)->group(function () {
 
 });
 
+Route::middleware('auth')->group(function () {
+    Route::post('/cart/apply-shipping', [CartController::class, 'setShippingCost'])->name('cart.shipping');
+    Route::post('/cart/apply-voucher', [CartController::class, 'applyVoucher'])->name('voucher.apply');
+    Route::get('/cart/total', [CartController::class, 'getCartTotal'])->name('cart.total');
+
+    
+});
+
+Route::post('/set-shipping-cost', [CartController::class, 'setShippingCost'])->middleware('auth');
+
+// Rute untuk menyimpan pembayaran baru (jika diperlukan)
+Route::post('/create-payment', [PaymentController::class, 'createPayment'])->name('create-payment');
+Route::post('/payments/update-status', [PaymentController::class, 'updateStatusFromClient'])->name('payment.update-status');
+
 Route::resource('/wishlist', WishlistController::class);
 
 
@@ -63,21 +78,6 @@ Route::get('/produk-detail', function () {
 Route::get('/service', function () {
     return view('landing.pages.layanan.service-index');
 })->name('service');
-
-Route::get('/order', function () {
-    return view('landing.pages.order.order-index');
-})->name('order');
-
-
-
-Route::get('/api/districts/{city_id}', [RegisteredUserController::class, 'getDistricts']);
-Route::get('/api/villages/{district_id}', [RegisteredUserController::class, 'getVillages']);
-Route::get('/user/{id}/edit', [RegisteredUserController::class, 'edit'])->name('user.edit');
-Route::put('/user/{id}', [RegisteredUserController::class, 'update'])->name('user.update');
-Route::get('/user', [RegisteredUserController::class, 'index'])->name('user.index');
-
-
-
 
 
 
@@ -148,6 +148,51 @@ Route::middleware(['auth'])->prefix('dashboard')->group(function () {
     Route::resource('/carts', CartController::class);
     //Tambahkan Bulk for Cart
     Route::post('/carts/bulk-delete', [CartController::class, 'bulkDelete'])->name('carts.bulk-delete');
+
+
+    //payment
+    Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
+        // Rute untuk menampilkan daftar pembayaran
+        Route::get('/payments', [PaymentController::class, 'index'])->name('payments.index');
+    
+        // Rute untuk menampilkan form tambah pembayaran (jika diperlukan)
+        Route::get('/payments/create', [PaymentController::class, 'create'])->name('payments.create');
+    
+        // Rute untuk menyimpan pembayaran baru (jika diperlukan)
+        Route::post('/payments', [PaymentController::class, 'store'])->name('payments.store');
+    
+        // Rute untuk menampilkan form edit pembayaran
+        Route::get('/payments/{payment}/edit', [PaymentController::class, 'edit'])->name('payments.edit');
+    
+        // Rute untuk mengupdate pembayaran
+        Route::put('/payments/{payment}', [PaymentController::class, 'update'])->name('payments.update');
+    
+        // Rute untuk menghapus pembayaran
+        Route::delete('/payments/{payment}', [PaymentController::class, 'destroy'])->name('payments.destroy');
+    
+        // Rute untuk menampilkan detail pembayaran dan invoice
+        Route::get('/payments/{payment}/show', [PaymentController::class, 'show'])->name('payments.show');
+    
+        // Rute untuk mengunduh invoice dalam format PDF
+        Route::get('/payments/{payment}/download-invoice', [PaymentController::class, 'downloadInvoice'])->name('payments.downloadInvoice');
+    
+        // Rute untuk membuat transaksi Midtrans dan mendapatkan snap token (API endpoint)
+        Route::post('/payments/midtrans/create-transaction', [PaymentController::class, 'createMidtransTransaction'])->name('payments.midtrans.createTransaction');
+
+        // Rute untuk memproses pembayaran setelah checkout (API endpoint)
+        Route::middleware(['auth'])->post('/process-payment', [PaymentController::class, 'processPayment'])->name('process.payment');
+
+        // web.php
+        Route::post('/payment/get-snap-token', [PaymentController::class, 'getSnapToken'])->name('payment.snap-token');
+
+    });
+    
+    // Rute untuk halaman checkout (di sisi pengguna/landing)
+    Route::middleware(['auth'])->get('/checkout', [PaymentController::class, 'checkout'])->name('checkout');
+    
+
+    
+    
 
     Route::resource('/discount-vouchers', DiscountVoucherController::class);
     Route::get('/vouchers/update-expired-status', [DiscountVoucherController::class, 'autoUpdateExpiredVouchers']);

@@ -7,6 +7,11 @@ use App\Models\Slider;
 use App\Models\CategoryProduct;
 use App\Models\Product;
 use App\Models\Cart;
+use Illuminate\Support\Str;
+use Midtrans\Snap;
+use App\Models\Payment;
+use App\Models\Transaction;
+use Midtrans\Config;
 use App\Models\User;
 use App\Models\Role;
 use App\Models\ShippingAddress;
@@ -83,29 +88,71 @@ class LandingPageController extends Controller
     }
 
     public function cartIndex(Request $request)
-    {   
-        // Ambil semua produk dan kategori (jika memang perlu di view)
-        $products = Product::all();
-        $categoryproducts = CategoryProduct::all();
+{
+    $products = Product::all();
+    $categoryproducts = CategoryProduct::all();
+    $total = 0;
+    $carts = collect();
+    $snapToken = null;
 
-        $total = 0;
-        $carts = collect(); // default kosong
+    try {
+        // Ambil user dan transaksi berdasarkan request
+        $transaction = Transaction::findOrFail($request->transaction_id);
+        $user = User::findOrFail($request->user_id);
 
-        // Cek apakah user sudah login
-        if (auth()->check()) {
-            // Ambil data keranjang berdasarkan user yang login
-            $carts = Cart::with('product')->where('user_id', auth()->id())->get();
+        // Ambil isi keranjang user
+        $carts = Cart::with('product')->where('user_id', $user->id)->get();
 
-            // Hitung total harga
-            foreach ($carts as $cart) {
-                if ($cart->product) {
-                    $total += $cart->product->price * $cart->quantity;
-                }
+        if ($carts->isEmpty()) {
+            return redirect()->back()->with('error', 'Keranjang kamu masih kosong.');
+        }
+
+        // Hitung total dan siapkan item_details untuk Midtrans
+        $itemDetails = [];
+        foreach ($carts as $cart) {
+            if ($cart->product) {
+                $itemTotal = $cart->product->price * $cart->quantity;
+                $total += $itemTotal;
+
+                $itemDetails[] = [
+                    'id' => 'ITEM-' . $cart->id,
+                    'price' => $cart->product->price,
+                    'quantity' => $cart->quantity,
+                    'name' => $cart->product->name,
+                ];
             }
         }
 
-        return view('landing.pages.cart.cart-index', compact('categoryproducts', 'products', 'carts', 'total'));
+        // === Midtrans Config ===
+        Config::$serverKey = config('services.midtrans.server_key');
+        Config::$isProduction = false;
+        Config::$isSanitized = true;
+        Config::$is3ds = true;
+
+        $params = [
+            'transaction_details' => [
+                'order_id' => $transaction->transaction_code,
+                'gross_amount' => $total,
+            ],
+            'item_details' => $itemDetails,
+            'customer_details' => [
+                'first_name' => $user->name,
+                'last_name' => '',
+                'email' => $user->email,
+                'phone' => $user->phone ?? '',
+            ]
+        ];
+
+        $snapToken = Snap::getSnapToken($params);
+
+    } catch (\Exception $e) {
+        return redirect()->back()->with('error', 'Gagal menampilkan halaman cart: ' . $e->getMessage());
     }
+
+    return view('landing.pages.cart.cart-index', compact('categoryproducts', 'products', 'carts', 'total', 'snapToken'));
+}
+
+    
 
     public function increaseQuantity(Request $request)
     {
@@ -197,7 +244,7 @@ class LandingPageController extends Controller
             'address' => 'required|string|max:255',
         ]);
 
-        $alamat = Alamat::create([
+        $address = Alamat::create([
             'user_id' => Auth::id(), // Otomatis ambil ID user yang login
             'no_telp' => $request->no_telp,
             'city_id' => $request->city_id,

@@ -4,82 +4,89 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Payment;
+use App\Models\DiscountVoucher;
 use App\Models\User;
 use App\Models\Transaction;
-// use App\Models\Purchase; // Dikomentari sesuai permintaan
 use App\Models\Cart;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
-use Barryvdh\DomPDF\Facade\Pdf; // Tambahkan untuk PDF
+use Barryvdh\DomPDF\Facade\Pdf;
 use Midtrans\Config;
 use Midtrans\Snap;
-use Midtrans\Notification; // Tambahkan untuk callback
+use Illuminate\Support\Facades\Auth;
 
 class PaymentController extends Controller
 {
     public function __construct()
     {
-        // Set konfigurasi Midtrans
-        Config::$serverKey = env('MIDTRANS_SERVER_KEY');
-        Config::$clientKey = env('MIDTRANS_CLIENT_KEY');
-        Config::$isProduction = env('MIDTRANS_IS_PRODUCTION', false);
+        Config::$serverKey = config('services.midtrans.server_key');
+        Config::$clientKey = config('services.midtrans.client_key');
+        Config::$isProduction = config('services.midtrans.is_production');
         Config::$isSanitized = true;
         Config::$is3ds = true;
     }
 
-    // Menampilkan daftar pembayaran dengan total transaksi & balance
     public function index()
     {
-        $payments = Payment::with(['user', 'transaction'])->latest()->get();
-        // Hitung total transaksi & balance
-        $totalTransactions = Payment::count();
-        $totalBalance = Payment::sum('amount');
-        // Hitung berdasarkan tahun, bulan, minggu
-        $yearlyBalance = Payment::whereYear('payment_date', date('Y'))->sum('amount');
-        $monthlyBalance = Payment::whereYear('payment_date', date('Y'))->whereMonth('payment_date', date('m'))->sum('amount');
-        $weeklyBalance = Payment::whereBetween('payment_date', [now()->startOfWeek(), now()->endOfWeek()])->sum('amount');
+        $payments = Payment::with(['user', 'transaction', 'shippingAddress'])->latest()->get();
+        $totalTransactions = Transaction::count();
+        $totalBalance = Payment::sum('total');
+        $yearlyBalance = Payment::whereYear('created_at', date('Y'))->sum('total');
+        $monthlyBalance = Payment::whereYear('created_at', date('Y'))->whereMonth('created_at', date('m'))->sum('total');
+        $weeklyBalance = Payment::whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])->sum('total');
+
         return view('admin.payments.index', compact(
-            'payments',
-            'totalTransactions',
-            'totalBalance',
-            'yearlyBalance',
-            'monthlyBalance',
-            'weeklyBalance'
+            'payments', 'totalTransactions', 'totalBalance',
+            'yearlyBalance', 'monthlyBalance', 'weeklyBalance'
         ));
     }
 
-    // Menampilkan form tambah pembayaran (Mungkin tidak terpakai setelah integrasi Midtrans)
     public function create()
     {
         $users = User::all();
         $transactions = Transaction::all();
         return view('admin.payments.create', compact('users', 'transactions'));
     }
+    
 
-    // Menyimpan pembayaran baru (Mungkin tidak terpakai langsung setelah integrasi Midtrans)
-    public function store(Request $request)
+    public function updateStatusFromClient(Request $request)
     {
-        $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'transaction_id' => 'required|exists:transactions,id',
-            'payment_status' => 'required|in:pending,confirmed,unpaid',
-            'payment_date' => 'nullable|date',
-            'amount' => 'required|numeric|min:0', // Menambahkan jumlah pembayaran
-        ]);
-        
-        // Generate payment ID unik seperti nomor orderan
-        $paymentId = 'PAY-' . strtoupper(uniqid());
-        Payment::create([
-            'payment_id' => $paymentId,
-            'user_id' => $request->user_id,
-            'transaction_id' => $request->transaction_id,
-            'payment_status' => $request->payment_status,
-            'payment_date' => $request->payment_date,
-            'amount' => $request->amount,
-        ]);
-        return redirect()->route('payments.index')->with('success', 'Pembayaran berhasil ditambahkan.');
+        $paymentId = $request->input('payment_id');
+
+        if (!$paymentId) {
+            return response()->json(['error' => 'ID pembayaran tidak ditemukan'], 400);
+        }
+
+        $payment = Payment::where('payment_id', $paymentId)->first();
+
+        if (!$payment) {
+            return response()->json(['error' => 'Data pembayaran tidak ditemukan'], 404);
+        }
+
+        DB::beginTransaction();
+
+        try {
+            $payment->payment_status = 'paid';
+            $payment->save();
+
+            $transaction = Transaction::find($payment->transaction_id);
+            if ($transaction) {
+                $transaction->status = 'paid';
+                $transaction->save();
+            } else {
+                DB::rollBack();
+                return response()->json(['error' => 'Data transaksi tidak ditemukan'], 404);
+            }
+
+            DB::commit();
+            return response()->json(['message' => 'Status pembayaran berhasil diperbarui.'], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['error' => 'Terjadi kesalahan, silakan coba lagi.'], 500);
+        }
     }
 
-    // Menampilkan form edit pembayaran
     public function edit(Payment $payment)
     {
         $users = User::all();
@@ -87,49 +94,45 @@ class PaymentController extends Controller
         return view('admin.payments.edit', compact('payment', 'users', 'transactions'));
     }
 
-    // Mengupdate pembayaran
     public function update(Request $request, Payment $payment)
     {
         $request->validate([
             'user_id' => 'required|exists:users,id',
             'transaction_id' => 'required|exists:transactions,id',
-            'payment_status' => 'required|in:pending,confirmed,unpaid',
-            'payment_date' => 'nullable|date',
-            'amount' => 'required|numeric|min:0',
+            'payment_status' => 'required|in:pending,success,failed',
+            'total' => 'required|numeric|min:0',
         ]);
-        $payment->update($request->all());
-        return redirect()->route('payments.index')->with('success', 'Pembayaran berhasil diperbarui.'); // Pesan Bahasa Indonesia
+
+        $payment->update([
+            'user_id' => $request->user_id,
+            'transaction_id' => $request->transaction_id,
+            'payment_status' => $request->payment_status,
+            'total' => $request->total,
+        ]);
+
+        return redirect()->route('payments.index')->with('success', 'Pembayaran berhasil diperbarui.');
     }
 
-    // Menghapus pembayaran
     public function destroy(Payment $payment)
     {
         $payment->delete();
         return redirect()->route('payments.index')->with('success', 'Pembayaran berhasil dihapus.');
     }
 
-    // Menampilkan detail pembayaran dan invoice
     public function show(Payment $payment)
     {
         return view('admin.payments.show', compact('payment'));
     }
 
-    // Mengunduh invoice dalam format PDF
     public function downloadInvoice(Payment $payment)
     {
         $pdf = Pdf::loadView('admin.payments.invoice', compact('payment'));
         return $pdf->download('invoice-' . $payment->payment_id . '.pdf');
     }
 
-    /**
-     * Membuat transaksi Midtrans dan mengembalikan snap token.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function createMidtransTransaction(Request $request)
     {
-        // Validasi data request (sesuaikan dengan kebutuhan Anda)
+        // Validasi input request
         $request->validate([
             'user_id' => 'required|exists:users,id',
             'transaction_id' => 'required|exists:transactions,id',
@@ -143,98 +146,160 @@ class PaymentController extends Controller
             'customer_details.first_name' => 'required|string',
             'customer_details.last_name' => 'nullable|string',
             'customer_details.email' => 'required|email',
-            'customer_details.phone' => 'nullable|string',
+            'customer_details.phone' => 'nullable|string', // Pastikan valid jika ada
         ]);
 
-        $transaction = Transaction::findOrFail($request->transaction_id);
-        $user = User::findOrFail($request->user_id);
-
-        $params = [
-            'transaction_details' => [
-                'order_id' => $transaction->order_id, // Gunakan order_id dari tabel transactions
-                'gross_amount' => $request->gross_amount,
-            ],
-            'item_details' => $request->items,
-            'customer_details' => [
-                'first_name' => $user->first_name,
-                'last_name' => $user->last_name,
-                'email' => $user->email,
-                'phone' => $user->phone_number ?? '', // Asumsi ada kolom phone_number di tabel users
-            ],
-            // Tambahkan detail lain seperti billing_address dan shipping_address jika diperlukan
-        ];
-
         try {
+            // Ambil transaksi dan pengguna dari database
+            $transaction = Transaction::findOrFail($request->transaction_id);
+            $user = User::findOrFail($request->user_id);
+
+            // Ambil semua item dalam keranjang
+            $cartItems = Cart::where('user_id', $user->id)->get();
+        
+            if ($cartItems->isEmpty()) {
+                return redirect()->back()->with('error', 'Keranjang kamu masih kosong.');
+            }
+        
+            // Menghitung total harga produk dan ongkir
+            $total = $cartItems->sum(function ($item) {
+                return ($item->price ?? 0) * ($item->quantity ?? 0);
+            });
+            
+
+            // Siapkan data untuk Midtrans
+            $params = [
+                'transaction_details' => [
+                    'order_id' => $transaction->transaction_code,
+                    'gross_amount' => $total,
+                ],
+                'item_details' => $request->items,
+                'customer_details' => [
+                    'first_name' => $user->name,
+                    'last_name' => $request->customer_details['last_name'] ?? '',
+                    'email' => $user->email,
+                    'phone' => $request->customer_details['phone'] ?? '', // Pastikan phone ada jika diisi
+                ],
+            ];
+
+            // Ambil Snap Token dari Midtrans
             $snapToken = Snap::getSnapToken($params);
 
-            // Simpan snap_token ke dalam tabel payments atau transactions
-            Payment::where('transaction_id', $transaction->order_id)->update(['snap_token' => $snapToken]);
+            // Buat entri pembayaran di database
+            $paymentId = 'PAY-' . strtoupper(uniqid());
+            Payment::create([
+                'payment_id' => $paymentId,
+                'user_id' => $user->id,
+                'transaction_id' => $transaction->id,
+                'snap_token' => $snapToken,
+                'payment_status' => 'pending',
+                'gross_amount' => $total,
+            ]);
 
-            return response()->json(['snap_token' => $snapToken]);
+            // Kembalikan snap_token dan transaction_code untuk diproses frontend
+            return response()->json([
+                'snap_token' => $snapToken,
+                'transaction_code' => $transaction->transaction_code
+            ]);
+
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            // Tangani error yang lebih spesifik
+            return response()->json(['error' => 'Terjadi kesalahan: ' . $e->getMessage()], 500);
         }
     }
 
-    /**
-     * Handle Midtrans callback (webhook).
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function midtransCallback(Request $request)
+    public function createPayment(Request $request)
     {
-        $notif = new Notification();
+        $user = Auth::user();
+    
+        if (!$user) {
+            return redirect()->route('login')->with('error', 'Anda harus login terlebih dahulu.');
+        }
+    
+        $request->validate([
+            'shipping_address_id' => 'required|exists:shipping_addresses,id'
+        ]);
+    
+        // Ambil semua item dalam keranjang
+        $cartItems = Cart::where('user_id', $user->id)->get();
+    
+        if ($cartItems->isEmpty()) {
+            return redirect()->back()->with('error', 'Keranjang kamu masih kosong.');
+        }
+    
+        // Menghitung total harga produk dan ongkir
+        $total = $cartItems->sum(function ($item) {
+            return ($item->price ?? 0) * ($item->quantity ?? 0);
+        });
+        
+    
+        // Membuat transaksi baru
+        $transaction = Transaction::create([
+            'user_id' => $user->id,
+            'shipping_address_id' => $request->shipping_address_id,
+            'discount_voucher_id' => $request->discount_voucher_id ?? null,
+            'transaction_code' => 'TRX-' . strtoupper(Str::random(10)),
+            'total_amount' => $total, // Total yang sudah dihitung setelah diskon dan ongkir
+            'status' => 'pending'
+        ]);
+    
+        // Membuat payment ID
+        $paymentId = 'PAY-' . strtoupper(Str::random(10));
+    
 
-        $transactionStatus = $notif->transaction_status;
-        $fraudStatus = $notif->fraud_status;
-        $orderId = $notif->order_id;
 
-        // Verifikasi signature key (gunakan server key Anda)
-        $serverKey = env('MIDTRANS_SERVER_KEY');
-        $hashed = hash('sha512', $orderId . $notif->status_code . $transactionStatus . $serverKey);
+        // Persiapkan parameter untuk Midtrans
+        $params = [
+            'transaction_details' => [
+                'order_id' => $paymentId,
+                'gross_amount' => $total, // Total harga setelah diskon dan ongkir
+            ],
+            'customer_details' => [
+                'first_name' => $user->name,
+                'email' => $user->email,
+            ]
+        ];
+    
+        try {
+            // Mendapatkan snap token dari Midtrans
+            $snapToken = Snap::getSnapToken($params);
+    
+            // Menyimpan informasi pembayaran ke database
+            Payment::create([
+                'user_id' => $user->id,
+                'transaction_id' => $transaction->id,
+                'shipping_address_id' => $request->shipping_address_id,
+                'payment_id' => $paymentId,
+                'snap_token' => $snapToken,
+                'payment_status' => 'pending',
+                'total' => $total, // Total pembayaran yang sudah dihitung
+            ]);
+    
+            // Menghapus item keranjang setelah pembayaran dibuat
+            Cart::where('user_id', $user->id)->delete();
+    
+            return redirect()->route('keranjang')->with('success', 'Pembayaran berhasil dibuat.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal membuat pembayaran: ' . $e->getMessage());
+        }
+    }
 
-        if ($hashed == $notif->signature_key) {
-            if ($transactionStatus == 'capture') {
-                if ($fraudStatus == 'challenge') {
-                    // TODO: Set transaction status on your database to 'challenge'
-                    $this->updateTransactionStatus($orderId, 'challenge');
-                } else if ($fraudStatus == 'accept') {
-                    // TODO: Set transaction status on your database to 'success'
-                    $this->updateTransactionStatus($orderId, 'success');
-                }
-            } else if ($transactionStatus == 'settlement') {
-                // TODO: Set transaction status on your database to 'success'
-                $this->updateTransactionStatus($orderId, 'success');
-            } else if ($transactionStatus == 'pending') {
-                // TODO: Set transaction status on your database to 'pending'
-                $this->updateTransactionStatus($orderId, 'pending');
-            } else if ($transactionStatus == 'deny') {
-                // TODO: Set transaction status on your database to 'failed'
-                $this->updateTransactionStatus($orderId, 'failed');
-            } else if ($transactionStatus == 'expire') {
-                // TODO: Set transaction status on your database to 'failed'
-                $this->updateTransactionStatus($orderId, 'failed');
-            } else if ($transactionStatus == 'cancel') {
-                // TODO: Set transaction status on your database to 'failed'
-                $this->updateTransactionStatus($orderId, 'failed');
+    public function updatePaymentStatusAdmin(Request $request, Payment $payment)
+    {
+        $request->validate([
+            'payment_status' => 'required|in:pending,success,failed',
+        ]);
+
+        $payment->update(['payment_status' => $request->payment_status]);
+
+        $transaction = Transaction::find($payment->transaction_id);
+        if ($transaction) {
+            $transaction->update(['status' => $request->payment_status]);
+            if ($request->payment_status === 'success') {
+                Cart::where('user_id', $transaction->user_id)->delete();
             }
-
-            return response()->json(['message' => 'Callback processed'], 200);
-        } else {
-            return response()->json(['error' => 'Invalid signature'], 400);
         }
-    }
 
-    protected function updateTransactionStatus($orderId, $status)
-    {
-        // Update status pembayaran di tabel payments
-        Payment::where('transaction_id', $orderId)->update(['payment_status' => $status]);
-
-        // Tambahkan logika lain jika diperlukan, seperti memperbarui status order di tabel lain
-        if ($status === 'success') {
-            Cart::where('user_id', Payment::where('transaction_id', $orderId)->value('user_id'))->delete();
-            // Contoh: Order::where('order_id', $orderId)->update(['status' => 'paid']);
-        }
+        return redirect()->route('payments.index')->with('success', 'Status pembayaran berhasil diperbarui.');
     }
 }
