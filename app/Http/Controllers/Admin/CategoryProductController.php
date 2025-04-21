@@ -11,8 +11,7 @@ class CategoryProductController extends Controller
 {
     public function index(Request $request)
     {
-        $query = CategoryProduct::withCount('products');
-
+        $categoryproducts = CategoryProduct::withCount('products')->get();
 
         if ($request->has('search')) {
             $query->where('name', 'like', '%' . $request->search . '%');

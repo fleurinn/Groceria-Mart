@@ -88,7 +88,7 @@
                                         </span>
                                     </div>
                         
-                                    {{-- Pilihan Ongkos Kirim --}}
+                                    <!-- {{-- Pilihan Ongkos Kirim --}}
                                     <div class="flex justify-between items-center mb-[10px]">
                                         <span class="text-left text-[#4b5966] text-[14px]">Ongkos Kirim</span>
                                         <select id="shipping-select" name="shipping_cost" class="text-right text-[#4b5966] text-[14px] font-medium bg-transparent border-none" 							name="shipping_cost">
@@ -122,7 +122,7 @@
                                         <span class="text-right text-[16px] font-medium text-[#4b5966]">Rp
                                             <span id="total"></span>
                                         </span>
-                                    </div>
+                                    </div> -->
                                 </div>
                             </div>
                         </div>

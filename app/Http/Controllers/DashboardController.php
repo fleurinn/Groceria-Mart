@@ -18,13 +18,16 @@ class DashboardController extends Controller
         
         switch ($user->role_id) {
             case 1:
-                return view('admin.pages.beranda.index'); // Admin dashboard
+                $user = Auth::user();
+                return view('admin.pages.beranda.index', compact('user')); // Admin dashboard
             case 2:
-                return view('admin.dashboard.seller'); // Seller dashboard
+                $user = Auth::user();
+                return view('admin.dashboard.seller', compact('user')); // Seller dashboard
             case 3:
                 return redirect()->route('landing-page'); // Buyer diarahkan ke landing page
             case 4:
-                return view('admin.dashboard.courier'); // Courier dashboard
+                $user = Auth::user();
+                return view('admin.dashboard.courier', compact('user'));
             default:
                 return abort(403, 'Unauthorized'); // Jika role_id tidak sesuai
         }

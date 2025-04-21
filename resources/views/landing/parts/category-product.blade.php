@@ -17,7 +17,6 @@
                                                 {{ $categoryproduct->name }}
                                             </h4>
                                         </a>
-                                        <p class="items m-[0] text-[13px] leading-[28px] text-[#777]">123 Items</p> {{-- Jumlah item bisa dibuat dinamis juga kalau ada relasi --}}
                                     </div>
                                 </div>
                             </div>

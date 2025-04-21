@@ -43,16 +43,21 @@
                                     <div class="single-pro-content">
                                         <h5 class="gi-single-title text-[#4b5966] text-[22px] capitalize mb-[20px] block font-oppins font-medium leading-[35px] tracking-[0.02rem] max-[1199px]:text-[20px] max-[1199px]:leading-[33px] max-[767px]:text-[18px] max-[767px]:text-[18px] max-[767px]:leading-[31px]">{{ $product->name }}</h5>
                                         <div class="gi-single-rating-wrap flex mb-[14px] items-center">
-                                            <div class="gi-single-rating pr-[15px] leading-[17px]">
-                                                <i class="gicon gi-star fill text-[#f27d0c] float-left text-[14px] mr-[3px]"></i>
-                                                <i class="gicon gi-star fill text-[#f27d0c] float-left text-[14px] mr-[3px]"></i>
-                                                <i class="gicon gi-star fill text-[#f27d0c] float-left text-[14px] mr-[3px]"></i>
-                                                <i class="gicon gi-star fill text-[#f27d0c] float-left text-[14px] mr-[3px]"></i>
-                                                <i class="gicon gi-star-o text-[#b2b2b2] float-left text-[14px] mr-[3px]"></i>
-                                            </div>
-                                            <span class="gi-read-review text-[#999] leading-[17px]">
-                                                |&nbsp;&nbsp;<a href="#" class="text-[#999] text-[14px] leading-[20px] hover:text-[#5caf90]">992 Ratings</a>
-                                            </span>
+                                                <div class="gi-single-rating pr-[15px] leading-[17px]">
+                                                    @php
+                                                        $averageRating = $product->reviews->avg('rating'); // Menghitung rata-rata rating
+                                                        $averageRating = round($averageRating); // Membulatkan nilai agar menjadi integer
+                                                    @endphp
+
+                                                    @for ($i = 1; $i <= 5; $i++)
+                                                        <i class="gicon gi-star inline-block text-[14px] mr-[3px] {{ $i <= $averageRating ? 'text-[#f27d0c]' : 'text-[#b2b2b2]' }}"></i>
+                                                    @endfor
+                                                </div>
+                                                <span class="gi-read-review text-[#999] leading-[17px]">
+                                                    |&nbsp;&nbsp;<a href="#" class="text-[#999] text-[14px] leading-[20px] hover:text-[#5caf90]">
+                                                        {{ $product->reviews->count() }} Ratings
+                                                    </a>
+                                                </span>
                                         </div>
                                         <div class="gi-single-price-stoke mb-[15px] pt-[15px] pb-[15px] flex justify-between">
                                             <div class="gi-single-price flex flex-col">
@@ -190,7 +195,7 @@
                                         @foreach ($product->reviews as $review)
                                             <div class="gi-t-review-item flex mb-[25px] pb-[25px] border-b-[1px] border-solid border-[#eee]">
                                                 <div class="gi-t-review-avtar basis-[50px] grow-[0] shrink-[0] mr-[15px]">
-                                                    <img src="assets/img/user/1.jpg" alt="user" class="max-w-full rounded-[5px]">
+                                                    <img src="{{ asset('assets/img/pp/user.png') }}" alt="user" class="max-w-full rounded-[5px]">
                                                 </div>
                                                 <div class="gi-t-review-content">
                                                     <div class="gi-t-review-top flex flex-col mb-[10px]">
@@ -210,8 +215,8 @@
                                                 </div>
                                             </div>
                                         @endforeach
-                                        </div>
-                                        <div class="gi-ratting-content w-full">
+                                </div>
+<div class="gi-ratting-content w-full">
     <h3 class="mb-[10px] text-[20px] font-semibold leading-[1] font-Poppins text-[#4b5966] tracking-[0.01rem]">Tambahkan Ulasan</h3>
     <div class="gi-ratting-form">
         <!-- Form untuk review -->

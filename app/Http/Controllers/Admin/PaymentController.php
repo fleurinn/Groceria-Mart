@@ -167,10 +167,55 @@ public function userOrderHistory(Request $request)
     return view('landing.pages.order.order-index', compact('payments'));
 }
 
+
+public function updateStatus(Request $request, $payment_id)
+{
+    $payment = Payment::findOrFail($payment_id);
+
+    // Validasi input
+    $request->validate([
+        'status_pengiriman' => 'required|string|in:selesai,sukses', // hanya izinkan 'selesai' atau 'sukses'
+        'status_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+    ]);
+
+    // Cek status sebelumnya
+    if ($payment->status_pengiriman !== 'dalam perjalanan') {
+        return redirect()->back()->with('error', 'Status hanya bisa diubah dari "dalam perjalanan" ke "selesai" atau "sukses".');
+    }
+
+    // Menyimpan gambar jika ada
+    if ($request->hasFile('image')) {
+        $imagePath = $request->file('status_image')->store('payment-status-images', 'public');
+        $payment->status_image = $imagePath;
+    }
+
+    // Update status_pengiriman
+    $payment->status_pengiriman = $request->status_pengiriman;
+    $payment->save();
+
+    return redirect()->route('user.order.kurir')->with('success', 'Status Pengiriman berhasil diperbarui!');
+}
+
+
+
+
+public function userOrderKurir(Request $request)
+{
+    $payments = Payment::with(['user', 'shippingAddress'])->latest()->get();
+
+    return view('admin.pages.kurir.index', compact('payments'));
+}
+
 public function index()
 {
     $payments = Payment::with(['user', 'transaction', 'shippingAddress'])->latest()->get();
     return view('admin.pages.payments.payment-history', compact('payments'));
+}
+
+public function indexKurir()
+{
+    $payments = Payment::with(['user', 'transaction', 'shippingAddress'])->latest()->get();
+    return view('admin.dashboard.courier', compact('payments'));
 }
 
     public function create()

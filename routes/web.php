@@ -78,11 +78,9 @@ Route::get('/service', function () {
     return view('landing.pages.layanan.service-index');
 })->name('service');
 
-Route::get('/order', function () {
-    return view('landing.pages.order.order-index');
-})->name('order');
-
+Route::put('//kurir/riwayat-order/{payment}/update-status', [PaymentController::class, 'updateStatus'])->name('payments.updateStatus');
 Route::get('/riwayat-pemesanan', [PaymentController::class, 'userOrderHistory'])->middleware('auth')->name('user.order.history');
+Route::get('/kurir/riwayat-order', [PaymentController::class, 'userOrderKurir'])->middleware('auth')->name('user.order.kurir');
 
 Route::get('/api/districts/{city_id}', [RegisteredUserController::class, 'getDistricts']);
 Route::get('/api/villages/{district_id}', [RegisteredUserController::class, 'getVillages']);

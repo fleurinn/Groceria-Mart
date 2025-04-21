@@ -15,6 +15,8 @@ class Payment extends Model
         'shipping_addresses_id',
         'payment_id',    // Tambahkan payment_id
         'snap_token',
+        'status_pengiriman', // Tambahkan payment_status
+        'status_image', // Tambahkan payment_status
         'payment_status', // Tambahkan payment_status
         'total',
     ];
