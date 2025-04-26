@@ -9,8 +9,8 @@
             <div class="flex flex-wrap">
                 <div class="min-[1200px]:w-[50%] min-[768px]:w-full px-[12px]">
                     <div class="gi-about-img">
-                        <img src="assets/img/common/about5.jpg" class="v-img w-full rounded-[5px] max-[1199px]:max-w-[600px] max-[199px]:mb-[30px]" alt="about">
-                        <img src="assets/img/common/about1.jpg" class="h-img" alt="about">
+                        <img src="assets/img/common/about5-5.jpg" class="v-img w-full rounded-[5px] max-[1199px]:max-w-[600px] max-[199px]:mb-[30px]" alt="about">
+                        <img src="assets/img/common/about1-1.jpg" class="h-img" alt="about">
                         <img src="assets/img/common/about7.jpg" class="h-img" alt="about">
                     </div>
                 </div>

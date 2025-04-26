@@ -27,7 +27,9 @@
                     <tr>
                         <td class="align-middle ps-4">{{ $payment->payment_id }}</td>
                         <td class="align-middle ps-4">{{ $payment->user->name }}</td>
-                        <td class="align-middle ps-4">{{ number_format($payment->total, 2) }}</td>
+                        <td class="price align-middle text-center white-space-nowrap fw-bold text-body-tertiary ps-4">
+                            Rp {{ number_format($payment->total, 2) }}
+                        </td>
                         <td class="align-middle ps-4">{{ ucfirst($payment->payment_status) }}</td>
                         <td class="align-middle ps-4">{{ $payment->created_at->format('Y-m-d H:i') }}</td>
                     </tr>

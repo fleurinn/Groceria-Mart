@@ -117,7 +117,7 @@
                   </a>
                 </td>
                 <td class="price align-middle text-center white-space-nowrap fw-bold text-body-tertiary ps-4">
-                    ${{ number_format($product->price, 2) }}
+                    Rp {{ number_format($product->price, 2) }}
                 </td>
                 <td class="category align-middle text-center white-space-nowrap text-body-quaternary fs-9 ps-4 fw-semibold">
                     {{ $product->category->name }}
@@ -175,30 +175,34 @@
                     Menampilkan {{ $products->firstItem() }} - {{ $products->lastItem() }} dari {{ $products->total() }} data
                 </p>
             </div>
-
+        
             <div class="col-auto d-flex">
-                <!-- Tombol Prev -->
-                <button class="page-link {{ $products->onFirstPage() ? 'disabled' : '' }}" data-list-pagination="prev"
-                    onclick="window.location='{{ $products->previousPageUrl() }}'">
-                    <span class="fas fa-chevron-left"></span>
-                </button>
-
-                <!-- Pagination Number -->
                 <ul class="mb-0 pagination">
+        
+                    <!-- Tombol Prev -->
+                    <li class="page-item {{ $products->onFirstPage() ? 'disabled' : '' }}">
+                        <a class="page-link" href="{{ $products->previousPageUrl() ?? '#' }}" aria-label="Previous">
+                            <span class="fas fa-chevron-left"></span>
+                        </a>
+                    </li>
+        
+                    <!-- Nomor Halaman -->
                     @for ($i = 1; $i <= $products->lastPage(); $i++)
                         <li class="page-item {{ $products->currentPage() == $i ? 'active' : '' }}">
                             <a class="page-link" href="{{ $products->url($i) }}">{{ $i }}</a>
                         </li>
                     @endfor
+        
+                    <!-- Tombol Next -->
+                    <li class="page-item {{ $products->hasMorePages() ? '' : 'disabled' }}">
+                        <a class="page-link" href="{{ $products->nextPageUrl() ?? '#' }}" aria-label="Next">
+                            <span class="fas fa-chevron-right"></span>
+                        </a>
+                    </li>
                 </ul>
-
-                <!-- Tombol Next -->
-                <button class="page-link pe-0 {{ $products->hasMorePages() ? '' : 'disabled' }}" data-list-pagination="next"
-                    onclick="window.location='{{ $products->nextPageUrl() }}'">
-                    <span class="fas fa-chevron-right"></span>
-                </button>
             </div>
         </div>
+        
       </div>
     </div>
   </div>

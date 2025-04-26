@@ -46,8 +46,11 @@ class ProductController extends Controller
                     '4' => $query->orderBy('name', 'desc'),
                     '5' => $query->orderBy('price', 'asc'),
                     '6' => $query->orderBy('price', 'desc'),
-                    default => null
+                    default => $query->orderBy('created_at', 'desc')
                 };
+            }, function ($query) {
+                // Kalau sort kosong, tetap urutkan berdasarkan created_at terbaru
+                $query->orderBy('created_at', 'desc');
             })
             ->paginate(10);
 
@@ -78,7 +81,7 @@ class ProductController extends Controller
             'color' => 'nullable|string|max:50',
             'description' => 'nullable|string|max:500',
             'category_product_id' => 'required|exists:category_products,id',
-            'image' => 'required|image|mimes:jpeg,jpg,png',
+            'image' => 'nullable|image|mimes:jpeg,jpg,png',
             'price' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:0',
             'status' => 'required|in:draft,publish',
@@ -95,7 +98,6 @@ class ProductController extends Controller
         [
             'name.required' => 'Kolom nama wajib diisi.', // Pesan khusus untuk validasi name
             'status.required' => 'Kolom status wajib diisi.', // Contoh untuk field lain
-            'image' => 'Kolom gambar wajib diisi.', // Contoh untuk field lain
             'price' => 'Kolom harga wajib diisi.', // Contoh untuk field lain
             'stock' => 'Kolom stok wajib diisi.', // Contoh untuk field lain
             'category_product_id' => 'Kolom kategori wajib diisi.', // Contoh untuk field lain

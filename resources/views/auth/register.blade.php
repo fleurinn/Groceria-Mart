@@ -47,24 +47,8 @@
                         <x-input-error :messages="$errors->get('first_name')" class="mt-2 text-red-500" />
                     </div>
 
-                    <div class="mb-4">
-                        <label for="last_name" class="block text-sm font-medium text-gray-700">Nama Lengkap<span
-                                class="text-red-500">*</span></label>
-                        <input id="last_name" type="text" name="last_name" placeholder="Nama Lengkap Anda"
-                            value="{{ old('last_name') }}" required autofocus
-                            class="h-11 w-full rounded-md border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-800 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                        <x-input-error :messages="$errors->get('last_name')" class="mt-2 text-red-500" />
-                    </div>
 
-                    <div class="mb-4">
-                        <label for="name" class="block text-sm font-medium text-gray-700">Nama Lengkap<span
-                                class="text-red-500">*</span></label>
-                        <input id="name" type="text" name="name" placeholder="Nama Lengkap Anda"
-                            value="{{ old('name') }}" required autofocus
-                            class="h-11 w-full rounded-md border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-800 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                        <x-input-error :messages="$errors->get('name')" class="mt-2 text-red-500" />
-                    </div>
-
+                   
 
                     <div class="mb-4">
                         <label for="email" class="block text-sm font-medium text-gray-700">Email<span
@@ -172,14 +156,7 @@
                         <x-input-error :messages="$errors->get('shipping_addresses.0.district_id')" class="mt-2 text-red-500" />
                     </div>
 
-                    <div class="mb-4">
-                        <label for="shipping_addresses[0][address]" class="block text-sm font-medium text-gray-700">Nama Lengkap<span
-                                class="text-red-500">*</span></label>
-                        <input id="shipping_addresses[0][address]" type="text" name="shipping_addresses[0][address]" placeholder="Alamat lengkap Anda"
-                            value="{{ old('shipping_addresses[0][address]') }}" required autofocus
-                            class="h-11 w-full rounded-md border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-800 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                        <x-input-error :messages="$errors->get('shipping_addresses[0][address]')" class="mt-2 text-red-500" />
-                    </div>
+                    
 
                     <div class="mt-6">
                         <button type="submit"
