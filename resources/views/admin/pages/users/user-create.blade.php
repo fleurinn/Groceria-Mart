@@ -1,4 +1,16 @@
-@extends('admin.layouts.admin-layouts')
+@php
+    if (auth()->user()->role_id == 1) {
+        $layout = 'admin.layouts.admin-layouts';
+    } elseif (auth()->user()->role_id == 2) {
+        $layout = 'admin.layouts.seller-layouts';
+    } elseif (auth()->user()->role_id == 4) {
+        $layout = 'admin.layouts.courier-layouts';
+    } else {
+        $layout = 'admin.layouts.default-layouts'; // fallback
+    }
+@endphp
+
+@extends($layout)
 
 @section('page_title', 'Profile Create | Groceria')
 @section('content')
@@ -17,15 +29,15 @@
           </div>
           <div class="row g-5">
             <div class="col-12 col-xl-4">
-              <h4 class="mb-3">First Name</h4>
+              <h4 class="mb-3">Nama Depan</h4>
               <input class="form-control mb-5" name="first_name" type="text" placeholder="Tulis name depan di sini..." />
             </div>
             <div class="col-12 col-xl-4">
-              <h4 class="mb-3">Last Name</h4>
+              <h4 class="mb-3">Nama Belakang</h4>
               <input class="form-control mb-5" name="last_name" type="text" placeholder="Tulis name belakang di sini..." />
             </div>
             <div class="col-12 col-xl-4">
-              <h4 class="mb-3">Full Name</h4>
+              <h4 class="mb-3">Nama Lengkap</h4>
               <input class="form-control mb-5" name="name" type="text" placeholder="Tulis name lengkap di sini..." />
             </div>
           </div>
@@ -36,13 +48,13 @@
               <input class="form-control mb-5" name="email" type="text" placeholder="Tulis e-mail di sini..." />
             </div>
             <div class="col-12 col-xl-3">
-              <h4 class="mb-3">Password</h4>
+              <h4 class="mb-3">Kata Sandi</h4>
               <input class="form-control mb-5" name="password" type="password" placeholder="Minimal 6 karakter " />
             </div>
             <div class="col-12 col-xl-3">
-              <h4 class="mb-3">Role</h4>
+              <h4 class="mb-3">Posisi</h4>
               <select name="role_id" class="form-select mb-5" required>
-                <option disabled selected value="">Pilih Role</option>
+                <option disabled selected value="">Pilih Posisi</option>
                 @foreach($roles as $role)
                   <option value="{{ $role->id }}">{{ $role->name }}</option>
                 @endforeach

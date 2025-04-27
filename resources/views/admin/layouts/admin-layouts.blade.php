@@ -138,11 +138,11 @@
                 <div class="nav-item-wrapper"><a class="nav-link label-1" href="{{ route('profile-pengguna.show', Auth::user()->id) }}" role="button" data-bs-toggle="" aria-expanded="false">
                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span data-feather="settings"></span></span><span class="nav-link-text-wrapper"><span class="nav-link-text">Profil</span></span></div>
                 </a></div><!-- parent pages-->
-                </li>
+              </li>
             </ul>
           </div>
         </div>
-        <div class="navbar-vertical-footer"><button class="btn navbar-vertical-toggle border-0 fw-semibold w-100 white-space-nowrap d-flex align-items-center"><span class="uil uil-left-arrow-to-left fs-8"></span><span class="uil uil-arrow-from-right fs-8"></span><span class="navbar-vertical-footer-text ms-2">Collapsed View</span></button></div>
+        <div class="navbar-vertical-footer"><button class="btn navbar-vertical-toggle border-0 fw-semibold w-100 white-space-nowrap d-flex align-items-center"><span class="uil uil-left-arrow-to-left fs-8"></span><span class="uil uil-arrow-from-right fs-8"></span><span class="navbar-vertical-footer-text ms-2">Mode Ringkas</span></button></div>
       </nav>
       <!-- SIDEBAR  END -->
 

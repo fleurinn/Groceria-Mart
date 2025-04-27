@@ -9,7 +9,7 @@
             <div class="col-12 col-xxl-6">
               <div class="mb-8">
                 <h2 class="mb-2">Beranda Groceria</h2>
-                <h5 class="text-body-tertiary fw-semibold">Inilah yang sedang terjadi di bisnis Anda saat ini!</h5>
+                <h5 class="text-body-tertiary fw-semibold">Halo {{$user->name}}, semangat terus yaa!</h5>
               </div>
               <div class="row align-items-center g-4">
                   <div class="col-12 col-md-auto">

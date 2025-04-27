@@ -1,6 +1,18 @@
-@extends('admin.layouts.admin-layouts')
+@php
+    if (auth()->user()->role_id == 1) {
+        $layout = 'admin.layouts.admin-layouts';
+    } elseif (auth()->user()->role_id == 2) {
+        $layout = 'admin.layouts.seller-layouts';
+    } elseif (auth()->user()->role_id == 4) {
+        $layout = 'admin.layouts.courier-layouts';
+    } else {
+        $layout = 'admin.layouts.default-layouts'; // fallback
+    }
+@endphp
 
-@section('page_title', 'Profile Create | Groceria')
+@extends($layout)
+
+@section('page_title', 'Profile Edit | Groceria')
 @section('content')
 
       <div class="content">
@@ -9,32 +21,32 @@
       @method('PUT')
           <div class="row g-3 flex-between-end mb-5">
             <div class="col-auto">
-              <h2 class="mb-2">Add a user</h2>
-              <h5 class="text-body-tertiary fw-semibold">Orders placed across your store</h5>
+              <h2 class="mb-2">Edit Profile</h2>
+              <h5 class="text-body-tertiary fw-semibold">Form Edit Profile</h5>
             </div>
             <div class="col-auto">
-            <a href="{{ route('profile-pengguna.index') }}" class="btn btn-phoenix-secondary me-2 mb-2 mb-sm-0">Cancel</a>
-            <button class="btn btn-primary mb-2 mb-sm-0" type="submit">Save</button></div>
+            <a href="{{ route('profile-pengguna.show', auth()->user()->id) }}" class="btn btn-phoenix-secondary me-2 mb-2 mb-sm-0">Batal</a>
+            <button class="btn btn-primary mb-2 mb-sm-0" type="submit">Simpan</button></div>
           </div>
           <div class="row g-5">
             <div class="col-12 col-xl-4">
-              <h4 class="mb-3">First Name</h4>
-              <input value="{{ old('first_name', $user->first_name) }}" class="form-control mb-5" name="first_name" type="text" placeholder="Write title here..." />
+              <h4 class="mb-3">Nama Depan</h4>
+              <input value="{{ old('first_name', $user->first_name) }}" class="form-control mb-5" name="first_name" type="text" placeholder="Tulis nama depan di sini..." />
             </div>
             <div class="col-12 col-xl-4">
-              <h4 class="mb-3">Last Name</h4>
-              <input value="{{ old('last_name', $user->last_name) }}" class="form-control mb-5" name="last_name" type="text" placeholder="Write title here..." />
+              <h4 class="mb-3">Name Belakang</h4>
+              <input value="{{ old('last_name', $user->last_name) }}" class="form-control mb-5" name="last_name" type="text" placeholder="TUlis nama belakang di sini..." />
             </div>
             <div class="col-12 col-xl-4">
-              <h4 class="mb-3">Full Name</h4>
-              <input value="{{ old('name', $user->name) }}" class="form-control mb-5" name="name" type="text" placeholder="Write title here..." />
+              <h4 class="mb-3">Nama Lengkap</h4>
+              <input value="{{ old('name', $user->name) }}" class="form-control mb-5" name="name" type="text" placeholder="Tulis nama lengkap di sini..." />
             </div>
           </div>
 
           <div class="row g-5">
             <div class="col-12 col-xl-4">
               <h4 class="mb-3">E-mail</h4>
-              <input  value="{{ old('email', $user->email) }}"  class="form-control mb-5" name="email" type="text" placeholder="Write title here..." />
+              <input  value="{{ old('email', $user->email) }}"  class="form-control mb-5" name="email" type="text" placeholder="contoh@gmail.com" />
             </div>
             <div class="col-12 col-xl-4">
             <h4 class="mb-3">Foto Profile</h4>
@@ -49,7 +61,7 @@
             </div>
             <div class="col-12 col-xl-4">
                 <h4 class="mb-3">No. Handphone</h4>
-                <input value="{{ old('shipping_addresses.0.no_telp', $user->shippingAddress->no_telp ?? '') }}" class="form-control mb-5" name="shipping_addresses[0][no_telp]" type="text" placeholder="Write title here..." />
+                <input value="{{ old('shipping_addresses.0.no_telp', $user->shippingAddress->no_telp ?? '') }}" class="form-control mb-5" name="shipping_addresses[0][no_telp]" type="text" placeholder="tulis nomor handphone di sini..." />
             </div>
           </div>
 

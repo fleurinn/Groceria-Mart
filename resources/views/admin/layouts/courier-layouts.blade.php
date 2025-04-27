@@ -82,8 +82,8 @@
             <ul class="navbar-nav flex-column" id="navbarVerticalNav">
               <li class="nav-item">
                 <!-- parent pages-->
-                 <div class="nav-item-wrapper"><a class="nav-link label-1" href="../../chat.html" role="button" data-bs-toggle="" aria-expanded="false">
-                    <div class="d-flex align-items-center"><span class="nav-link-icon"><span data-feather="home"></span></span><span class="nav-link-text-wrapper"><span class="nav-link-text">Home</span></span></div>
+                 <div class="nav-item-wrapper"><a class="nav-link label-1" href="{{ route('dashboard.kurir') }}" role="button" data-bs-toggle="" aria-expanded="false">
+                    <div class="d-flex align-items-center"><span class="nav-link-icon"><span data-feather="home"></span></span><span class="nav-link-text-wrapper"><span class="nav-link-text">Beranda</span></span></div>
                 </a></div><!-- parent pages-->
               </li>
               <li class="nav-item">
@@ -106,7 +106,7 @@
             </ul>
           </div>
         </div>
-        <div class="navbar-vertical-footer"><button class="btn navbar-vertical-toggle border-0 fw-semibold w-100 white-space-nowrap d-flex align-items-center"><span class="uil uil-left-arrow-to-left fs-8"></span><span class="uil uil-arrow-from-right fs-8"></span><span class="navbar-vertical-footer-text ms-2">Collapsed View</span></button></div>
+        <div class="navbar-vertical-footer"><button class="btn navbar-vertical-toggle border-0 fw-semibold w-100 white-space-nowrap d-flex align-items-center"><span class="uil uil-left-arrow-to-left fs-8"></span><span class="uil uil-arrow-from-right fs-8"></span><span class="navbar-vertical-footer-text ms-2">Mode Ringkas</span></button></div>
       </nav>
       <!-- SIDEBAR  END -->
 
@@ -171,10 +171,7 @@
       <footer class="footer position-absolute">
           <div class="row g-0 justify-content-between align-items-center h-100">
             <div class="col-12 col-sm-auto text-center">
-              <p class="mb-0 mt-2 mt-sm-0 text-body">Thank you for creating with Phoenix<span class="d-none d-sm-inline-block"></span><span class="d-none d-sm-inline-block mx-1">|</span><br class="d-sm-none" />2024 &copy;<a class="mx-1" href="https://themewagon.com/">Themewagon</a></p>
-            </div>
-            <div class="col-12 col-sm-auto text-center">
-              <p class="mb-0 text-body-tertiary text-opacity-85">v1.20.1</p>
+              <p class="mb-0 mt-2 mt-sm-0 text-body">Copyright <span class="d-none d-sm-inline-block"></span>&copy;<a class="mx-1" href="https://instagram/dhya.s0.com/">Groceria</a>all rights reserved. Powered by Groceria.</p>
             </div>
           </div>
         </footer>

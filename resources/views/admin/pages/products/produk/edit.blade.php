@@ -1,6 +1,18 @@
-@extends('admin.layouts.admin-layouts')
+@php
+    if (auth()->user()->role_id == 1) {
+        $layout = 'admin.layouts.admin-layouts';
+    } elseif (auth()->user()->role_id == 2) {
+        $layout = 'admin.layouts.seller-layouts';
+    } elseif (auth()->user()->role_id == 4) {
+        $layout = 'admin.layouts.courier-layouts';
+    } else {
+        $layout = 'admin.layouts.default-layouts'; // fallback
+    }
+@endphp
 
-@section('page_title', 'Product Edit | Groceria')
+@extends($layout)
+
+@section('page_title', 'Products | Groceria')
 @section('content')
 
 <div class="content">
