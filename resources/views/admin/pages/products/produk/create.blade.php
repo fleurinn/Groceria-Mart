@@ -12,7 +12,7 @@
 
 @extends($layout)
 
-@section('page_title', 'Products | Groceria')
+@section('page_title', 'Product Create | Groceria')
 @section('content')
 
 <div class="content">
