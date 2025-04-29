@@ -19,15 +19,15 @@
                                 @method('PUT')
                                 <span class="gi-register-wrap gi-register-half w-[50%] px-[15px]">
                                     <label class="inline-block mb-[9px] text-[#4b5966] text-[15px] font-medium tracking-[0] leading-[1]">Nama Depan*</label>
-                                    <input value="{{ old('first_name', $user->first_name) }}" type="text" name="first_name" placeholder="Masukan nama depan" class="w-full bg-transparent border-[1px] border-solid border-[#eee] text-[#777] text-[14px] mb-[26px] px-[15px] outline-[0] rounded-[5px] h-[50px]" required>
+                                    <input value="{{ old('first_name', $user->first_name) }}" id="first_name" type="text" name="first_name" placeholder="Masukan nama depan" class="w-full bg-transparent border-[1px] border-solid border-[#eee] text-[#777] text-[14px] mb-[26px] px-[15px] outline-[0] rounded-[5px] h-[50px]" required>
                                 </span>
                                 <span class="gi-register-wrap gi-register-half w-[50%] px-[15px]">
                                     <label class="inline-block mb-[9px] text-[#4b5966] text-[15px] font-medium tracking-[0] leading-[1]">Nama Belakang*</label>
-                                    <input value="{{ old('last_name', $user->last_name) }}" type="text" name="last_name" placeholder="Masukan nama belakang" class="w-full bg-transparent border-[1px] border-solid border-[#eee] text-[#777] text-[14px] mb-[26px] px-[15px] outline-[0] rounded-[5px] h-[50px]" required>
+                                    <input value="{{ old('last_name', $user->last_name) }}" id="last_name" type="text" name="last_name" placeholder="Masukan nama belakang" class="w-full bg-transparent border-[1px] border-solid border-[#eee] text-[#777] text-[14px] mb-[26px] px-[15px] outline-[0] rounded-[5px] h-[50px]" required>
                                 </span>
                                 <span class="gi-register-wrap gi-register-half w-[50%] px-[15px]">
                                     <label class="inline-block mb-[9px] text-[#4b5966] text-[15px] font-medium tracking-[0] leading-[1]">Nama Lengkap*</label>
-                                    <input value="{{ old('name', $user->name) }}" type="text" name="name" placeholder="Masukan nama lengkap" class="w-full bg-transparent border-[1px] border-solid border-[#eee] text-[#777] text-[14px] mb-[26px] px-[15px] outline-[0] rounded-[5px] h-[50px]" required>
+                                    <input value="{{ old('name', $user->name) }}" id="name" type="text" name="name" placeholder="Masukan nama lengkap" class="w-full bg-transparent border-[1px] border-solid border-[#eee] text-[#777] text-[14px] mb-[26px] px-[15px] outline-[0] rounded-[5px] h-[50px]" required>
                                 </span>
                                 <span class="gi-register-wrap gi-register-half w-[50%] px-[15px]">
                                     <label class="inline-block mb-[9px] text-[#4b5966] text-[15px] font-medium tracking-[0] leading-[1]">Email*</label>
@@ -109,6 +109,23 @@
         </div>
     </section>
 
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const firstNameInput = document.getElementById('first_name');
+        const lastNameInput = document.getElementById('last_name');
+        const fullNameInput = document.getElementById('name');
+
+        function updateFullName() {
+            const firstName = firstNameInput.value.trim();
+            const lastName = lastNameInput.value.trim();
+            fullNameInput.value = `${firstName} ${lastName}`.trim();
+        }
+
+        firstNameInput.addEventListener('input', updateFullName);
+        lastNameInput.addEventListener('input', updateFullName);
+    });
+</script>
 <!-- Sample section End -->
 <script>
 document.getElementById('citySelect').addEventListener('change', function () {

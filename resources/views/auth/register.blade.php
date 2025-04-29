@@ -39,16 +39,29 @@
                     @csrf
 
                     <div class="mb-4">
-                        <label for="first_name" class="block text-sm font-medium text-gray-700">Nama Lengkap<span
+                        <label for="first_name" class="block text-sm font-medium text-gray-700">Nama Depan<span
                                 class="text-red-500">*</span></label>
                         <input id="first_name" type="text" name="first_name" placeholder="Nama Lengkap Anda"
                             value="{{ old('first_name') }}" required autofocus
                             class="h-11 w-full rounded-md border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-800 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                         <x-input-error :messages="$errors->get('first_name')" class="mt-2 text-red-500" />
                     </div>
-
-
-                   
+                    <div class="mb-4">
+                        <label for="last_name" class="block text-sm font-medium text-gray-700">Nama Belakang<span
+                                class="text-red-500">*</span></label>
+                        <input id="last_name" type="text" name="last_name" placeholder="Nama Lengkap Anda"
+                            value="{{ old('last_name') }}" required autofocus
+                            class="h-11 w-full rounded-md border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-800 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                        <x-input-error :messages="$errors->get('last_name')" class="mt-2 text-red-500" />
+                    </div>
+                    <div class="mb-4">
+                        <label for="name" class="block text-sm font-medium text-gray-700">Nama Lengkap<span
+                                class="text-red-500">*</span></label>
+                        <input id="name" type="text" name="name" placeholder="Nama Lengkap Anda"
+                            value="{{ old('name') }}" required autofocus
+                            class="h-11 w-full rounded-md border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-800 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                        <x-input-error :messages="$errors->get('name')" class="mt-2 text-red-500" />
+                    </div>                   
 
                     <div class="mb-4">
                         <label for="email" class="block text-sm font-medium text-gray-700">Email<span
@@ -156,6 +169,23 @@
                         <x-input-error :messages="$errors->get('shipping_addresses.0.district_id')" class="mt-2 text-red-500" />
                     </div>
 
+                    <div class="mb-4">
+                        <label for="shipping_addresses_0_address" class="block text-sm font-medium text-gray-700">
+                            Alamat Lengkap<span class="text-red-500">*</span>
+                        </label>
+                        <input 
+                            id="shipping_addresses_0_address" 
+                            type="text" 
+                            name="shipping_addresses[0][address]" 
+                            placeholder="Masukkan alamat lengkap anda."
+                            value="{{ old('shipping_addresses.0.address') }}" 
+                            required 
+                            autofocus
+                            class="h-11 w-full rounded-md border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-800 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                        >
+                        <x-input-error :messages="$errors->get('shipping_addresses.0.address')" class="mt-2 text-red-500" />
+                    </div>
+ 
                     
 
                     <div class="mt-6">
@@ -228,7 +258,22 @@
     });
 </script>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const firstNameInput = document.getElementById('first_name');
+        const lastNameInput = document.getElementById('last_name');
+        const fullNameInput = document.getElementById('name');
 
+        function updateFullName() {
+            const firstName = firstNameInput.value.trim();
+            const lastName = lastNameInput.value.trim();
+            fullNameInput.value = `${firstName} ${lastName}`.trim();
+        }
+
+        firstNameInput.addEventListener('input', updateFullName);
+        lastNameInput.addEventListener('input', updateFullName);
+    });
+</script>
 
 
 </html>

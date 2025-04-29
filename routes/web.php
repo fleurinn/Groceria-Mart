@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\User\UserController;
 use App\Http\Controllers\Admin\CategoryProductController;
@@ -27,6 +28,12 @@ use App\Http\Controllers\ProfileCustController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [LandingPageController::class, 'index'])->name('landing-page');
+
+
+
+Route::get('/login-gcms', [AuthenticatedSessionController::class, 'createGcms'])->name('login-gcms');
+Route::post('/login-gcms', [AuthenticatedSessionController::class, 'storeGcms']);
+Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
 
 Route::controller(LandingPageController::class)->group(function () {
     Route::get('/', 'index')->name('landing-page');

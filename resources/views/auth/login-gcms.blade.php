@@ -25,16 +25,15 @@
     <div class="flex min-h-screen">
         <div class="w-full md:w-1/2 flex items-center justify-center p-6">
             <div class="w-full max-w-md shadow-md rounded-lg p-8 bg-white">
-                <a href="{{ route('landing-page') }}" class="text-sm text-gray-600">&larr; Kembali ke beranda</a>
-
                 <div class="flex justify-center mb-6">
                     <img src="{{ asset('assets/img/logo/logogroceria.png') }}" alt="Logo Groceria" class="h-10">
                 </div>
 
-                <h2 class="text-3xl font-bold text-gray-800 mt-4">{{ __('Masuk') }}</h2>
-                <p class="text-gray-600 mt-1">Masukan e-mail dan kata sandi untuk masuk!</p>
+                <a href="{{ route('landing-page') }}" class="text-sm text-gray-600">&larr;{{ __('Kembali ke beranda') }}</a>
 
-                <form method="POST" action="{{ route('login2') }}" class="mt-8">
+                <p class="text-gray-600 mt-1">Masukan e-mail dan kata sandi untuk Log-In!</p>
+
+                <form method="POST" action="{{ route('login-gcms') }}" class="mt-8">
                     @csrf
 
                     <div class="mb-4">
@@ -89,7 +88,7 @@
 
                     <div class="mt-4 text-center text-sm text-gray-600">
                         Belum punya akun? 
-                        <a href="{{ url('/register2') }}" class="text-blue-600 hover:underline">
+                        <a href="{{ url('/register') }}" class="text-blue-600 hover:underline">
                             Daftar di sini
                         </a>.
                     </div>

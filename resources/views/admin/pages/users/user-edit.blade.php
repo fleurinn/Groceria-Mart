@@ -29,19 +29,20 @@
             <button class="btn btn-primary mb-2 mb-sm-0" type="submit">Simpan</button></div>
           </div>
           <div class="row g-5">
-            <div class="col-12 col-xl-4">
-              <h4 class="mb-3">Nama Depan</h4>
-              <input value="{{ old('first_name', $user->first_name) }}" class="form-control mb-5" name="first_name" type="text" placeholder="Tulis nama depan di sini..." />
-            </div>
-            <div class="col-12 col-xl-4">
-              <h4 class="mb-3">Name Belakang</h4>
-              <input value="{{ old('last_name', $user->last_name) }}" class="form-control mb-5" name="last_name" type="text" placeholder="TUlis nama belakang di sini..." />
-            </div>
-            <div class="col-12 col-xl-4">
-              <h4 class="mb-3">Nama Lengkap</h4>
-              <input value="{{ old('name', $user->name) }}" class="form-control mb-5" name="name" type="text" placeholder="Tulis nama lengkap di sini..." />
-            </div>
+              <div class="col-12 col-xl-4">
+                  <h4 class="mb-3">Nama Depan</h4>
+                  <input id="first_name" value="{{ old('first_name', $user->first_name) }}" class="form-control mb-5" name="first_name" type="text" placeholder="Tulis nama depan di sini..." />
+              </div>
+              <div class="col-12 col-xl-4">
+                  <h4 class="mb-3">Nama Belakang</h4>
+                  <input id="last_name" value="{{ old('last_name', $user->last_name) }}" class="form-control mb-5" name="last_name" type="text" placeholder="Tulis nama belakang di sini..." />
+              </div>
+              <div class="col-12 col-xl-4">
+                  <h4 class="mb-3">Nama Lengkap</h4>
+                  <input id="name" value="{{ old('name', $user->name) }}" class="form-control mb-5" name="name" type="text" placeholder="Tulis nama lengkap di sini..." />
+              </div>
           </div>
+
 
           <div class="row g-5">
             <div class="col-12 col-xl-4">
@@ -189,5 +190,20 @@
     });
   });
 </script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const firstNameInput = document.getElementById('first_name');
+        const lastNameInput = document.getElementById('last_name');
+        const fullNameInput = document.getElementById('name');
 
+        function updateFullName() {
+            const firstName = firstNameInput.value.trim();
+            const lastName = lastNameInput.value.trim();
+            fullNameInput.value = `${firstName} ${lastName}`.trim();
+        }
+
+        firstNameInput.addEventListener('input', updateFullName);
+        lastNameInput.addEventListener('input', updateFullName);
+    });
+</script>
 @endsection
